@@ -7,7 +7,7 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   {
     path: 'relationships',
-    loadChildren: `./relationships/relationship.module#RelationshipsModule`
+    loadChildren: `./relationships/relationships.module#RelationshipsModule`
   }
 ];
 
