@@ -4,9 +4,11 @@ import { IonicModule } from '@ionic/angular';
 
 import { RelationshipsRoutingModule } from './relationships-routing.module';
 import { RelationshipsComponent } from './relationships.component';
+import { EditRelationshipComponent } from './components/edit-relationship/edit-relationship.component';
+import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
 
 @NgModule({
-  declarations: [RelationshipsComponent],
+  declarations: [RelationshipsComponent, EditRelationshipComponent, ViewRelationshipComponent],
   imports: [
     CommonModule,
     IonicModule,

@@ -18,7 +18,7 @@ import { ActionSheetController } from '@ionic/angular';
         {{ item }}
       </ion-list-header>
       <ion-item-sliding>
-        <ion-item>
+        <ion-item [routerLink]="['edit']">
           <ion-icon name="business" class="icon-lg"></ion-icon>
           <ion-label>
             <h2>{{ item }}</h2>

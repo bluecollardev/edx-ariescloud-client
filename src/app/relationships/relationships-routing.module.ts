@@ -2,28 +2,29 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { RelationshipsComponent } from './relationships.component';
+import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
+import { EditRelationshipComponent } from './components/edit-relationship/edit-relationship.component';
 
 const routes: Routes = [
   {
     path: 'relationships',
     component: RelationshipsComponent,
-    /*children: [
-      {
-        path: 'module1',
-        component: module1Component,
-        children: [
-          {
-            path: 'submodule11',
-            component: submodule11Component,
-          },
-          {
-            path: '',
-            redirectTo: 'submodule11',
-            pathMatch: 'full'
-          }
-        ]
-      },
-    ]*/
+  },
+  {
+    path: 'relationships/view',
+    component: ViewRelationshipComponent,
+  },
+  {
+    path: 'relationships/view/:id',
+    component: ViewRelationshipComponent,
+  },
+  {
+    path: 'relationships/edit',
+    component: EditRelationshipComponent,
+  },
+  {
+    path: 'relationships/edit/:id',
+    component: EditRelationshipComponent,
   }
 ];
 

@@ -18,7 +18,7 @@ import { ActionSheetController } from '@ionic/angular';
         Pending Approval
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items.slice(0,1)">
-        <ion-item>
+        <ion-item [routerLink]="['view']">
           <ion-icon name="business" class="icon-lg"></ion-icon>
           <ion-label>
             <h2>{{ item }}</h2>
@@ -38,7 +38,7 @@ import { ActionSheetController } from '@ionic/angular';
         Organizations
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items.slice(1,2)">
-        <ion-item>
+        <ion-item [routerLink]="['view']">
           <ion-icon name="business" class="icon-lg"></ion-icon>
           <ion-label>
             <h2>{{ item }}</h2>
@@ -58,7 +58,7 @@ import { ActionSheetController } from '@ionic/angular';
         All Contacts
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items">
-        <ion-item>
+        <ion-item [routerLink]="['view']">
           <ion-icon name="person" class="icon-lg"></ion-icon>
           <ion-label>
             <h2>{{ item }}</h2>
@@ -67,10 +67,7 @@ import { ActionSheetController } from '@ionic/angular';
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
-            <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
-          </button>
-          <button ion-button color="primary" icon-start>
-            <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
+            <ion-icon name="ios-create" class="icon-md"></ion-icon> Edit
           </button>
         </ion-item-options>
       </ion-item-sliding>
@@ -146,6 +143,6 @@ export class RelationshipsComponent implements OnInit {
       ]
     });
 
-    actionSheet.present();
+    // actionSheet.present();
   }
 }
