@@ -12,70 +12,78 @@ import { ActionSheetController } from '@ionic/angular';
         <ion-title class="ios title-ios hydrated">Manage Relationships</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-    <ion-list>
-      <ion-list-header>
-        Pending Approval
-      </ion-list-header>
-      <ion-item-sliding *ngFor="let item of items.slice(0,1)">
-        <ion-item [routerLink]="['view']">
-          <ion-icon name="business" class="icon-lg"></ion-icon>
-          <ion-label>
-            <h2>{{ item }}</h2>
-            <small>DID: abcd-1234-df34-cd34</small>
-          </ion-label>
-        </ion-item>
-        <ion-item-options>
-          <button ion-button color="light" icon-start>
-            <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
-          </button>
-          <button ion-button color="primary" icon-start>
-            <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
-          </button>
-        </ion-item-options>
-      </ion-item-sliding>
-      <ion-list-header>
-        Organizations
-      </ion-list-header>
-      <ion-item-sliding *ngFor="let item of items.slice(1,2)">
-        <ion-item [routerLink]="['view']">
-          <ion-icon name="business" class="icon-lg"></ion-icon>
-          <ion-label>
-            <h2>{{ item }}</h2>
-            <small>DID: abcd-1234-df34-cd34</small>
-          </ion-label>
-        </ion-item>
-        <ion-item-options>
-          <button ion-button color="light" icon-start>
-            <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
-          </button>
-          <button ion-button color="primary" icon-start>
-            <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
-          </button>
-        </ion-item-options>
-      </ion-item-sliding>
-      <ion-list-header>
-        All Contacts
-      </ion-list-header>
-      <ion-item-sliding *ngFor="let item of items">
-        <ion-item [routerLink]="['view']">
-          <ion-icon name="person" class="icon-lg"></ion-icon>
-          <ion-label>
-            <h2>{{ item }}</h2>
-            <small>DID: abcd-1234-df34-cd34</small>
-          </ion-label>
-        </ion-item>
-        <ion-item-options>
-          <button ion-button color="light" icon-start>
-            <ion-icon name="ios-eye-off" class="icon-md"></ion-icon> Disable
-          </button>
-          <button ion-button color="light" icon-start>
-            <ion-icon name="ios-create" class="icon-md"></ion-icon> Edit
-          </button>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
-    <ion-button color="primary" clear full icon-start margin [routerLink]="['add']"><ion-icon name="add"></ion-icon> Add New Relationship</ion-button>
+    <ion-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+              <ion-list>
+                <ion-list-header>
+                  Pending Approval
+                </ion-list-header>
+                <ion-item-sliding *ngFor="let item of items.slice(0,1)">
+                  <ion-item [routerLink]="['view']">
+                    <ion-icon name="business" class="icon-lg"></ion-icon>
+                    <ion-label>
+                      <h2>{{ item }}</h2>
+                      <small>DID: abcd-1234-df34-cd34</small>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item-options>
+                    <button ion-button color="light" icon-start>
+                      <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
+                    </button>
+                    <button ion-button color="primary" icon-start>
+                      <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
+                    </button>
+                  </ion-item-options>
+                </ion-item-sliding>
+                <ion-list-header>
+                  Organizations
+                </ion-list-header>
+                <ion-item-sliding *ngFor="let item of items.slice(1,2)">
+                  <ion-item [routerLink]="['view']">
+                    <ion-icon name="business" class="icon-lg"></ion-icon>
+                    <ion-label>
+                      <h2>{{ item }}</h2>
+                      <small>DID: abcd-1234-df34-cd34</small>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item-options>
+                    <button ion-button color="light" icon-start>
+                      <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
+                    </button>
+                    <button ion-button color="primary" icon-start>
+                      <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
+                    </button>
+                  </ion-item-options>
+                </ion-item-sliding>
+                <ion-list-header>
+                  All Contacts
+                </ion-list-header>
+                <ion-item-sliding *ngFor="let item of items">
+                  <ion-item [routerLink]="['view']">
+                    <ion-icon name="person" class="icon-lg"></ion-icon>
+                    <ion-label>
+                      <h2>{{ item }}</h2>
+                      <small>DID: abcd-1234-df34-cd34</small>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item-options>
+                    <button ion-button color="light" icon-start>
+                      <ion-icon name="ios-eye-off" class="icon-md"></ion-icon> Disable
+                    </button>
+                    <button ion-button color="light" icon-start>
+                      <ion-icon name="ios-create" class="icon-md"></ion-icon> Edit
+                    </button>
+                  </ion-item-options>
+                </ion-item-sliding>
+              </ion-list>
+              <ion-button color="primary" clear full icon-start margin [routerLink]="['add']"><ion-icon name="add"></ion-icon> Add New Relationship</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
   `,
   styleUrls: ['./relationships.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

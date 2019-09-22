@@ -11,40 +11,46 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
         <ion-title class="ios title-ios hydrated">My Profile</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content >
       <br />
       <br />
-      <form onsubmit="processForm(event)">
-        <ion-list lines="full" class="ion-no-margin ion-no-padding">
-          <ion-item>
-            <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
-            <ion-input required type="text" oninput="handleFirstNameValue(event)">Alice</ion-input>
-          </ion-item>
-
-          <ion-item>
-            <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
-            <ion-input required type="text" oninput="handleLastNameValue(event)">Cooper</ion-input>
-          </ion-item>
-
-          <!--<ion-item>
-            <ion-label position="stacked">Address</ion-label>
-            <ion-input placeholder="Address Line 1"></ion-input>
-            <ion-input placeholder="Address Line 2"></ion-input>
-            <ion-input placeholder="City"></ion-input>
-            <ion-input placeholder="State"></ion-input>
-            <ion-input placeholder="Zip Code"></ion-input>
-          </ion-item>-->
-
-          <ion-item>
-            <ion-label position="stacked">Notes</ion-label>
-            <ion-textarea></ion-textarea>
-          </ion-item>
-        </ion-list>
-
-        <div class="ion-padding">
-          <ion-button expand="block" type="submit" class="ion-no-margin">Update Account</ion-button>
-        </div>
-      </form>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
+            <form onsubmit="processForm(event)">
+              <ion-list lines="full" class="ion-no-margin ion-no-padding">
+                <ion-item>
+                  <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
+                  <ion-input required type="text" oninput="handleFirstNameValue(event)">Alice</ion-input>
+                </ion-item>
+      
+                <ion-item>
+                  <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
+                  <ion-input required type="text" oninput="handleLastNameValue(event)">Cooper</ion-input>
+                </ion-item>
+      
+                <!--<ion-item>
+                  <ion-label position="stacked">Address</ion-label>
+                  <ion-input placeholder="Address Line 1"></ion-input>
+                  <ion-input placeholder="Address Line 2"></ion-input>
+                  <ion-input placeholder="City"></ion-input>
+                  <ion-input placeholder="State"></ion-input>
+                  <ion-input placeholder="Zip Code"></ion-input>
+                </ion-item>-->
+      
+                <ion-item>
+                  <ion-label position="stacked">Notes</ion-label>
+                  <ion-textarea></ion-textarea>
+                </ion-item>
+              </ion-list>
+      
+              <div class="ion-padding">
+                <ion-button expand="block" type="submit" class="ion-no-margin">Update Account</ion-button>
+              </div>
+            </form>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   `,
   styleUrls: ['./profile.component.scss'],

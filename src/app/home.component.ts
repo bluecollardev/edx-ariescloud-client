@@ -15,17 +15,23 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
     <ion-content>
       <br />
       <br />
-      <ion-list>
-        <ion-item>
-          <ion-label position="stacked">Username</ion-label>
-          <ion-input type="text" value=""></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">Password</ion-label>
-          <ion-input type="password" value=""></ion-input>
-        </ion-item>
-      </ion-list>
-      <ion-button color="primary" clear full margin [routerLink]="['\/profile\']">Sign In</ion-button>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
+            <ion-list>
+              <ion-item>
+                <ion-label position="stacked">Username</ion-label>
+                <ion-input type="text" value=""></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Password</ion-label>
+                <ion-input type="password" value=""></ion-input>
+              </ion-item>
+            </ion-list>
+            <ion-button color="primary" clear full margin [routerLink]="['/profile']">Sign In</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
     <!--<ion-button color="primary" clear full margin>Sign In</ion-button>-->
   `,

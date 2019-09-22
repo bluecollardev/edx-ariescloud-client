@@ -12,74 +12,82 @@ import { ActionSheetController } from '@ionic/angular';
         <ion-title class="ios title-ios hydrated">Manage Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-    <ion-list *ngFor="let item of items">
-      <ion-list-header>
-        {{ item }}
-      </ion-list-header>
-      <ion-item-sliding>
-        <ion-item [routerLink]="['edit']">
-          <ion-icon name="business" class="icon-lg"></ion-icon>
-          <ion-label>
-            <h2>{{ item }}</h2>
-            <small>DID: abcd-1234-df34-cd34</small>
-          </ion-label>
-        </ion-item>
-        <ion-item-options>
-          <button ion-button color="light" icon-start>
-            <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
-          </button>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
-
-    <ion-grid style="width: 100%;">
-      <ion-row>
-        <ion-col>
-          <ion-list-header>
-            <ion-label>My Credentials</ion-label>
-          </ion-list-header>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
-          <ion-card text-center [routerLink]="['view']">
-            <ion-card-header>
-              {{ cred.issuedBy }}
-            </ion-card-header>
-            <ion-icon name="document" class="icon-lg"></ion-icon>
-            <ion-card-content>
-              {{ cred.name }}
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    
-    <ion-grid style="width: 100%;">
-      <ion-row>
-        <ion-col>
-          <ion-list-header>
-            <ion-label>Credentials Shared With Me</ion-label>
-          </ion-list-header>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
-          <ion-card text-center [routerLink]="['view']">
-            <ion-card-header>
-              {{ cred.issuedBy }}
-            </ion-card-header>
-            <ion-icon name="document" class="icon-lg"></ion-icon>
-            <ion-card-content>
-              {{ cred.name }}
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-button color="primary" clear full icon-start margin><ion-icon name="add"></ion-icon> Create New Credential</ion-button>
+    <ion-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+            <ion-list *ngFor="let item of items">
+              <ion-list-header>
+                {{ item }}
+              </ion-list-header>
+              <ion-item-sliding>
+                <ion-item [routerLink]="['edit']">
+                  <ion-icon name="business" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h2>{{ item }}</h2>
+                    <small>DID: abcd-1234-df34-cd34</small>
+                  </ion-label>
+                </ion-item>
+                <ion-item-options>
+                  <button ion-button color="light" icon-start>
+                    <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
+                  </button>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
+        
+            <ion-grid style="width: 100%;">
+              <ion-row>
+                <ion-col>
+                  <ion-list-header>
+                    <ion-label>My Credentials</ion-label>
+                  </ion-list-header>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
+                  <ion-card text-center [routerLink]="['view']">
+                    <ion-card-header>
+                      {{ cred.issuedBy }}
+                    </ion-card-header>
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-card-content>
+                      {{ cred.name }}
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            
+            <ion-grid style="width: 100%;">
+              <ion-row>
+                <ion-col>
+                  <ion-list-header>
+                    <ion-label>Credentials Shared With Me</ion-label>
+                  </ion-list-header>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
+                  <ion-card text-center [routerLink]="['view']">
+                    <ion-card-header>
+                      {{ cred.issuedBy }}
+                    </ion-card-header>
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-card-content>
+                      {{ cred.name }}
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+        
+            <ion-button color="primary" clear full icon-start margin [routerLink]="['create']"><ion-icon name="add"></ion-icon> Create New Credential</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
   `,
   styleUrls: ['./credentials.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
