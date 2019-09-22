@@ -62,7 +62,7 @@ export class AppComponent {
   pages = [
     {
       title: 'My Profile',
-      url: '/menu/',
+      url: '/profile/',
       // icon: 'home'
       children: []
     },
@@ -70,13 +70,18 @@ export class AppComponent {
       title: 'My Relationships',
       children: [
         {
+          title: 'Manage Relationships',
+          url: '/relationships/create/',
+          // icon: 'logo-ionic'
+        },
+        {
           title: 'Create Relationship',
-          url: '/menu/',
+          url: '/relationships/create/',
           // icon: 'logo-ionic'
         },
         {
           title: 'Pending Connections',
-          url: '/menu/',
+          url: '/relationships/pending',
           // icon: 'logo-ionic'
         }
       ]
@@ -85,18 +90,23 @@ export class AppComponent {
       title: 'My Credentials',
       children: [
         {
+          title: 'Manage Credentials',
+          url: '/credentials/create/',
+          // icon: 'logo-ionic'
+        },
+        {
           title: 'Create Credential',
-          url: '/menu/',
+          url: '/credentials/create/',
           // icon: 'logo-ionic'
         },
         {
           title: 'Credentials Received',
-          url: '/menu/',
+          url: '/credentials/received/',
           // icon: 'logo-ionic'
         },
         {
           title: 'Credentials Owned',
-          url: '/menu/',
+          url: '/credentials/owned/',
           // icon: 'logo-google'
         }
       ]
