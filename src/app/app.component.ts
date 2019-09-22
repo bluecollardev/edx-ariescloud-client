@@ -79,11 +79,11 @@ export class AppComponent {
           url: '/relationships/create/',
           // icon: 'logo-ionic'
         },
-        {
+        /*{
           title: 'Pending Connections',
           url: '/relationships/pending',
           // icon: 'logo-ionic'
-        }
+        }*/
       ]
     },
     {

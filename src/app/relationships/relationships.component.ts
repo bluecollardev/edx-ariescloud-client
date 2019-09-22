@@ -19,16 +19,17 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items.slice(0,1)">
         <ion-item>
+          <ion-label>
           <h2>{{ item }}</h2>
+          <small>DID: abcd-1234-df34-cd34</small>
+          </ion-label>
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
-            <!--<ion-icon name="ios-more"></ion-icon>-->
-            Accept
+            <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
           </button>
           <button ion-button color="primary" icon-start>
-            <!--<ion-icon name="text"></ion-icon>-->
-            Decline
+            <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
           </button>
         </ion-item-options>
       </ion-item-sliding>
@@ -37,16 +38,17 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items.slice(1,2)">
         <ion-item>
+          <ion-label>
           <h2>{{ item }}</h2>
+          <small>DID: abcd-1234-df34-cd34</small>
+          </ion-label>
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
-            <!--<ion-icon name="ios-more"></ion-icon>-->
-            Accept
+            <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
           </button>
           <button ion-button color="primary" icon-start>
-            <!--<ion-icon name="text"></ion-icon>-->
-            Decline
+            <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
           </button>
         </ion-item-options>
       </ion-item-sliding>
@@ -55,21 +57,22 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items">
         <ion-item>
+          <ion-label>
           <h2>{{ item }}</h2>
+          <small>DID: abcd-1234-df34-cd34</small>
+          </ion-label>
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
-            <!--<ion-icon name="ios-more"></ion-icon>-->
-            Accept
+            <ion-icon name="ios-checkmark" class="icon-md"></ion-icon> Accept
           </button>
           <button ion-button color="primary" icon-start>
-            <!--<ion-icon name="text"></ion-icon>-->
-            Decline
+            <ion-icon name="ios-close" class="icon-md"></ion-icon> Decline
           </button>
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
-    <ion-button color="primary" clear full icon-start margin><ion-icon name="add"></ion-icon> Add New</ion-button>
+    <ion-button color="primary" clear full icon-start margin><ion-icon name="add"></ion-icon> Create New Relationship</ion-button>
   `,
   styleUrls: ['./relationships.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -93,7 +96,7 @@ export class RelationshipsComponent implements OnInit {
       'James Kirk',
       // 'Joanne Roberts',
       'Jordan Stewart',
-      'Nicole Pennington',
+      // 'Nicole Pennington',
       // 'Morgan Wesley',
       // 'George Phillip',
       // 'Tamara Jackson'

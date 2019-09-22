@@ -19,26 +19,36 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding>
         <ion-item>
-          <h2>Sample Credential</h2>
+          <ion-label>
+            <h2>{{ item }}</h2>
+            <small>DID: abcd-1234-df34-cd34</small>
+          </ion-label>
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
-            <!--<ion-icon name="ios-more"></ion-icon>-->
-            Share
+            <ion-icon name="ios-share"></ion-icon> Share
           </button>
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
 
-    <ion-grid>
+    <ion-grid style="width: 100%;">
       <ion-row>
-        <ion-col *ngFor="let item of [1,2]">
-          <ion-card>
+        <ion-col>
+          <ion-list-header>
+            <ion-label>Organizations</ion-label>
+          </ion-list-header>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
+          <ion-card text-center>
             <ion-card-header>
-              ACME Inc.
+              {{ cred.issuedBy }}
             </ion-card-header>
+            <ion-icon name="document" class="icon-lg"></ion-icon>
             <ion-card-content>
-              Transcript 1.3
+              {{ cred.name }}
             </ion-card-content>
           </ion-card>
         </ion-col>
@@ -53,6 +63,7 @@ import { ActionSheetController } from '@ionic/angular';
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
   items: string[];
+  credentials: object[];
 
   constructor(public actionSheetCtrl: ActionSheetController) {
     this.initializeItems();
@@ -64,6 +75,25 @@ export class CredentialsComponent implements OnInit {
     this.items = [
       'Faber University',
       'ACME Inc.'
+    ];
+
+    this.credentials = [
+      {
+        issuedBy: 'Faber University',
+        name: 'Transcript v1.3 for Alice'
+      },
+      {
+        issuedBy: 'Google',
+        name: 'Cloud Developer'
+      },
+      /*{
+        issuedBy: 'Oracle',
+        name: 'Red Hat Engineer III'
+      },
+      {
+        issuedBy: 'PADI',
+        name: 'Assistant Instructor'
+      }*/
     ];
   }
 
