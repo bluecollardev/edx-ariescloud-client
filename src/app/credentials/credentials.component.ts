@@ -107,6 +107,6 @@ export class CredentialsComponent implements OnInit {
       ]
     });
 
-    actionSheet.present();
+    // actionSheet.present();
   }
 }
