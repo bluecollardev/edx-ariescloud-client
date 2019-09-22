@@ -63,58 +63,32 @@ export class AppComponent {
     {
       title: 'My Profile',
       url: '/profile/',
-      // icon: 'home'
-      children: []
-    },
-    {
-      title: 'My Relationships',
-      children: [
-        {
-          title: 'Manage Relationships',
-          url: '/relationships/',
-          // icon: 'logo-ionic'
-        },
-        {
-          title: 'Add Relationship',
-          url: '/relationships/add/',
-          // icon: 'logo-ionic'
-        },
-        /*{
-          title: 'Pending Connections',
-          url: '/relationships/pending',
-          // icon: 'logo-ionic'
-        }*/
-      ]
+      icon: 'person'
     },
     {
       title: 'My Credentials',
-      children: [
-        {
-          title: 'Manage Credentials',
-          url: '/credentials/',
-          // icon: 'logo-ionic'
-        },
-        {
-          title: 'Create Credential',
-          url: '/credentials/create/',
-          // icon: 'logo-ionic'
-        },
-        /*{
-          title: 'Credentials Received',
-          url: '/credentials/received/',
-          // icon: 'logo-ionic'
-        },
-        {
-          title: 'Credentials Owned',
-          url: '/credentials/owned/',
-          // icon: 'logo-google'
-        }*/
-      ]
+      url: '/credentials/',
+       icon: 'ribbon'
+    },
+    {
+      title: 'Create Credential',
+      url: '/credentials/create/',
+      icon: 'logo-ionic'
+    },
+    {
+      title: 'My Relationships',
+      url: '/relationships/',
+      icon: 'people'
+    },
+    {
+      title: 'Add Relationship',
+      url: '/relationships/add/',
+      icon: 'person-add'
     },
     {
       title: 'Sign Out',
       url: '/',
-      // icon: 'home'
+      icon: 'log-out'
     },
   ];
 
