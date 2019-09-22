@@ -19,9 +19,10 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items.slice(0,1)">
         <ion-item>
+          <ion-icon name="business" class="icon-lg"></ion-icon>
           <ion-label>
-          <h2>{{ item }}</h2>
-          <small>DID: abcd-1234-df34-cd34</small>
+            <h2>{{ item }}</h2>
+            <small>DID: abcd-1234-df34-cd34</small>
           </ion-label>
         </ion-item>
         <ion-item-options>
@@ -38,9 +39,10 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items.slice(1,2)">
         <ion-item>
+          <ion-icon name="business" class="icon-lg"></ion-icon>
           <ion-label>
-          <h2>{{ item }}</h2>
-          <small>DID: abcd-1234-df34-cd34</small>
+            <h2>{{ item }}</h2>
+            <small>DID: abcd-1234-df34-cd34</small>
           </ion-label>
         </ion-item>
         <ion-item-options>
@@ -57,9 +59,10 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding *ngFor="let item of items">
         <ion-item>
+          <ion-icon name="person" class="icon-lg"></ion-icon>
           <ion-label>
-          <h2>{{ item }}</h2>
-          <small>DID: abcd-1234-df34-cd34</small>
+            <h2>{{ item }}</h2>
+            <small>DID: abcd-1234-df34-cd34</small>
           </ion-label>
         </ion-item>
         <ion-item-options>
@@ -95,7 +98,7 @@ export class RelationshipsComponent implements OnInit {
       'Bob Johnson',
       'James Kirk',
       // 'Joanne Roberts',
-      'Jordan Stewart',
+      // 'Jordan Stewart',
       // 'Nicole Pennington',
       // 'Morgan Wesley',
       // 'George Phillip',

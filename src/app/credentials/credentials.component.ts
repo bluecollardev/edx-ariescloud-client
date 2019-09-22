@@ -19,6 +19,7 @@ import { ActionSheetController } from '@ionic/angular';
       </ion-list-header>
       <ion-item-sliding>
         <ion-item>
+          <ion-icon name="business" class="icon-lg"></ion-icon>
           <ion-label>
             <h2>{{ item }}</h2>
             <small>DID: abcd-1234-df34-cd34</small>
@@ -26,7 +27,7 @@ import { ActionSheetController } from '@ionic/angular';
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
-            <ion-icon name="ios-share"></ion-icon> Share
+            <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
           </button>
         </ion-item-options>
       </ion-item-sliding>
@@ -36,7 +37,7 @@ import { ActionSheetController } from '@ionic/angular';
       <ion-row>
         <ion-col>
           <ion-list-header>
-            <ion-label>Organizations</ion-label>
+            <ion-label>Credentials Received</ion-label>
           </ion-list-header>
         </ion-col>
       </ion-row>
