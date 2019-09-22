@@ -34,7 +34,7 @@ import { MenuController } from '@ionic/angular';
             </ion-item>
 
             <!-- Children List for clicked Item -->
-            <ion-list *ngIf="p.open">
+            <ion-list *ngIf="p.open" class="ion-no-margin">
               <ion-menu-toggle>
                 <ion-item *ngFor="let sub of p.children" class="sub-item" [routerLink]="sub.url" routerDirection="root"
                   routerLinkActive="active">
