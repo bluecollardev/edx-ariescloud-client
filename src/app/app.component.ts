@@ -71,7 +71,7 @@ export class AppComponent {
       children: [
         {
           title: 'Manage Relationships',
-          url: '/relationships/create/',
+          url: '/relationships/',
           // icon: 'logo-ionic'
         },
         {
@@ -91,7 +91,7 @@ export class AppComponent {
       children: [
         {
           title: 'Manage Credentials',
-          url: '/credentials/create/',
+          url: '/credentials/',
           // icon: 'logo-ionic'
         },
         {
