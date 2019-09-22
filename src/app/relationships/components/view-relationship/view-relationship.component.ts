@@ -12,30 +12,35 @@ import { Component, OnInit } from '@angular/core';
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-card text-center [routerLink]="['view']">
-        <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
-    
-        <ion-card-content>
-          <ion-card-title>
-            Faber University
-          </ion-card-title>
-          <small><small>Their ID: 123-45-6789</small></small>
-          <br />
-          <small><small>My DID: acbd-123-sdf-2345</small></small>
-        </ion-card-content>
-        
-        <ion-item class="flex ion-justify-content-around">
-          <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-          <ion-label>Date Connected</ion-label>
-          <ion-badge item-end>{{ graduationDate }}</ion-badge>
-        </ion-item>
-        
-        <ion-item class="flex ion-justify-content-around">
-          <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-          <ion-label>Status</ion-label>
-          <ion-badge item-end>Enabled</ion-badge>
-        </ion-item>
-      </ion-card>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
+            <ion-card text-center [routerLink]="['view']">
+              <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
+              <ion-card-content>
+                <ion-card-title>
+                  Faber University
+                </ion-card-title>
+                <small><small>Their ID: 123-45-6789</small></small>
+                <br />
+                <small><small>My DID: acbd-123-sdf-2345</small></small>
+              </ion-card-content>
+              
+              <ion-item class="flex ion-justify-content-around">
+                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
+                <ion-label>Date Connected</ion-label>
+                <ion-badge item-end>{{ graduationDate }}</ion-badge>
+              </ion-item>
+              
+              <ion-item class="flex ion-justify-content-around">
+                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
+                <ion-label>Status</ion-label>
+                <ion-badge item-end>Enabled</ion-badge>
+              </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   `,
   styleUrls: ['./view-relationship.component.scss']
