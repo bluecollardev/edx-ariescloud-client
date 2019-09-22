@@ -5,6 +5,7 @@ import { HomeComponent } from './home.component';
 // tslint:disable-next-line: max-line-length
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'relationships', redirectTo: '/relationships' },
   {
     path: 'relationships',
     loadChildren: `./relationships/relationships.module#RelationshipsModule`
