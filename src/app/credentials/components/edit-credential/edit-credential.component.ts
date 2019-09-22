@@ -19,22 +19,29 @@ import { Component, OnInit } from '@angular/core';
             <ion-label position="stacked">Credential Name <ion-text color="danger">*</ion-text></ion-label>
             <ion-input required type="text" oninput="handleLastNameValue(event)">Bachelor's Degree of Science</ion-input>
           </ion-item>
-          
-          <ion-item>
-            <ion-label position="stacked">Select Schema<ion-text color="danger">*</ion-text></ion-label>
-            <ion-select required>
-              <ion-select-option>v1.1</ion-select-option>
-              <ion-select-option>v1.2</ion-select-option>
-              <ion-select-option selected>v1.3</ion-select-option>
-              <ion-select-option>v2.0</ion-select-option>
-            </ion-select>
-          </ion-item>
-          
+
           <ion-grid>
             <ion-row>
               <ion-col>
                 <ion-item>
-                  <ion-label position="stacked">New Field </ion-label>
+                  <ion-label position="stacked">Select Schema<ion-text color="danger">*</ion-text></ion-label>
+                  <ion-select required>
+                    <ion-select-option>v1.1</ion-select-option>
+                    <ion-select-option>v1.2</ion-select-option>
+                    <ion-select-option selected>v1.3</ion-select-option>
+                    <ion-select-option>v2.0</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                <ion-button margin-end><ion-icon name="add"></ion-icon> New</ion-button>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col>
+                <ion-item>
+                  <ion-label position="stacked">New Data Field </ion-label>
                   <ion-input required type="text"></ion-input>
                 </ion-item>
               </ion-col>
@@ -76,7 +83,9 @@ import { Component, OnInit } from '@angular/core';
 
           <ion-item>
             <ion-label position="stacked">Sample Data</ion-label>
-            <ion-textarea></ion-textarea>
+            <!--<ion-textarea></ion-textarea>-->
+            <pre>
+            </pre>
           </ion-item>
         </ion-list>
 

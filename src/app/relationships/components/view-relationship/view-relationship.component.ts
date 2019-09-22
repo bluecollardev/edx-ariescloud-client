@@ -11,6 +11,16 @@ import { Component, OnInit } from '@angular/core';
         <ion-title class="ios title-ios hydrated">View Relationship</ion-title>
       </ion-toolbar>
     </ion-header>
+    <ion-content>
+      <ion-card text-center [routerLink]="['view']">
+        <ion-card-header>
+          Faber University
+        </ion-card-header>
+        <ion-icon name="document" class="icon-lg"></ion-icon>
+        <ion-card-content>
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
   `,
   styleUrls: ['./view-relationship.component.scss']
 })
