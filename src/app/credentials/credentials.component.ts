@@ -37,13 +37,36 @@ import { ActionSheetController } from '@ionic/angular';
       <ion-row>
         <ion-col>
           <ion-list-header>
-            <ion-label>Credentials Received</ion-label>
+            <ion-label>My Credentials</ion-label>
           </ion-list-header>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
-          <ion-card text-center>
+          <ion-card text-center [routerLink]="['view']">
+            <ion-card-header>
+              {{ cred.issuedBy }}
+            </ion-card-header>
+            <ion-icon name="document" class="icon-lg"></ion-icon>
+            <ion-card-content>
+              {{ cred.name }}
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
+    <ion-grid style="width: 100%;">
+      <ion-row>
+        <ion-col>
+          <ion-list-header>
+            <ion-label>Credentials Shared With Me</ion-label>
+          </ion-list-header>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
+          <ion-card text-center [routerLink]="['view']">
             <ion-card-header>
               {{ cred.issuedBy }}
             </ion-card-header>
@@ -87,14 +110,14 @@ export class CredentialsComponent implements OnInit {
         issuedBy: 'Google',
         name: 'Cloud Developer'
       },
-      /*{
+      {
         issuedBy: 'Oracle',
         name: 'Red Hat Engineer III'
       },
       {
         issuedBy: 'PADI',
         name: 'Assistant Instructor'
-      }*/
+      }
     ];
   }
 
@@ -115,7 +138,6 @@ export class CredentialsComponent implements OnInit {
 
   presentActionSheet() {
     const actionSheet = this.actionSheetCtrl.create({
-      title: 'Modify your album',
       buttons: [
         {
           text: 'Destructive',

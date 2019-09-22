@@ -6,9 +6,10 @@ import { RelationshipsRoutingModule } from './relationships-routing.module';
 import { RelationshipsComponent } from './relationships.component';
 import { EditRelationshipComponent } from './components/edit-relationship/edit-relationship.component';
 import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
+import { AddRelationshipComponent } from './components/add-relationship/add-relationship.component';
 
 @NgModule({
-  declarations: [RelationshipsComponent, EditRelationshipComponent, ViewRelationshipComponent],
+  declarations: [RelationshipsComponent, EditRelationshipComponent, ViewRelationshipComponent, AddRelationshipComponent],
   imports: [
     CommonModule,
     IonicModule,

@@ -1,14 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-add-relationship',
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
         <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
           <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">My Profile</ion-title>
+        <ion-title class="ios title-ios hydrated">Request Access to Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -17,13 +17,13 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
       <form onsubmit="processForm(event)">
         <ion-list lines="full" class="ion-no-margin ion-no-padding">
           <ion-item>
-            <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
-            <ion-input required type="text" oninput="handleFirstNameValue(event)">Alice</ion-input>
+            <ion-label position="stacked">Org. Name <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input required type="text" oninput="handleFirstNameValue(event)">ACME Inc.</ion-input>
           </ion-item>
 
           <ion-item>
-            <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
-            <ion-input required type="text" oninput="handleLastNameValue(event)">Cooper</ion-input>
+            <ion-label position="stacked">Their Endpoint DID <ion-text color="danger">*</ion-text></ion-label>
+            <ion-input required type="text" oninput="handleLastNameValue(event)"></ion-input>
           </ion-item>
 
           <!--<ion-item>
@@ -42,16 +42,17 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
         </ion-list>
 
         <div class="ion-padding">
-          <ion-button expand="block" type="submit" class="ion-no-margin">Update Account</ion-button>
+          <ion-button expand="block" type="submit" class="ion-no-margin">Request Access</ion-button>
         </div>
       </form>
     </ion-content>
   `,
-  styleUrls: ['./profile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./add-relationship.component.scss']
 })
-export class ProfileComponent implements OnInit {
-  constructor() {}
+export class AddRelationshipComponent implements OnInit {
 
-  ngOnInit() {}
+  constructor() { }
+
+  ngOnInit() {
+  }
 }

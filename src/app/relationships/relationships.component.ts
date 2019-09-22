@@ -67,12 +67,15 @@ import { ActionSheetController } from '@ionic/angular';
         </ion-item>
         <ion-item-options>
           <button ion-button color="light" icon-start>
+            <ion-icon name="ios-eye-off" class="icon-md"></ion-icon> Disable
+          </button>
+          <button ion-button color="light" icon-start>
             <ion-icon name="ios-create" class="icon-md"></ion-icon> Edit
           </button>
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
-    <ion-button color="primary" clear full icon-start margin><ion-icon name="add"></ion-icon> Create New Relationship</ion-button>
+    <ion-button color="primary" clear full icon-start margin [routerLink]="['add']"><ion-icon name="add"></ion-icon> Add New Relationship</ion-button>
   `,
   styleUrls: ['./relationships.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -120,7 +123,6 @@ export class RelationshipsComponent implements OnInit {
 
   presentActionSheet() {
     const actionSheet = this.actionSheetCtrl.create({
-      title: 'Modify your album',
       buttons: [
         {
           text: 'Destructive',

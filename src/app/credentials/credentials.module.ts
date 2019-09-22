@@ -6,9 +6,10 @@ import { CredentialsRoutingModule } from './credentials-routing.module';
 import { CredentialsComponent } from './credentials.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
+import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 
 @NgModule({
-  declarations: [CredentialsComponent, EditCredentialComponent, ViewCredentialComponent],
+  declarations: [CredentialsComponent, EditCredentialComponent, ViewCredentialComponent, CreateCredentialComponent],
   imports: [
     CommonModule,
     IonicModule,

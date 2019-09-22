@@ -75,8 +75,8 @@ export class AppComponent {
           // icon: 'logo-ionic'
         },
         {
-          title: 'Create Relationship',
-          url: '/relationships/create/',
+          title: 'Add Relationship',
+          url: '/relationships/add/',
           // icon: 'logo-ionic'
         },
         /*{
