@@ -6,8 +6,13 @@ import { ActionSheetController } from '@ionic/angular';
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
-        <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
-          <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated">Manage Credentials</ion-title>
       </ion-toolbar>
@@ -36,7 +41,7 @@ import { ActionSheetController } from '@ionic/angular';
                 </ion-item-options>
               </ion-item-sliding>
             </ion-list>
-        
+
             <ion-grid style="width: 100%;">
               <ion-row>
                 <ion-col>
@@ -46,7 +51,13 @@ import { ActionSheetController } from '@ionic/angular';
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
+                <ion-col
+                  *ngFor="let cred of credentials"
+                  sizeXs="6"
+                  sizeSm="4"
+                  sizeMd="3"
+                  sizeLg="2"
+                >
                   <ion-card text-center [routerLink]="['view']">
                     <ion-card-header>
                       {{ cred.issuedBy }}
@@ -59,7 +70,7 @@ import { ActionSheetController } from '@ionic/angular';
                 </ion-col>
               </ion-row>
             </ion-grid>
-            
+
             <ion-grid style="width: 100%;">
               <ion-row>
                 <ion-col>
@@ -69,7 +80,13 @@ import { ActionSheetController } from '@ionic/angular';
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col *ngFor="let cred of credentials" sizeXs="6" sizeSm="4" sizeMd="3" sizeLg="2">
+                <ion-col
+                  *ngFor="let cred of credentials"
+                  sizeXs="6"
+                  sizeSm="4"
+                  sizeMd="3"
+                  sizeLg="2"
+                >
                   <ion-card text-center [routerLink]="['view']">
                     <ion-card-header>
                       {{ cred.issuedBy }}
@@ -82,8 +99,17 @@ import { ActionSheetController } from '@ionic/angular';
                 </ion-col>
               </ion-row>
             </ion-grid>
-        
-            <ion-button color="primary" clear full icon-start margin [routerLink]="['create']"><ion-icon name="add"></ion-icon> Create New Credential</ion-button>
+
+            <ion-button
+              color="primary"
+              clear
+              full
+              icon-start
+              margin
+              [routerLink]="['create']"
+              ><ion-icon name="add"></ion-icon> Create New
+              Credential</ion-button
+            >
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -95,7 +121,7 @@ import { ActionSheetController } from '@ionic/angular';
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
   items: string[];
-  credentials: object[];
+  credentials: any[];
 
   constructor(public actionSheetCtrl: ActionSheetController) {
     this.initializeItems();
@@ -104,10 +130,7 @@ export class CredentialsComponent implements OnInit {
   ngOnInit() {}
 
   initializeItems() {
-    this.items = [
-      'Faber University',
-      'ACME Inc.'
-    ];
+    this.items = ['Faber University', 'ACME Inc.'];
 
     this.credentials = [
       {
@@ -138,8 +161,8 @@ export class CredentialsComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
-      this.items = this.items.filter((item) => {
-        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      this.items = this.items.filter(item => {
+        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });
     }
   }
@@ -153,12 +176,14 @@ export class CredentialsComponent implements OnInit {
           handler: () => {
             console.log('Destructive clicked');
           }
-        }, {
+        },
+        {
           text: 'Archive',
           handler: () => {
             console.log('Archive clicked');
           }
-        }, {
+        },
+        {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
