@@ -12,4 +12,4 @@ import { CredentialFormComponent } from './components/credentials/credential-for
     CommonModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {}
