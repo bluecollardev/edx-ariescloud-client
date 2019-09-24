@@ -41,7 +41,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
                             >*</ion-text
                           ></ion-label
                         >
-                        <ion-select required>
+                        <ion-select required formControlName="version">
                           <ion-select-option>v1.1</ion-select-option>
                           <ion-select-option>v1.2</ion-select-option>
                           <ion-select-option selected>v1.3</ion-select-option>
