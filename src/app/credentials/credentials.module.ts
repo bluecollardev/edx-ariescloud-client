@@ -16,7 +16,7 @@ import { SharedModule } from '../shared/shared.module';
     ViewCredentialComponent,
     CreateCredentialComponent
   ],
-  imports: [CommonModule, IonicModule, CredentialsRoutingModule, SharedModule],
+  imports: [CommonModule, CredentialsRoutingModule, SharedModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CredentialsModule {}

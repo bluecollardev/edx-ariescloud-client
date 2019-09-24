@@ -10,10 +10,18 @@ import { RouteReuseStrategy } from '@angular/router';
 import { ProfileModule } from './profile/profile.module';
 import { RelationshipsModule } from './relationships/relationships.module';
 import { CredentialsModule } from './credentials/credentials.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
-  imports: [BrowserModule, AppRoutingModule, IonicModule.forRoot(), ProfileModule, RelationshipsModule, CredentialsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    IonicModule.forRoot(),
+    ProfileModule,
+    RelationshipsModule,
+    CredentialsModule
+  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
