@@ -82,12 +82,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-
-                <ion-item>
-                  <ion-label position="stacked">Sample Data</ion-label>
-                  <!--<ion-textarea></ion-textarea>-->
-                  <pre></pre>
-                </ion-item>
               </ion-list>
 
               <div class="ion-padding">
