@@ -10,6 +10,8 @@ import { RouteReuseStrategy } from '@angular/router';
 import { ProfileModule } from './profile/profile.module';
 import { RelationshipsModule } from './relationships/relationships.module';
 import { CredentialsModule } from './credentials/credentials.module';
+import { CredentialsReceivedModule } from './credentials-received/credentials-received.module';
+import { ProofsModule } from './proofs/proofs.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -20,7 +22,9 @@ import { SharedModule } from './shared/shared.module';
     IonicModule.forRoot(),
     ProfileModule,
     RelationshipsModule,
-    CredentialsModule
+    ProofsModule,
+    CredentialsModule,
+    CredentialsReceivedModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

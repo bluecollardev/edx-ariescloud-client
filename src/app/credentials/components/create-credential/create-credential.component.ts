@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 @Component({
   template: `
@@ -17,8 +17,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <br />
-      <br />
+      <br/>
+      <br/>
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
@@ -26,8 +26,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
                   <ion-label position="stacked"
-                    >Credential Name
-                    <ion-text color="danger">*</ion-text></ion-label
+                  >Credential Name
+                    <ion-text color="danger">*</ion-text>
+                  </ion-label
                   >
                   <ion-input type="text" formControlName="name"></ion-input>
                 </ion-item>
@@ -37,9 +38,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
                     <ion-col>
                       <ion-item>
                         <ion-label position="stacked"
-                          >Select Schema<ion-text color="danger"
-                            >*</ion-text
-                          ></ion-label
+                        >Select Schema
+                          <ion-text color="danger"
+                          >*
+                          </ion-text
+                          >
+                        </ion-label
                         >
                         <ion-select required formControlName="version">
                           <ion-select-option>v1.1</ion-select-option>
@@ -51,7 +55,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
                     </ion-col>
                     <ion-col size="3">
                       <ion-button margin-end
-                        ><ion-icon name="add"></ion-icon> New</ion-button
+                      >
+                        <ion-icon name="add"></ion-icon>
+                        New
+                      </ion-button
                       >
                     </ion-col>
                   </ion-row>
@@ -60,14 +67,17 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
                     <ion-col>
                       <ion-item>
                         <ion-label position="stacked"
-                          >Create Data Field
+                        >Create Data Field
                         </ion-label>
                         <ion-input required type="text"></ion-input>
                       </ion-item>
                     </ion-col>
                     <ion-col size="3">
                       <ion-button margin-end
-                        ><ion-icon name="add"></ion-icon> Add</ion-button
+                      >
+                        <ion-icon name="add"></ion-icon>
+                        Add
+                      </ion-button
                       >
                     </ion-col>
                   </ion-row>
@@ -85,8 +95,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
               </ion-list>
 
               <div class="ion-padding">
-                <ion-button expand="block" type="submit" class="ion-no-margin"
-                  >Create Credential</ion-button
+                <ion-button expand="block" type="submit" class="ion-no-margin" [routerLink]="['/credentials']">
+                  <ion-icon name="add"></ion-icon>
+                  Create Credential
+                </ion-button
                 >
               </div>
             </form>
@@ -100,7 +112,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class CreateCredentialComponent implements OnInit {
   fg: FormGroup;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit() {
     const fg = new FormGroup({

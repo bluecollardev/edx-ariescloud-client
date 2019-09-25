@@ -1,5 +1,5 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {ActionSheetController} from '@ionic/angular';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-credentials',
@@ -14,7 +14,7 @@ import {ActionSheetController} from '@ionic/angular';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Organization Credentials</ion-title>
+        <ion-title class="ios title-ios hydrated">Verify Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -22,12 +22,31 @@ import {ActionSheetController} from '@ionic/angular';
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+            <ion-list *ngFor="let item of items.slice(0,1)">
+              <ion-list-header>
+                {{ item }}
+              </ion-list-header>
+              <ion-item-sliding>
+                <ion-item [routerLink]="['edit']">
+                  <ion-icon name="business" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h2>{{ item }}</h2>
+                    <small>DID: abcd-1234-df34-cd34</small>
+                  </ion-label>
+                </ion-item>
+                <ion-item-options>
+                  <button ion-button color="light" icon-start>
+                    <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
+                  </button>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
 
             <ion-grid style="width: 100%;">
               <ion-row>
                 <ion-col>
                   <ion-list-header>
-                    <ion-label>My Organization's Credentials</ion-label>
+                    <ion-label>Credentials Shared With Me</ion-label>
                   </ion-list-header>
                 </ion-col>
               </ion-row>
@@ -39,7 +58,7 @@ import {ActionSheetController} from '@ionic/angular';
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center [routerLink]="['edit']">
+                  <ion-card text-center [routerLink]="['view']">
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
@@ -51,31 +70,15 @@ import {ActionSheetController} from '@ionic/angular';
                 </ion-col>
               </ion-row>
             </ion-grid>
-
-            <div style="display: flex">
-              <ion-button
-                style="flex: 1"
-                color="primary"
-                clear
-                full
-                icon-start
-                margin
-                [routerLink]="['create']"
-              >
-                <ion-icon name="add"></ion-icon>
-                Create New Credential
-              </ion-button
-              >
-            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./credentials.component.scss'],
+  styleUrls: ['./proofs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CredentialsComponent implements OnInit {
+export class ProofsComponent implements OnInit {
   searchQuery: '';
   items: string[];
   credentials: any[];
@@ -84,8 +87,7 @@ export class CredentialsComponent implements OnInit {
     this.initializeItems();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   initializeItems() {
     this.items = ['Faber University', 'ACME Inc.'];
@@ -93,19 +95,19 @@ export class CredentialsComponent implements OnInit {
     this.credentials = [
       {
         issuedBy: 'Faber University',
-        name: 'University Transcript'
+        name: 'Transcript v1.3 for Alice Cooper'
       },
       {
         issuedBy: 'Faber University',
-        name: 'Associate\'s Degree'
+        name: 'Transcript v1.1 for Jonathan Smith'
       },
       {
         issuedBy: 'Faber University',
-        name: 'Bachelor\'s Degree'
+        name: 'Transcript v2.3 for Bob McKenzie'
       },
       {
         issuedBy: 'Faber University',
-        name: 'Master\'s Degree'
+        name: 'Transcript v1.9 for Sally Reitman'
       }
     ];
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
   selector: 'app-profile',
@@ -11,24 +11,35 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
         <ion-title class="ios title-ios hydrated">My Profile</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content >
-      <br />
-      <br />
+    <ion-content>
+      <br/>
+      <br/>
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <form onsubmit="processForm(event)">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
-                  <ion-label position="stacked">First Name <ion-text color="danger">*</ion-text></ion-label>
+                  <ion-label position="stacked">Org. Name
+                    <ion-text color="danger">*</ion-text>
+                  </ion-label>
+                  <ion-input required type="text" oninput="handleFirstNameValue(event)">Faber University</ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="stacked">First Name
+                    <ion-text color="danger">*</ion-text>
+                  </ion-label>
                   <ion-input required type="text" oninput="handleFirstNameValue(event)">Alice</ion-input>
                 </ion-item>
-      
+
                 <ion-item>
-                  <ion-label position="stacked">Last Name <ion-text color="danger">*</ion-text></ion-label>
+                  <ion-label position="stacked">Last Name
+                    <ion-text color="danger">*</ion-text>
+                  </ion-label>
                   <ion-input required type="text" oninput="handleLastNameValue(event)">Cooper</ion-input>
                 </ion-item>
-      
+
                 <!--<ion-item>
                   <ion-label position="stacked">Address</ion-label>
                   <ion-input placeholder="Address Line 1"></ion-input>
@@ -37,13 +48,13 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
                   <ion-input placeholder="State"></ion-input>
                   <ion-input placeholder="Zip Code"></ion-input>
                 </ion-item>-->
-      
+
                 <ion-item>
                   <ion-label position="stacked">Notes</ion-label>
                   <ion-textarea></ion-textarea>
                 </ion-item>
               </ion-list>
-      
+
               <div class="ion-padding">
                 <ion-button expand="block" type="submit" class="ion-no-margin">Update Account</ion-button>
               </div>
@@ -57,7 +68,9 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit {
-  constructor() {}
+  constructor() {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 }

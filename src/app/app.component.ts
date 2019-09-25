@@ -66,14 +66,24 @@ export class AppComponent {
       icon: 'person'
     },
     {
-      title: 'My Credentials',
+      title: 'Verify Credentials',
+      url: '/verify-credentials/',
+       icon: 'finger-print'
+    },
+    {
+      title: 'Credentials Received',
+      url: '/credentials-received/',
+       icon: 'archive'
+    },
+    {
+      title: 'Organization Credentials',
       url: '/credentials/',
        icon: 'ribbon'
     },
     {
-      title: 'Create Credential',
+      title: 'Define New Credential',
       url: '/credentials/create/',
-      icon: 'logo-ionic'
+      icon: 'bookmark'
     },
     {
       title: 'My Relationships',

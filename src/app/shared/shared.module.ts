@@ -11,4 +11,4 @@ import { CredentialFormComponent } from './components/credentials/credential-for
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   exports: [ReactiveFormsModule, FormsModule, IonicModule]
 })
-export class SharedModule {}
+export class SharedModule { }
