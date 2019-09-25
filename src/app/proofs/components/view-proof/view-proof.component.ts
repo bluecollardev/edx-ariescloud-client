@@ -82,7 +82,7 @@ import {Component, OnInit} from '@angular/core';
                   full
                   icon-start
                   margin
-                  [routerLink]="['add']"
+                  [routerLink]="['/verify-credentials']"
                 >
                   <ion-icon name="key"></ion-icon>
                   Authenticate Credential
