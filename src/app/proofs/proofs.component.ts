@@ -1,5 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
+import {Router} from "@angular/router";
+import {CredentialStateService} from "../credentials/services/credential-state.service";
+import {CredentialActionsService} from "../credentials/services/credential-actions.service";
 
 @Component({
   selector: 'app-credentials',
@@ -50,15 +53,15 @@ import { ActionSheetController } from '@ionic/angular';
                   </ion-list-header>
                 </ion-col>
               </ion-row>
-              <ion-row>
+              <ion-row *ngIf="stateSvc.credentials | async as creds">
                 <ion-col
-                  *ngFor="let cred of credentials"
+                  *ngFor="let cred of creds"
                   sizeXs="6"
                   sizeSm="4"
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center [routerLink]="['view']">
+                  <ion-card text-center (click)="presentActionSheet()">
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
@@ -83,33 +86,20 @@ export class ProofsComponent implements OnInit {
   items: string[];
   credentials: any[];
 
-  constructor(public actionSheetCtrl: ActionSheetController) {
+  constructor(
+    private router: Router,
+    public stateSvc: CredentialStateService,
+    private actionSvc: CredentialActionsService,
+    public actionSheetCtrl: ActionSheetController
+  ) {
     this.initializeItems();
   }
 
   ngOnInit() {}
 
-  initializeItems() {
+  async initializeItems() {
     this.items = ['Faber University', 'ACME Inc.'];
-
-    this.credentials = [
-      {
-        issuedBy: 'Faber University',
-        name: 'Transcript v1.3 for Alice Cooper'
-      },
-      {
-        issuedBy: 'Faber University',
-        name: 'Transcript v1.1 for Jonathan Smith'
-      },
-      {
-        issuedBy: 'Faber University',
-        name: 'Transcript v2.3 for Bob McKenzie'
-      },
-      {
-        issuedBy: 'Faber University',
-        name: 'Transcript v1.9 for Sally Reitman'
-      }
-    ];
+    await this.actionSvc.loadCredDefs();
   }
 
   getItems(ev: any) {
@@ -127,20 +117,22 @@ export class ProofsComponent implements OnInit {
     }
   }
 
-  presentActionSheet() {
-    const actionSheet = this.actionSheetCtrl.create({
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Destructive',
-          role: 'destructive',
-          handler: () => {
-            console.log('Destructive clicked');
-          }
+          text: 'View',
+          handler: () => this.router.navigate(['/credentials-received/view'])
         },
         {
-          text: 'Archive',
+          text: 'Verify',
+          handler: () => this.router.navigate(['/credentials-received/verify'])
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
           handler: () => {
-            console.log('Archive clicked');
+            console.log('Delete clicked');
           }
         },
         {
@@ -153,6 +145,6 @@ export class ProofsComponent implements OnInit {
       ]
     });
 
-    // actionSheet.present();
+    await actionSheet.present();
   }
 }
