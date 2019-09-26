@@ -17,11 +17,9 @@ export interface ICredDef {
       <ion-toolbar class="ios hydrated">
         <ion-buttons
           slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
           <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
+            class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated">Create Credential</ion-title>
       </ion-toolbar>
@@ -35,11 +33,9 @@ export interface ICredDef {
             <form [formGroup]="fg">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
-                  <ion-label position="stacked"
-                  >Credential Name
+                  <ion-label position="stacked">Credential Name
                     <ion-text color="danger">*</ion-text>
-                  </ion-label
-                  >
+                  </ion-label>
                   <ion-input type="text" formControlName="name"></ion-input>
                 </ion-item>
 
@@ -47,14 +43,9 @@ export interface ICredDef {
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label position="stacked"
-                        >Select Schema
-                          <ion-text color="danger"
-                          >*
-                          </ion-text
-                          >
-                        </ion-label
-                        >
+                        <ion-label position="stacked">Select Schema
+                          <ion-text color="danger">*</ion-text>
+                        </ion-label>
                         <ion-select required formControlName="version">
                           <ion-select-option>v1.1</ion-select-option>
                           <ion-select-option>v1.2</ion-select-option>
@@ -67,35 +58,30 @@ export interface ICredDef {
                       <ion-button margin-end (click)="this.newSchemaPopup()">
                         <ion-icon name="add"></ion-icon>
                         New
-                      </ion-button
-                      >
+                      </ion-button>
                     </ion-col>
                   </ion-row>
 
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label position="stacked"
-                        >Create Data Field
-                        </ion-label>
+                        <ion-label position="stacked">Create Data Field</ion-label>
                         <ion-input
                           required
                           type="text"
-                          [formControl]="baseFc"
-                        ></ion-input>
+                          [formControl]="baseFc">
+                        </ion-input>
                       </ion-item>
                     </ion-col>
                     <ion-col size="3">
-                      <ion-button margin-end (click)="addFc(fg, baseFc)"
-                        ><ion-icon name="add"></ion-icon> Add</ion-button
-                      >
+                      <ion-button margin-end (click)="addFc(fg, baseFc)">
+                        <ion-icon name="add"></ion-icon> Add
+                      </ion-button>
                     </ion-col>
                   </ion-row>
                   <ion-row>
                     <ion-col>
-                      <ion-label *ngIf="baseFc.invalid"
-                        >Error message</ion-label
-                      >
+                      <ion-label *ngIf="baseFc.invalid">Error message</ion-label>
                     </ion-col>
                   </ion-row>
                   <ion-row
