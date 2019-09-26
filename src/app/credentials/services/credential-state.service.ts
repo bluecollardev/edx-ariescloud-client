@@ -7,37 +7,37 @@ import { BehaviorSubject } from 'rxjs';
 export class CredentialStateService {
   private proofs$ = new BehaviorSubject<any[]>(null);
   private credentials$ = new BehaviorSubject<any[]>(null);
+  private issuers$ = new BehaviorSubject<any[]>(null);
 
   proofs = this.proofs$.asObservable();
   credentials = this.credentials$.asObservable();
+  issuers = this.issuers$.asObservable();
+
+  constructor() {
+  }
 
   setProofs(data: any[]) {
     this.proofs$.next(data);
   }
 
   setCredentials(data: any[]) {
+    this.setIssuers(data);
     this.credentials$.next(data);
   }
 
-  constructor() {
-    const proof = {
-      name: 'University Degree',
-      version: '1.2',
-      requested_attributes: {
-        attr1_referents: {
-          name: 'zzzzz',
-          restrictions: [{}]
-        }
-      },
-      requested_predicates: []
-    };
+  setIssuers(creds: any[]) {
+    const data = creds
+      .filter((cred, idx, arr) => {
+        return arr
+          .map((item) => item.issuedBy)
+          .indexOf(cred.issuedBy) === idx;
+      })
+      .map((cred) => ({
+        name: cred.issuedBy,
+        type: 'Organization',
+        did: 'abcd-1234-bd45-a9d8'
+      }));
 
-    const governmentCredential = {
-      email: 'alice@faber.edu',
-      name: 'Alice',
-      tax_id: '123-45-6789'
-    };
-
-    this.setProofs([proof]);
+    this.issuers$.next(data);
   }
 }

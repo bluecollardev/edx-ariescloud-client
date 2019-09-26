@@ -37,6 +37,33 @@ import { Component, OnInit } from '@angular/core';
                 <ion-label>Status</ion-label>
                 <ion-badge item-end>Enabled</ion-badge>
               </ion-item>
+              
+              <div style="display: flex">
+                <ion-button
+                  style="flex: 1"
+                  color="primary"
+                  outline
+                  full
+                  icon-start
+                  margin
+                  [routerLink]="['/relationships']"
+                >
+                  <ion-icon name="close-circle"></ion-icon>
+                  Disable
+                </ion-button>
+                <ion-button
+                  style="flex: 1"
+                  color="secondary"
+                  outline
+                  full
+                  icon-start
+                  margin
+                  [routerLink]="['/relationships']"
+                >
+                  <ion-icon name="trash"></ion-icon>
+                  Remove
+                </ion-button>
+              </div>
             </ion-card>
           </ion-col>
         </ion-row>

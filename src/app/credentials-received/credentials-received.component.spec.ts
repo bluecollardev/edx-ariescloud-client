@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditRelationshipComponent } from './edit-relationship.component';
+import { CredentialsReceivedComponent } from './credentials-received.component';
 
-describe('EditRelationshipComponent', () => {
-  let component: EditRelationshipComponent;
-  let fixture: ComponentFixture<EditRelationshipComponent>;
+describe('CredentialsComponent', () => {
+  let component: CredentialsReceivedComponent;
+  let fixture: ComponentFixture<CredentialsReceivedComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditRelationshipComponent ]
+      declarations: [ CredentialsReceivedComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditRelationshipComponent);
+    fixture = TestBed.createComponent(CredentialsReceivedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
