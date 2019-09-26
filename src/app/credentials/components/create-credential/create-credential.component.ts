@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 
@@ -122,12 +122,31 @@ export interface ICredDef {
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./create-credential.component.scss']
+  styleUrls: ['./create-credential.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateCredentialComponent implements OnInit {
   fg: FormGroup;
   baseFc = new FormControl(null);
   valid = false;
+
+  constructor(
+    private stateSvc: CredentialStateService,
+    private actionSvc: CredentialActionsService,
+    private alertController: AlertController
+  ) {}
+
+  ngOnInit() {
+    const fg = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      version: new FormControl('', [Validators.required]),
+      schema: new FormArray([])
+    });
+
+    this.fg = fg;
+
+    fg.valueChanges.subscribe(obs => console.log(obs));
+  }
 
   addFc(fg: FormGroup, baseFc: FormControl) {
     console.log(fg);
@@ -150,23 +169,6 @@ export class CreateCredentialComponent implements OnInit {
     this.fg = fg;
   }
 
-  constructor(
-    private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService,
-    private alertController: AlertController
-  ) {}
-
-  ngOnInit() {
-    const fg = new FormGroup({
-      name: new FormControl('', Validators.required),
-      version: new FormControl('', [Validators.required]),
-      schema: new FormArray([])
-    });
-
-    this.fg = fg;
-
-    fg.valueChanges.subscribe(obs => console.log(obs));
-  }
   submit(fg: FormGroup) {
     const credDef = fg.value;
     fg.valid

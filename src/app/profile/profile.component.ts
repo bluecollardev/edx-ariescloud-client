@@ -1,10 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 
 import { ProfileStateService } from './services/profile-state.service';
 import { ProfileActionsService } from './services/profile-actions.service';
-import {ICredDef} from "../credentials/components/create-credential/create-credential.component";
 
 export interface IProfile {
   orgName: string;
@@ -82,7 +81,7 @@ export interface IProfile {
 })
 export class ProfileComponent implements OnInit {
   fg: FormGroup;
-  valid: false;
+  valid = false;
 
   constructor(
     private stateSvc: ProfileStateService,

@@ -1,9 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
-import {CredentialStateService} from "../../services/credential-state.service";
-import {CredentialActionsService} from "../../services/credential-actions.service";
-import {AlertController} from "@ionic/angular";
-import {ICredDef} from "../create-credential/create-credential.component";
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
+
+import { CredentialActionsService } from '../../services/credential-actions.service';
+import { CredentialStateService } from '../../services/credential-state.service';
+
+export interface ICredDef {
+  name: string;
+  version: string;
+  schema: string[];
+}
 
 @Component({
   template: `
@@ -116,12 +122,31 @@ import {ICredDef} from "../create-credential/create-credential.component";
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./edit-credential.component.scss']
+  styleUrls: ['./edit-credential.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditCredentialComponent implements OnInit {
   fg: FormGroup;
   baseFc = new FormControl(null);
   valid = false;
+
+  constructor(
+    private stateSvc: CredentialStateService,
+    private actionSvc: CredentialActionsService,
+    private alertController: AlertController
+  ) {}
+
+  ngOnInit() {
+    const fg = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      version: new FormControl('', [Validators.required]),
+      schema: new FormArray([])
+    });
+
+    this.fg = fg;
+
+    fg.valueChanges.subscribe(obs => console.log(obs));
+  }
 
   addFc(fg: FormGroup, baseFc: FormControl) {
     console.log(fg);
@@ -144,23 +169,6 @@ export class EditCredentialComponent implements OnInit {
     this.fg = fg;
   }
 
-  constructor(
-    private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService,
-    private alertController: AlertController
-  ) {}
-
-  ngOnInit() {
-    const fg = new FormGroup({
-      name: new FormControl('', Validators.required),
-      version: new FormControl('', [Validators.required]),
-      schema: new FormArray([])
-    });
-
-    this.fg = fg;
-
-    fg.valueChanges.subscribe(obs => console.log(obs));
-  }
   submit(fg: FormGroup) {
     const credDef = fg.value;
     fg.valid
