@@ -157,7 +157,7 @@ export class CreateCredentialComponent implements OnInit {
     console.log('index', i);
     const schema = fg.controls.schema['controls'];
     schema.splice(i, 1);
-    fg.controls.schema = schema;
+    fg.controls.schema['controls'] = schema;
     this.fg = fg;
   }
 
