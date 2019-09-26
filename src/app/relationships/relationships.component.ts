@@ -93,8 +93,7 @@ import {ActionSheetController} from '@ionic/angular';
                 full
                 icon-start
                 margin
-                [routerLink]="['add']"
-              >
+                [routerLink]="['add']">
                 <ion-icon name="add"></ion-icon>
                 Add New Relationship
               </ion-button>
@@ -142,7 +141,7 @@ export class RelationshipsComponent implements OnInit {
     const val = ev.target.value;
 
     // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
+    if (val && val.trim() !== '') {
       this.items = this.items.filter((item) => {
         return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
       });

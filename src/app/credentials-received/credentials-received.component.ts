@@ -22,19 +22,19 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row>
+        <ion-row *ngIf="stateSvc.issuers | async as issuers">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-            <ion-list *ngFor="let item of items">
+            <ion-list *ngFor="let issuer of issuers">
               <ion-list-header>
-                {{ item }}
+                {{ issuer.type }}
               </ion-list-header>
               <ion-item-sliding>
                 <ion-item>
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
+                    <h2>{{ issuer.name }}</h2>
+                    <small>DID: {{ issuer.did }}</small>
                   </ion-label>
                 </ion-item>
                 <!--<ion-item-options>
@@ -83,7 +83,7 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
 })
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
-  items: string[];
+  issuers: string[];
   credentials: any[];
 
   constructor(
@@ -98,8 +98,8 @@ export class CredentialsReceivedComponent implements OnInit {
   ngOnInit() {}
 
   async initializeItems() {
-    this.items = ['Faber University'];
     await this.actionSvc.loadCredDefs();
+    this.issuers = [];
   }
 
   getItems(ev: any) {
@@ -110,8 +110,8 @@ export class CredentialsReceivedComponent implements OnInit {
     const val = ev.target.value;
 
     // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
-      this.items = this.items.filter(item => {
+    if (val && val.trim() !== '') {
+      this.issuers = this.issuers.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });
     }
