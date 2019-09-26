@@ -1,5 +1,9 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {ActionSheetController} from '@ionic/angular';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActionSheetController } from '@ionic/angular';
+
+import { CredentialStateService } from './services/credential-state.service';
+import { CredentialActionsService } from './services/credential-actions.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-credentials',
@@ -8,8 +12,7 @@ import {ActionSheetController} from '@ionic/angular';
       <ion-toolbar class="ios hydrated">
         <ion-buttons
           slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
           <ion-menu-button
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
@@ -31,21 +34,21 @@ import {ActionSheetController} from '@ionic/angular';
                   </ion-list-header>
                 </ion-col>
               </ion-row>
-              <ion-row>
+              <ion-row *ngIf="stateSvc.credentials | async as creds">
                 <ion-col
-                  *ngFor="let cred of credentials"
+                  *ngFor="let cred of creds"
                   sizeXs="6"
                   sizeSm="4"
                   sizeMd="3"
-                  sizeLg="2"
-                >
-                  <ion-card text-center [routerLink]="['edit']">
+                  sizeLg="2">
+                  <ion-card text-center (click)="presentActionSheet()">
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      {{ cred.name }}
+                      <small>{{ cred.name }}</small><br />
+                      <small>{{ cred.program }}</small>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
@@ -60,12 +63,10 @@ import {ActionSheetController} from '@ionic/angular';
                 full
                 icon-start
                 margin
-                [routerLink]="['create']"
-              >
+                [routerLink]="['create']">
                 <ion-icon name="add"></ion-icon>
                 Create New Credential
-              </ion-button
-              >
+              </ion-button>
             </div>
           </ion-col>
         </ion-row>
@@ -80,34 +81,21 @@ export class CredentialsComponent implements OnInit {
   items: string[];
   credentials: any[];
 
-  constructor(public actionSheetCtrl: ActionSheetController) {
+  constructor(
+    private router: Router,
+    public stateSvc: CredentialStateService,
+    private actionSvc: CredentialActionsService,
+    public actionSheetCtrl: ActionSheetController
+  ) {
     this.initializeItems();
   }
 
   ngOnInit() {
   }
 
-  initializeItems() {
+  async initializeItems() {
     this.items = ['Faber University', 'ACME Inc.'];
-
-    this.credentials = [
-      {
-        issuedBy: 'Faber University',
-        name: 'University Transcript'
-      },
-      {
-        issuedBy: 'Faber University',
-        name: 'Associate\'s Degree'
-      },
-      {
-        issuedBy: 'Faber University',
-        name: 'Bachelor\'s Degree'
-      },
-      {
-        issuedBy: 'Faber University',
-        name: 'Master\'s Degree'
-      }
-    ];
+    await this.actionSvc.loadCredDefs();
   }
 
   getItems(ev: any) {
@@ -125,20 +113,22 @@ export class CredentialsComponent implements OnInit {
     }
   }
 
-  presentActionSheet() {
-    const actionSheet = this.actionSheetCtrl.create({
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Destructive',
-          role: 'destructive',
-          handler: () => {
-            console.log('Destructive clicked');
-          }
+          text: 'View',
+          handler: () => this.router.navigate(['/credentials/view'])
         },
         {
-          text: 'Archive',
+          text: 'Edit',
+          handler: () => this.router.navigate(['/credentials/edit'])
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
           handler: () => {
-            console.log('Archive clicked');
+            console.log('Delete clicked');
           }
         },
         {
@@ -151,6 +141,6 @@ export class CredentialsComponent implements OnInit {
       ]
     });
 
-    // actionSheet.present();
+    await actionSheet.present();
   }
 }
