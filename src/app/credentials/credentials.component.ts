@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 
 import { CredentialStateService } from './services/credential-state.service';
 import { CredentialActionsService } from './services/credential-actions.service';
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-credentials',
@@ -78,7 +78,6 @@ import {Router} from "@angular/router";
 })
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
-  items: string[];
   credentials: any[];
 
   constructor(
@@ -94,7 +93,6 @@ export class CredentialsComponent implements OnInit {
   }
 
   async initializeItems() {
-    this.items = ['Faber University', 'ACME Inc.'];
     await this.actionSvc.loadCredDefs();
   }
 
@@ -106,8 +104,8 @@ export class CredentialsComponent implements OnInit {
     const val = ev.target.value;
 
     // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
-      this.items = this.items.filter(item => {
+    if (val && val.trim() !== '') {
+      this.credentials = this.credentials.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });
     }

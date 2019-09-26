@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
-import {Router} from "@angular/router";
-import {CredentialStateService} from "../credentials/services/credential-state.service";
-import {CredentialActionsService} from "../credentials/services/credential-actions.service";
+import { Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
+import { CredentialStateService } from '../credentials/services/credential-state.service';
+import { CredentialActionsService } from '../credentials/services/credential-actions.service';
 
 @Component({
   selector: 'app-credentials-received',
@@ -22,19 +24,19 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row>
+        <ion-row *ngIf="stateSvc.issuers | async as issuers">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-            <ion-list *ngFor="let item of items">
+            <ion-searchbar (ionInput)="this.getItems(issuers, $event)"></ion-searchbar>
+            <ion-list *ngFor="let issuer of issuers">
               <ion-list-header>
-                {{ item }}
+                {{ issuer.type }}
               </ion-list-header>
               <ion-item-sliding>
                 <ion-item>
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
+                    <h2>{{ issuer.name }}</h2>
+                    <small>DID: {{ issuer.did }}</small>
                   </ion-label>
                 </ion-item>
                 <!--<ion-item-options>
@@ -61,7 +63,7 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center (click)="presentActionSheet()">
+                  <ion-card text-center (click)="this.presentActionSheet()">
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
@@ -83,7 +85,7 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
 })
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
-  items: string[];
+  issuers: string[];
   credentials: any[];
 
   constructor(
@@ -98,11 +100,12 @@ export class CredentialsReceivedComponent implements OnInit {
   ngOnInit() {}
 
   async initializeItems() {
-    this.items = ['Faber University'];
     await this.actionSvc.loadCredDefs();
+    this.issuers = [];
   }
 
-  getItems(ev: any) {
+  getItems(issuers, ev: any) {
+    let filtered = [];
     // Reset items back to all of the items
     this.initializeItems();
 
@@ -110,11 +113,13 @@ export class CredentialsReceivedComponent implements OnInit {
     const val = ev.target.value;
 
     // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
-      this.items = this.items.filter(item => {
-        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      });
+    if (val && val.trim() !== '') {
+      filtered = issuers.filter(issuer => {
+        return issuer.name.toLowerCase().indexOf(val.toLowerCase()) > -1;
+      }) || [];
     }
+
+    return filtered;
   }
 
   async presentActionSheet() {
