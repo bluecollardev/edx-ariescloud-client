@@ -150,6 +150,7 @@ export class CreateCredentialComponent implements OnInit {
     this.fg = fg;
     baseFc.clearValidators();
     baseFc.updateValueAndValidity();
+    baseFc.setValue(null);
   }
 
   removeFc(fg: FormGroup, i: number) {
