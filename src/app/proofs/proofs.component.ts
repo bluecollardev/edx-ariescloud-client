@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
-import {Router} from "@angular/router";
-import {CredentialStateService} from "../credentials/services/credential-state.service";
-import {CredentialActionsService} from "../credentials/services/credential-actions.service";
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Router} from '@angular/router';
+
+import { CredentialStateService } from '../credentials/services/credential-state.service';
+import { CredentialActionsService } from '../credentials/services/credential-actions.service';
 
 @Component({
   selector: 'app-credentials',
@@ -30,18 +31,18 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
                 {{ item }}
               </ion-list-header>
               <ion-item-sliding>
-                <ion-item [routerLink]="['edit']">
+                <ion-item>
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item }}</h2>
                     <small>DID: abcd-1234-df34-cd34</small>
                   </ion-label>
                 </ion-item>
-                <ion-item-options>
+                <!--<ion-item-options>
                   <button ion-button color="light" icon-start>
                     <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
                   </button>
-                </ion-item-options>
+                </ion-item-options>-->
               </ion-item-sliding>
             </ion-list>
 
@@ -90,7 +91,8 @@ export class ProofsComponent implements OnInit {
     private router: Router,
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
-    public actionSheetCtrl: ActionSheetController
+    public actionSheetCtrl: ActionSheetController,
+    private alertController: AlertController
   ) {
     this.initializeItems();
   }
@@ -126,7 +128,9 @@ export class ProofsComponent implements OnInit {
         },
         {
           text: 'Verify',
-          handler: () => this.router.navigate(['/credentials-received/verify'])
+          handler: () => {
+            this.verifyCredPopup();
+          }
         },
         {
           text: 'Delete',
@@ -146,5 +150,29 @@ export class ProofsComponent implements OnInit {
     });
 
     await actionSheet.present();
+  }
+
+  async verifyCredPopup() {
+    const alert = await this.alertController.create({
+      header: 'Verifying Credential',
+      message: '<strong>Success!</strong> This credential is valid.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

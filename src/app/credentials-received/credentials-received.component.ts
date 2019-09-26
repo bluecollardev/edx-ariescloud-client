@@ -30,18 +30,18 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
                 {{ item }}
               </ion-list-header>
               <ion-item-sliding>
-                <ion-item [routerLink]="['view']">
+                <ion-item>
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item }}</h2>
                     <small>DID: abcd-1234-df34-cd34</small>
                   </ion-label>
                 </ion-item>
-                <ion-item-options>
+                <!--<ion-item-options>
                   <button ion-button color="light" icon-start>
                     <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
                   </button>
-                </ion-item-options>
+                </ion-item-options>-->
               </ion-item-sliding>
             </ion-list>
 
