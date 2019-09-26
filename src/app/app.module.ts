@@ -12,7 +12,7 @@ import { RelationshipsModule } from './relationships/relationships.module';
 import { CredentialsModule } from './credentials/credentials.module';
 import { CredentialsReceivedModule } from './credentials-received/credentials-received.module';
 import { ProofsModule } from './proofs/proofs.module';
-import { SharedModule } from './shared/shared.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -20,6 +20,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserModule,
     AppRoutingModule,
     IonicModule.forRoot(),
+    HttpClientModule,
     ProfileModule,
     RelationshipsModule,
     ProofsModule,

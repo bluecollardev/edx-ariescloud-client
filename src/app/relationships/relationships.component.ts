@@ -1,15 +1,24 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {ActionSheetController} from '@ionic/angular';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActionSheetController } from '@ionic/angular';
+import { RelationshipsStateService } from './services/relationships-state.service';
+import { RelationshipsActionService } from './services/relationships-action.service';
 
 @Component({
   selector: 'app-relationships',
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
-        <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
-          <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Manage Relationships</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Manage Relationships</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -21,7 +30,7 @@ import {ActionSheetController} from '@ionic/angular';
               <ion-list-header>
                 Pending Approval
               </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items.slice(0,1)">
+              <ion-item-sliding *ngFor="let item of items.slice(0, 1)">
                 <ion-item [routerLink]="['view']">
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
@@ -43,7 +52,7 @@ import {ActionSheetController} from '@ionic/angular';
               <ion-list-header>
                 Organizations
               </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items.slice(1,2)">
+              <ion-item-sliding *ngFor="let item of items.slice(1, 2)">
                 <ion-item [routerLink]="['view']">
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
@@ -93,7 +102,8 @@ import {ActionSheetController} from '@ionic/angular';
                 full
                 icon-start
                 margin
-                [routerLink]="['add']">
+                [routerLink]="['add']"
+              >
                 <ion-icon name="add"></ion-icon>
                 Add New Relationship
               </ion-button>
@@ -110,11 +120,16 @@ export class RelationshipsComponent implements OnInit {
   searchQuery: '';
   items: string[];
 
-  constructor(public actionSheetCtrl: ActionSheetController) {
+  constructor(
+    public actionSheetCtrl: ActionSheetController,
+    private stateSvc: RelationshipsStateService,
+    private actionSvc: RelationshipsActionService
+  ) {
     this.initializeItems();
   }
 
   ngOnInit() {
+    // this.actionSvc.getRelationships().subscribe(obs => console.log(obs));
   }
 
   initializeItems() {
@@ -123,7 +138,7 @@ export class RelationshipsComponent implements OnInit {
       'ACME Inc.',
       // 'Alice Cooper',
       'Bob Johnson',
-      'James Kirk',
+      'James Kirk'
       // 'Joanne Roberts',
       // 'Jordan Stewart',
       // 'Nicole Pennington',
@@ -142,8 +157,8 @@ export class RelationshipsComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-      this.items = this.items.filter((item) => {
-        return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      this.items = this.items.filter(item => {
+        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });
     }
   }
@@ -157,12 +172,14 @@ export class RelationshipsComponent implements OnInit {
           handler: () => {
             console.log('Destructive clicked');
           }
-        }, {
+        },
+        {
           text: 'Archive',
           handler: () => {
             console.log('Archive clicked');
           }
-        }, {
+        },
+        {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
