@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { CredentialStateService } from '../../services/credential-state.service';
+import { AlertController } from '@ionic/angular';
+
 import { CredentialActionsService } from '../../services/credential-actions.service';
+import { CredentialStateService } from '../../services/credential-state.service';
 
 export interface ICredDef {
   name: string;
@@ -62,8 +64,7 @@ export interface ICredDef {
                       </ion-item>
                     </ion-col>
                     <ion-col size="3">
-                      <ion-button margin-end
-                      >
+                      <ion-button margin-end (click)="this.newSchemaPopup()">
                         <ion-icon name="add"></ion-icon>
                         New
                       </ion-button
@@ -124,9 +125,10 @@ export interface ICredDef {
                 <ion-button
                   expand="block"
                   (click)="submit(fg)"
-                  class="ion-no-margin"
-                  >Create Credential</ion-button
-                >
+                  class="ion-no-margin">
+                  <ion-icon name="add"></ion-icon>
+                  Create Credential
+                </ion-button>
               </div>
             </form>
           </ion-col>
@@ -164,7 +166,8 @@ export class CreateCredentialComponent implements OnInit {
 
   constructor(
     private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService
+    private actionSvc: CredentialActionsService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -190,5 +193,35 @@ export class CreateCredentialComponent implements OnInit {
   sendCredDef(credDef: ICredDef) {
     console.log(credDef);
     this.actionSvc.submitCredDef(credDef);
+  }
+
+  async newSchemaPopup() {
+    const alert = await this.alertController.create({
+      header: 'Create a New Schema',
+      inputs: [
+        {
+          name: '',
+          type: 'text',
+          placeholder: 'MySchema'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
