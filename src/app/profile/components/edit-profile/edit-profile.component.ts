@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 import { ProfileStateService } from '../../services/profile-state.service';
@@ -73,6 +74,7 @@ export class EditProfileComponent implements OnInit {
   valid = false;
 
   constructor(
+    private router: Router,
     private stateSvc: ProfileStateService,
     private actionSvc: ProfileActionsService,
     private alertController: AlertController
@@ -97,6 +99,7 @@ export class EditProfileComponent implements OnInit {
       : console.log('invalid', (this.valid = false));
 
     // re-direct url of some kind
+    this.router.navigate(['/profile']);
   }
 
   sendProfile(profile: IProfile) {
