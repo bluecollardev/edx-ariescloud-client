@@ -13,7 +13,6 @@ import { MenuController } from '@ionic/angular';
         </ion-header>
 
         <ion-content>
-
           <div *ngFor="let p of pages">
 
             <!-- Standard Menu Item -->
@@ -23,6 +22,7 @@ import { MenuController } from '@ionic/angular';
                 <ion-label>
                   {{ p.title }}
                 </ion-label>
+                <ion-badge *ngIf="p.hasBadge" color="primary" item-end>2</ion-badge>
               </ion-item>
             </ion-menu-toggle>
             <!-- Item with Children -->
@@ -45,10 +45,8 @@ import { MenuController } from '@ionic/angular';
                 </ion-item>
               </ion-menu-toggle>
             </ion-list>
-
           </div>
         </ion-content>
-
       </ion-menu>
 
       <ion-router-outlet id="content" main></ion-router-outlet>
@@ -68,7 +66,8 @@ export class AppComponent {
     {
       title: 'My Messages',
       url: '/messages/',
-      icon: 'mail'
+      icon: 'mail',
+      hasBadge: true
     },
     {
       title: 'My Relationships',
@@ -78,17 +77,18 @@ export class AppComponent {
     {
       title: 'Certificates of Proof',
       url: '/verify-credentials/',
-       icon: 'finger-print'
+      icon: 'finger-print',
+      hasBadge: true
     },
     {
       title: 'Credentials Received',
       url: '/credentials-received/',
-       icon: 'archive'
+      icon: 'archive'
     },
     {
       title: 'My Credential Types',
       url: '/credentials/',
-       icon: 'ribbon'
+      icon: 'ribbon'
     },
     /*{
       title: 'Create Org. Credential',
