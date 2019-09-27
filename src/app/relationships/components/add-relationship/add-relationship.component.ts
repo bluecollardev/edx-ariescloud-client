@@ -23,27 +23,18 @@ import { IInvitation } from '../../models/i-invitation';
     <ion-content>
       <br />
       <br />
-      <ion-grid *ngIf="invitation$ | async as invite">
+      <!--<ion-grid *ngIf="invitation$ | async as invite">-->
+      <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <form onsubmit="processForm(event)">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
-                  <ion-label position="stacked"
-                    >Invitation
+                  <ion-label position="stacked">Send To (Provide DID)
                     <ion-text color="danger">*</ion-text>
                   </ion-label>
-                  <ion-input required type="text">{{ invite }}</ion-input>
+                  <ion-input required type="text"></ion-input>
                 </ion-item>
-
-                <!--<ion-item>
-                  <ion-label position="stacked">Address</ion-label>
-                  <ion-input placeholder="Address Line 1"></ion-input>
-                  <ion-input placeholder="Address Line 2"></ion-input>
-                  <ion-input placeholder="City"></ion-input>
-                  <ion-input placeholder="State"></ion-input>
-                  <ion-input placeholder="Zip Code"></ion-input>
-                </ion-item>-->
 
                 <ion-item>
                   <ion-label position="stacked">Notes</ion-label>
@@ -62,7 +53,7 @@ import { IInvitation } from '../../models/i-invitation';
                   [routerLink]="['/relationships']"
                 >
                   <ion-icon name="send"></ion-icon>
-                  Request Access
+                  Send Invitation
                 </ion-button>
               </div>
             </form>
@@ -83,7 +74,7 @@ export class AddRelationshipComponent implements OnInit {
   ngOnInit() {
     this.actionSvc.createInvitation();
     this.stateSvc.ready.subscribe(bool => {
-      if (bool) this.invitation$ = this.stateSvc.invitation$;
+      // if (bool) this.invitation$ = this.stateSvc.invitation$;
     });
   }
 }
