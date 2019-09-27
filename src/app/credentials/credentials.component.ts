@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 
 import { CredentialStateService } from './services/credential-state.service';
 import { CredentialActionsService } from './services/credential-actions.service';
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-credentials',

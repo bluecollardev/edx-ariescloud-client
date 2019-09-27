@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
-import {Router} from "@angular/router";
-import {CredentialStateService} from "../credentials/services/credential-state.service";
-import {CredentialActionsService} from "../credentials/services/credential-actions.service";
+import { Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
+import { CredentialStateService } from '../credentials/services/credential-state.service';
+import { CredentialActionsService } from '../credentials/services/credential-actions.service';
 
 @Component({
   selector: 'app-credentials-received',
@@ -61,7 +63,7 @@ import {CredentialActionsService} from "../credentials/services/credential-actio
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center (click)="presentActionSheet()">
+                  <ion-card text-center (click)="this.presentActionSheet()">
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
@@ -102,7 +104,8 @@ export class CredentialsReceivedComponent implements OnInit {
     this.issuers = [];
   }
 
-  getItems(ev: any) {
+  getItems(issuers, ev: any) {
+    let filtered = [];
     // Reset items back to all of the items
     this.initializeItems();
 
@@ -115,6 +118,8 @@ export class CredentialsReceivedComponent implements OnInit {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });
     }
+
+    return filtered;
   }
 
   async presentActionSheet() {
