@@ -57,7 +57,7 @@ export interface IProfile {
                   (click)="submit(fg)"
                   class="ion-no-margin">
                   <ion-icon name="save"></ion-icon>
-                  Update Account
+                  Save Profile
                 </ion-button>
               </div>
             </form>
