@@ -23,54 +23,57 @@ export interface IProfile {
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <br/>
-      <br/>
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
-            <form [formGroup]="fg">
-              <ion-list lines="full" class="ion-no-margin ion-no-padding">
-                <ion-item>
-                  <ion-label position="stacked">Org. Name
-                    <ion-text color="danger">*</ion-text>
-                  </ion-label>
-                  <ion-input required type="text" formControlName="orgName"></ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label position="stacked">First Name
-                    <ion-text color="danger">*</ion-text>
-                  </ion-label>
-                  <ion-input required type="text" formControlName="firstName"></ion-input>
-                </ion-item>
-
-                <ion-item>
-                  <ion-label position="stacked">Last Name
-                    <ion-text color="danger">*</ion-text>
-                  </ion-label>
-                  <ion-input required type="text" formControlName="lastName"></ion-input>
-                </ion-item>
-
-                <!--<ion-item>
-                  <ion-label position="stacked">Address</ion-label>
-                  <ion-input placeholder="Address Line 1"></ion-input>
-                  <ion-input placeholder="Address Line 2"></ion-input>
-                  <ion-input placeholder="City"></ion-input>
-                  <ion-input placeholder="State"></ion-input>
-                  <ion-input placeholder="Zip Code"></ion-input>
-                </ion-item>-->
-              </ion-list>
-
-              <div class="ion-padding">
+            <ion-card text-center>
+              <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
+              <ion-card-content>
+                <ion-card-title>
+                  Alice Cooper
+                </ion-card-title>
+                <small><small>My DID: acbd-123-sdf-2345</small></small>
+              </ion-card-content>
+              <div style="display: flex">
                 <ion-button
-                  expand="block"
-                  (click)="submit(fg)"
-                  class="ion-no-margin">
-                  <ion-icon name="save"></ion-icon>
-                  Update Account
+                  style="flex: 1"
+                  color="primary"
+                  outline
+                  full
+                  icon-start
+                  margin
+                  [routerLink]="['edit']"
+                >
+                  <ion-icon name="create"></ion-icon>
+                  Edit Profile
                 </ion-button>
               </div>
-            </form>
+              <ion-list>
+                <ion-item-group>
+                  <ion-item-divider>
+                    <ion-label>Shortcuts</ion-label>
+                  </ion-item-divider>
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/messages/view'])">
+                    <ion-label>
+                      <h2>Messages</h2>
+                    </ion-label>
+                    <ion-badge color="primary" item-end>2</ion-badge>
+                  </ion-item>
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/credentials-received'])">
+                    <ion-label>
+                      <h2>Credentials Received</h2>
+                    </ion-label>
+                    <ion-badge color="medium" item-end>4</ion-badge>
+                  </ion-item>
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/verify-credentials'])">
+                    <ion-label>
+                      <h2>Certificates of Proof</h2>
+                    </ion-label>
+                    <ion-badge color="medium" item-end>2</ion-badge>
+                  </ion-item>
+                </ion-item-group>
+              </ion-list>
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -80,9 +83,6 @@ export interface IProfile {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent implements OnInit {
-  fg: FormGroup;
-  valid = false;
-
   constructor(
     private stateSvc: ProfileStateService,
     private actionSvc: ProfileActionsService,
@@ -90,28 +90,5 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const fg = new FormGroup({
-      orgName: new FormControl('', [Validators.required]), // TODO: Required only if issuing
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required])
-    });
-
-    this.fg = fg;
-
-    fg.valueChanges.subscribe(obs => console.log(obs));
-  }
-
-  submit(fg: FormGroup) {
-    const profile = fg.value;
-    fg.valid
-      ? (console.log('valid'), this.sendProfile(profile))
-      : console.log('invalid', (this.valid = false));
-
-    // re-direct url of some kind
-  }
-
-  sendProfile(profile: IProfile) {
-    console.log(profile);
-    this.actionSvc.submitProfile(profile);
   }
 }
