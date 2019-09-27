@@ -196,8 +196,8 @@ export class ProofsComponent implements OnInit {
 
   async verifyCredPopup() {
     const alert = await this.alertController.create({
-      header: 'Verifying Credential',
-      message: '<strong>Success!</strong> This credential is valid.',
+      header: 'Certificate Claims Verified',
+      message: '<strong>Success!</strong> All claims within this certificate are valid.',
       buttons: [
         {
           text: 'Cancel',
