@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import {
   IRelationshipResponse,
   IConnectionParams
@@ -7,6 +7,8 @@ import {
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.acme';
 import { HttpService, IHttpConfig } from 'src/app/core/services/http.service';
+import { IInvitation } from '../models/i-invitation';
+import { RelationshipsStateService } from './relationships-state.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -14,23 +16,38 @@ const apiUrl = environment.apiUrl;
   providedIn: 'root'
 })
 export class RelationshipsActionService {
-  relationships$: Observable<IRelationshipResponse>;
+  headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   url: string;
-  constructor(private http: HttpClient, private httpSvc: HttpService) {
+
+  constructor(
+    private http: HttpClient,
+    private httpSvc: HttpService,
+    private stateSvc: RelationshipsStateService
+  ) {
     console.log('the url', this.url);
     this.httpSvc.getConfig().then(config => this.init(config));
   }
 
-  getRelationships(params: IConnectionParams = {}) {}
-
   init(config: IHttpConfig) {
+    if (!config) return;
+    console.log('config', config);
     this.url = config.apiUrl;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.stateSvc.setReady(true);
+  }
 
-    const obs = this.http.get<IRelationshipResponse>(
+  getRelationships(params: IConnectionParams = {}) {
+    this.stateSvc.relationships$ = this.http.get<IRelationshipResponse>(
       `${this.url}relationships`,
-      { headers }
+      { headers: this.headers }
     );
-    obs.subscribe(data => console.log(data));
+  }
+
+  createInvitation() {
+    this.stateSvc.invitation$ = this.http.post<IInvitation>(
+      `${this.url}relationships`,
+      {
+        headers: this.headers
+      }
+    );
   }
 }

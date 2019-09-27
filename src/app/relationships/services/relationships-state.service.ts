@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { IInvitation } from '../models/i-invitation';
+import { IRelationshipResponse } from '../models/i-relationship';
 
 export interface IRelationship {
   name: string;
@@ -12,15 +14,25 @@ export interface IRelationship {
   providedIn: 'root'
 })
 export class RelationshipsStateService {
-  relationships$: BehaviorSubject<IRelationship[]> = new BehaviorSubject<
-    IRelationship[]
-  >(null);
+  // relationships$: BehaviorSubject<IRelationship[]> = new BehaviorSubject<
+  // IRelationship[]
+  // >(null);
 
-  relationships = this.relationships$.asObservable();
+  // relationships = this.relationships$.asObservable();
 
-  setRelationships(data: IRelationship[]) {
-    this.relationships$.next(data);
+  invitation$: Observable<IInvitation>;
+  relationships$: Observable<IRelationshipResponse>;
+
+  private _ready$ = new BehaviorSubject<boolean>(false);
+  ready = this._ready$.asObservable();
+
+  setReady(bool: boolean) {
+    this._ready$.next(bool);
   }
+
+  // setRelationships(data: IRelationship[]) {
+  //   this.relationships$.next(data);
+  // }
 
   constructor() {
     const relationships = [
@@ -40,6 +52,6 @@ export class RelationshipsStateService {
       }
     ];
 
-    this.relationships$.next(relationships);
+    // this.relationships$.next(relationships);
   }
 }
