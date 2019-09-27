@@ -8,7 +8,7 @@ import { MenuController } from '@ionic/angular';
       <ion-menu contentId="content">
         <ion-header>
           <ion-toolbar color="primary">
-            <ion-title>EDX Aries Client</ion-title>
+            <ion-title><ion-icon name="analytics"></ion-icon> Aries Client</ion-title>
           </ion-toolbar>
         </ion-header>
 
