@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
 
 import { CredentialStateService } from '../credentials/services/credential-state.service';
 import { CredentialActionsService } from '../credentials/services/credential-actions.service';

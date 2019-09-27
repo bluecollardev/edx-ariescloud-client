@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-credential',
@@ -82,7 +84,7 @@ import {Component, OnInit} from '@angular/core';
                   full
                   icon-start
                   margin
-                  [routerLink]="['/credentials-received']"
+                  (click)="this.shareCredPopup()"
                 >
                   <ion-icon name="share"></ion-icon>
                   Share Credential
@@ -99,10 +101,72 @@ import {Component, OnInit} from '@angular/core';
 export class ViewCredentialComponent implements OnInit {
   graduationDate: string = new Date().toDateString()
 
-  constructor() {
-  }
+  constructor(
+    private router: Router,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
   }
 
+  async shareCredPopup() {
+    console.log(arguments);
+    const alert = await this.alertController.create({
+      header: 'Share Credential',
+      message: 'Please choose a relationship to share this credential with.',
+      inputs: [
+        {
+          name: 'checkbox1',
+          type: 'checkbox',
+          label: 'ACME Inc.',
+          value: 'value1',
+          checked: false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+            this.credSharedPopup();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async credSharedPopup() {
+    const alert = await this.alertController.create({
+      header: 'Credential Shared',
+      message: 'Success! Your credential was shared with ACME Inc.',
+      buttons: [
+        {
+          text: 'Back',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+            this.router.navigate(['/credentials-received']);
+          }
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 }
