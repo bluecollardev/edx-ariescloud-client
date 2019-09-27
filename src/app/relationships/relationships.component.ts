@@ -107,8 +107,8 @@ import { IRelationshipResponse } from './models/i-relationship';
                 margin
                 [routerLink]="['add']"
               >
-                <ion-icon name="add"></ion-icon>
-                Add New Relationship
+                <ion-icon name="person-add"></ion-icon>
+                Invite to Connect
               </ion-button>
             </div>
           </ion-col>
