@@ -26,7 +26,7 @@ import { CredentialActionsService } from '../credentials/services/credential-act
       <ion-grid>
         <ion-row *ngIf="stateSvc.issuers | async as issuers">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar (ionInput)="this.getItems(issuers, $event)"></ion-searchbar>
+            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list *ngFor="let issuer of issuers">
               <ion-list-header>
                 {{ issuer.type }}
@@ -114,9 +114,9 @@ export class CredentialsReceivedComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-      filtered = issuers.filter(issuer => {
-        return issuer.name.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      }) || [];
+      this.issuers = this.issuers.filter(item => {
+        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
+      });
     }
 
     return filtered;
