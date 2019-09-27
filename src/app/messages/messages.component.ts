@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
-import { RelationshipsStateService } from './services/relationships-state.service';
-import { RelationshipsActionService } from './services/relationships-action.service';
+import { MessagesStateService } from './services/messages-state.service';
+import { MessagesActionService } from './services/messages-action.service';
 import { IRelationshipResponse } from './models/i-relationship';
 
 @Component({
@@ -20,7 +20,7 @@ import { IRelationshipResponse } from './models/i-relationship';
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Manage Connections</ion-title
+          >My Messages</ion-title
         >
       </ion-toolbar>
     </ion-header>
@@ -31,51 +31,7 @@ import { IRelationshipResponse } from './models/i-relationship';
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header>
-                Incoming Requests
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items.slice(0, 1)">
-                <ion-item [routerLink]="['view']">
-                  <ion-icon name="business" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
-                  </ion-label>
-                </ion-item>
-                <ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-checkmark" class="icon-md"></ion-icon>
-                    Accept
-                  </button>
-                  <button ion-button color="primary" icon-start>
-                    <ion-icon name="ios-close" class="icon-md"></ion-icon>
-                    Decline
-                  </button>
-                </ion-item-options>
-              </ion-item-sliding>
-              <ion-list-header>
-                Outgoing Requests
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items.slice(1, 2)">
-                <ion-item [routerLink]="['view']">
-                  <ion-icon name="business" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
-                  </ion-label>
-                </ion-item>
-                <ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-checkmark" class="icon-md"></ion-icon>
-                    Accept
-                  </button>
-                  <button ion-button color="primary" icon-start>
-                    <ion-icon name="ios-close" class="icon-md"></ion-icon>
-                    Decline
-                  </button>
-                </ion-item-options>
-              </ion-item-sliding>
-              <ion-list-header>
-                My Connections
+                By Connection
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of items">
                 <ion-item [routerLink]="['view']">
@@ -85,45 +41,25 @@ import { IRelationshipResponse } from './models/i-relationship';
                     <small>DID: abcd-1234-df34-cd34</small>
                   </ion-label>
                 </ion-item>
-                <ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
-                    Disable
-                  </button>
-                </ion-item-options>
               </ion-item-sliding>
             </ion-list>
-            <div style="display: flex">
-              <ion-button
-                style="flex: 1"
-                color="primary"
-                clear
-                full
-                icon-start
-                margin
-                [routerLink]="['add']"
-              >
-                <ion-icon name="person-add"></ion-icon>
-                Add Connection
-              </ion-button>
-            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./relationships.component.scss'],
+  styleUrls: ['./messages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RelationshipsComponent implements OnInit {
+export class MessagesComponent implements OnInit {
   // searchQuery: '';
   items: string[];
   relationships$: Observable<IRelationshipResponse>;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
-    private stateSvc: RelationshipsStateService,
-    private actionSvc: RelationshipsActionService
+    private stateSvc: MessagesStateService,
+    private actionSvc: MessagesActionService
   ) {
     this.initializeItems();
   }

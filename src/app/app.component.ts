@@ -66,6 +66,16 @@ export class AppComponent {
       icon: 'person'
     },
     {
+      title: 'My Messages',
+      url: '/messages/',
+      icon: 'mail'
+    },
+    {
+      title: 'My Connections',
+      url: '/relationships/',
+      icon: 'people'
+    },
+    {
       title: 'Certificates of Proof',
       url: '/verify-credentials/',
        icon: 'finger-print'
@@ -76,17 +86,7 @@ export class AppComponent {
        icon: 'archive'
     },
     {
-      title: 'My Relationships',
-      url: '/relationships/',
-      icon: 'people'
-    },
-    {
-      title: 'Send Invitation',
-      url: '/relationships/add/',
-      icon: 'person-add'
-    },
-    {
-      title: 'Manage Credential Types',
+      title: 'My Credential Types',
       url: '/credentials/',
        icon: 'ribbon'
     },

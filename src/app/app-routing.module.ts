@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { ProfileComponent } from './profile/profile.component';
+import { MessagesComponent } from './messages/messages.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
 import { CredentialsComponent } from './credentials/credentials.component';
 import { CredentialsReceivedComponent } from './credentials-received/credentials-received.component';
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: `./profile/profile.module#ProfileModule`
+  },
+  {
+    path: 'messages',
+    pathMatch: 'full',
+    component: MessagesComponent
   },
   {
     path: 'relationships',

@@ -17,7 +17,7 @@ import { IInvitation } from '../../models/i-invitation';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Send Invitation</ion-title>
+        <ion-title class="ios title-ios hydrated">New Connection Request</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -53,7 +53,7 @@ import { IInvitation } from '../../models/i-invitation';
                   [routerLink]="['/relationships']"
                 >
                   <ion-icon name="send"></ion-icon>
-                  Send Invitation
+                  Send Connection Request
                 </ion-button>
               </div>
             </form>
