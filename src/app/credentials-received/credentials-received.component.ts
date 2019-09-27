@@ -193,7 +193,7 @@ export class CredentialsReceivedComponent implements OnInit {
 
   async selectDataPopup() {
     const alert = await this.alertController.create({
-      header: 'Select Data Popup',
+      header: 'Select Data',
       message: 'Please select what information you want to share.',
       inputs: [
         {

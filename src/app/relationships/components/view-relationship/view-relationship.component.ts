@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
         <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
           <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">View Connection</ion-title>
+        <ion-title class="ios title-ios hydrated">Relationship Details</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

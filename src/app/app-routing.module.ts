@@ -26,6 +26,10 @@ const routes: Routes = [
     component: MessagesComponent
   },
   {
+    path: 'messages',
+    loadChildren: `./messages/messages.module#MessagesModule`
+  },
+  {
     path: 'relationships',
     pathMatch: 'full',
     component: RelationshipsComponent
