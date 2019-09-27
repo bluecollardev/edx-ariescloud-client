@@ -42,14 +42,14 @@ import { IRelationshipResponse } from './models/i-relationship';
                   </ion-label>
                 </ion-item>
                 <ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-checkmark" class="icon-md"></ion-icon>
-                    Accept
-                  </button>
-                  <button ion-button color="primary" icon-start>
+                  <ion-item-option color="danger" type="button" icon-start>
                     <ion-icon name="ios-close" class="icon-md"></ion-icon>
                     Decline
-                  </button>
+                  </ion-item-option>
+                  <ion-item-option color="success" type="button" icon-start>
+                    <ion-icon name="ios-checkmark" class="icon-md"></ion-icon>
+                    Accept
+                  </ion-item-option>
                 </ion-item-options>
               </ion-item-sliding>
               <ion-list-header>
@@ -64,14 +64,14 @@ import { IRelationshipResponse } from './models/i-relationship';
                   </ion-label>
                 </ion-item>
                 <ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
-                    Disable
-                  </button>
-                  <button ion-button color="light" icon-start>
+                  <ion-item-option color="danger" type="button" icon-start>
                     <ion-icon name="trash" class="icon-md"></ion-icon>
                     Delete
-                  </button>
+                  </ion-item-option>
+                  <ion-item-option color="light" type="button" icon-start>
+                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                    Disable
+                  </ion-item-option>
                 </ion-item-options>
               </ion-item-sliding>
             </ion-list>

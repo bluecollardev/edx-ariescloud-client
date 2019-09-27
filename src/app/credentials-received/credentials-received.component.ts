@@ -38,11 +38,6 @@ import { CredentialActionsService } from '../credentials/services/credential-act
                     <small>DID: {{ issuer.did }}</small>
                   </ion-label>
                 </ion-item>
-                <!--<ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-share" class="icon-md"></ion-icon> Share
-                  </button>
-                </ion-item-options>-->
               </ion-item-sliding>
             </ion-list>
 

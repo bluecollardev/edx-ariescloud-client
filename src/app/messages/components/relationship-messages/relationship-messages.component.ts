@@ -51,7 +51,72 @@ import { Router } from '@angular/router';
                   (click)="this.provideProofPopup()"
                 >
                   <ion-icon name="share-alt"></ion-icon>
-                  Respond
+                  Provide
+                </ion-button>
+              </div>
+            </ion-card>
+            <ion-card text-center>
+              <ion-card-content>
+                <ion-card-title>
+                  <small><small>Accept Credential from ACME Inc.</small></small>
+                </ion-card-title>
+              </ion-card-content>
+              <ion-card-content>
+                <p>
+                  <strong>ACME Inc.</strong> has issued you the following credential: <i>Agile Coaching Certificate</i>.
+                </p>
+              </ion-card-content>
+              
+              <div style="display: flex; flex-direction: column">
+                <ion-button
+                  aria-disabled="true" 
+                  disabled
+                  style="flex: 1"
+                  color="light"
+                  clear
+                  full
+                  icon-start
+                  margin
+                >
+                  <ion-icon name="checkmark"></ion-icon>
+                  Credential Accepted
+                </ion-button>
+              </div>
+            </ion-card>
+            <ion-card text-center>
+              <ion-card-content>
+                <ion-card-title>
+                  <small><small>Accept Credential from ACME Inc.</small></small>
+                </ion-card-title>
+              </ion-card-content>
+              <ion-card-content>
+                <p>
+                  <strong>ACME Inc.</strong> has issued you the following credential: <i>JavaScript Programmer Certificate</i>.
+                </p>
+              </ion-card-content>
+              
+              <div style="display: flex">
+                <ion-button
+                  style="flex: 1"
+                  color="light"
+                  clear
+                  full
+                  icon-start
+                  margin
+                >
+                  <ion-icon name="close"></ion-icon>
+                  Decline
+                </ion-button>
+                <ion-button
+                  style="flex: 1"
+                  color="success"
+                  clear
+                  full
+                  icon-start
+                  margin
+                >
+                  <ion-icon name="checkmark"></ion-icon>
+                  Accept
                 </ion-button>
               </div>
             </ion-card>

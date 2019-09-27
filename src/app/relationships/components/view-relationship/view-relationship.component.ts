@@ -41,7 +41,19 @@ import { Component, OnInit } from '@angular/core';
               <div style="display: flex">
                 <ion-button
                   style="flex: 1"
-                  color="primary"
+                  color="danger"
+                  outline
+                  full
+                  icon-start
+                  margin
+                  [routerLink]="['/relationships']"
+                >
+                  <ion-icon name="trash"></ion-icon>
+                  Delete
+                </ion-button>
+                <ion-button
+                  style="flex: 1"
+                  color="light"
                   outline
                   full
                   icon-start
@@ -50,18 +62,6 @@ import { Component, OnInit } from '@angular/core';
                 >
                   <ion-icon name="close-circle"></ion-icon>
                   Disable
-                </ion-button>
-                <ion-button
-                  style="flex: 1"
-                  color="secondary"
-                  outline
-                  full
-                  icon-start
-                  margin
-                  [routerLink]="['/relationships']"
-                >
-                  <ion-icon name="trash"></ion-icon>
-                  Remove
                 </ion-button>
               </div>
             </ion-card>
