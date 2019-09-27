@@ -4,7 +4,7 @@ import {
   IRelationshipResponse,
   IConnectionParams
 } from '../models/i-relationship';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment.acme';
 import { HttpService, IHttpConfig } from 'src/app/core/services/http.service';
 
@@ -25,9 +25,11 @@ export class RelationshipsActionService {
 
   init(config: IHttpConfig) {
     this.url = config.apiUrl;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
     const obs = this.http.get<IRelationshipResponse>(
-      `${this.url}relationships`
-      // { headers: { header: 'Access-Control-Allow-Origin' } }
+      `${this.url}relationships`,
+      { headers }
     );
     obs.subscribe(data => console.log(data));
   }
