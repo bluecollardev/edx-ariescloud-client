@@ -29,7 +29,18 @@ import { Router } from '@angular/router';
                 </p>
               </ion-card-content>
               
-              <div style="display: flex; flex-direction: column">
+              <div style="display: flex">
+                <ion-button
+                  style="flex: 1"
+                  color="light"
+                  clear
+                  full
+                  icon-start
+                  margin
+                >
+                  <ion-icon name="close"></ion-icon>
+                  Decline
+                </ion-button>
                 <ion-button
                   style="flex: 1"
                   color="primary"
@@ -41,6 +52,34 @@ import { Router } from '@angular/router';
                 >
                   <ion-icon name="share-alt"></ion-icon>
                   Respond
+                </ion-button>
+              </div>
+            </ion-card>
+            <ion-card text-center>
+              <ion-card-content>
+                <ion-card-title>
+                  <small><small>Certificate of Proof Request</small></small>
+                </ion-card-title>
+              </ion-card-content>
+              <ion-card-content>
+                <p>
+                  <strong>ACME Inc.</strong> requested proof that Alice Cooper has a Computer Science degree from an accredited institution.
+                </p>
+              </ion-card-content>
+              
+              <div style="display: flex; flex-direction: column">
+                <ion-button
+                  aria-disabled="true" 
+                  disabled
+                  style="flex: 1"
+                  color="light"
+                  clear
+                  full
+                  icon-start
+                  margin
+                >
+                  <ion-icon name="close"></ion-icon>
+                  Request Declined
                 </ion-button>
               </div>
             </ion-card>
@@ -66,7 +105,6 @@ import { Router } from '@angular/router';
                   full
                   icon-start
                   margin
-                  (click)="this.provideProofPopup()"
                 >
                   <ion-icon name="checkmark"></ion-icon>
                   Invitation Accepted
