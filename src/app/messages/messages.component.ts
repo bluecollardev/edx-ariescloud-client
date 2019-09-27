@@ -13,7 +13,7 @@ import { IRelationshipResponse } from './models/i-relationship';
       <ion-toolbar class="ios hydrated">
         <ion-buttons
           slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+          class="sc-ion-buttons-ioxs-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
         >
           <ion-menu-button
             class="hydrated ios button ion-activatable ion-focusable activated"
