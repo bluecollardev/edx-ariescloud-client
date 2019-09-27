@@ -57,7 +57,7 @@ export interface IProfile {
                   color="light"
                   (click)="this.router.navigate(['/profile'])"
                   class="ion-no-margin">
-                  <ion-icon name="close-circle-outline"></ion-icon>
+                  <ion-icon name="close"></ion-icon>
                   Cancel
                 </ion-button>
                 <ion-button
