@@ -112,13 +112,13 @@ export class RelationshipsComponent implements OnInit {
 
   ngOnInit() {
     this.actionSvc.getRelationships();
-    this.stateSvc.ready.subscribe(bool => {
+    /*this.stateSvc.ready.subscribe(bool => {
       console.log('bool', bool)
       if (bool) {
         this.relationships$ = this.stateSvc.relationships$;
         this.relationships$.subscribe(obs => console.log(obs));
       }
-    });
+    });*/
   }
 
   initializeItems() {
