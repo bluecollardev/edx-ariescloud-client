@@ -42,7 +42,16 @@ export class CredentialActionsService {
           program: 'Business',
           version: '1.2',
           schema: 'university-degree'
-        }]
+        },
+        {
+          issuedBy: 'Faber University',
+          issuedTo: 'Alice Cooper',
+          name: 'Certificate of Course Completion',
+          program: 'Agile Coaching',
+          version: '1.2',
+          schema: 'random-course'
+        }
+      ]
     };
 
     const data = response.data;

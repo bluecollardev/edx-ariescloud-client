@@ -81,7 +81,7 @@ export class AppComponent {
       icon: 'people'
     },
     {
-      title: 'Add Relationship',
+      title: 'Send Invitation',
       url: '/relationships/add/',
       icon: 'person-add'
     },
