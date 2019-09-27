@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 import { ProfileStateService } from './services/profile-state.service';
@@ -53,24 +54,24 @@ export interface IProfile {
                   <ion-item-divider>
                     <ion-label>Shortcuts</ion-label>
                   </ion-item-divider>
-                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/messages/view'])">
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/messages'])">
                     <ion-label>
                       <h2>Messages</h2>
                     </ion-label>
                     <ion-badge color="primary" item-end>2</ion-badge>
                   </ion-item>
-                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/credentials-received'])">
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/credentials-received'])" lines="none">
                     <ion-label>
                       <h2>Credentials Received</h2>
                     </ion-label>
                     <ion-badge color="medium" item-end>4</ion-badge>
                   </ion-item>
-                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/verify-credentials'])">
+                  <!--<ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/verify-credentials'])">
                     <ion-label>
                       <h2>Certificates of Proof</h2>
                     </ion-label>
                     <ion-badge color="medium" item-end>2</ion-badge>
-                  </ion-item>
+                  </ion-item>-->
                 </ion-item-group>
               </ion-list>
             </ion-card>
@@ -84,6 +85,7 @@ export interface IProfile {
 })
 export class ProfileComponent implements OnInit {
   constructor(
+    public router: Router,
     private stateSvc: ProfileStateService,
     private actionSvc: ProfileActionsService,
     private alertController: AlertController
