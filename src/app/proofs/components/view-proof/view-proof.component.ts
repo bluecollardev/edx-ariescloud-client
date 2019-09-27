@@ -24,19 +24,23 @@ import { Router} from '@angular/router';
                 <ion-card-title>
                   Bachelor's of Science
                   <br/>
-                  <small>Faber University</small>
+                  <div style="text-align: left; max-width: 60%; margin: 0 auto">
+                    <small><small><small>Issued by:</small> Faber University</small></small>
+                    <!--<br />
+                    <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
+                  </div>
                 </ion-card-title>
                 <small>
-                  <small>Tax ID: 123-45-6789</small>
+                  <small>Tax ID: 123-45-6789 </small>
                 </small>
-                <br/>
+                <br />
                 <small>
-                  <small>DID: acbd-123-sdf-2345</small>
+                  <small> DID: acbd-123-sdf-2345</small>
                 </small>
               </ion-card-content>
               <ion-card-content>
                 <p>
-                  Alice is a verified graduate of Faber University.
+                  <strong>Alice Cooper</strong> is a verified graduate of Faber University.
                 </p>
               </ion-card-content>
 
