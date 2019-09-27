@@ -86,7 +86,7 @@ export class AppComponent {
       icon: 'person-add'
     },
     {
-      title: 'My Org. Credentials',
+      title: 'Manage Credential Types',
       url: '/credentials/',
        icon: 'ribbon'
     },
