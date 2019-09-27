@@ -21,6 +21,7 @@ export class CredentialActionsService {
       data: [
         {
           issuedBy: 'Faber University',
+          issuedTo: 'Alice Cooper',
           name: 'Bachelor\'s of Science Degree',
           program: 'Computer Science',
           version: '1.2',
@@ -28,6 +29,7 @@ export class CredentialActionsService {
         },
         {
           issuedBy: 'Faber University',
+          issuedTo: 'Alice Cooper',
           name: 'Bachelor\'s of Science Degree',
           program: 'Microbiology',
           version: '1.2',
@@ -35,6 +37,7 @@ export class CredentialActionsService {
         },
         {
           issuedBy: 'Faber University',
+          issuedTo: 'Alice Cooper',
           name: 'Master\'s of Business Administration',
           program: 'Business',
           version: '1.2',

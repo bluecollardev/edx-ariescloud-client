@@ -69,7 +69,9 @@ import { CredentialActionsService } from '../credentials/services/credential-act
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      {{ cred.name }}
+                      <small><strong>{{ cred.name }}</strong></small>
+                      <br />
+                      <small>{{ cred.program }}</small>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>

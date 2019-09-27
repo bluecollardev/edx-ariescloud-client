@@ -64,11 +64,13 @@ import { CredentialActionsService } from '../credentials/services/credential-act
                 >
                   <ion-card text-center (click)="presentActionSheet()">
                     <ion-card-header>
-                      {{ cred.issuedBy }}
+                      {{ cred.issuedTo }}
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      {{ cred.name }}
+                      <small><strong>{{ cred.name }}</strong></small>
+                      <br />
+                      <small>{{ cred.issuedBy }}</small>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>

@@ -10,7 +10,6 @@ import { HttpService, IHttpConfig } from 'src/app/core/services/http.service';
 import { IInvitation } from '../models/i-invitation';
 import { RelationshipsStateService } from './relationships-state.service';
 
-const apiUrl = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
@@ -25,18 +24,19 @@ export class RelationshipsActionService {
     private stateSvc: RelationshipsStateService
   ) {
     console.log('the url', this.url);
-    this.httpSvc.getConfig().then(config => this.init(config));
+    const apiUrl = 'http://localhost:3000/';
+
+    this.url = apiUrl;
+    // this.httpSvc.getConfig().then(config => this.init(config));
+    this.init();
   }
 
-  init(config: IHttpConfig) {
-    if (!config) return;
-    console.log('config', config);
-    this.url = config.apiUrl;
+  init() {
     this.stateSvc.setReady(true);
   }
 
   getRelationships(params: IConnectionParams = {}) {
-    this.stateSvc.relationships$ = this.http.get<IRelationshipResponse>(
+    return this.stateSvc.relationships$ = this.http.get<IRelationshipResponse>(
       `${this.url}relationships`,
       { headers: this.headers }
     );

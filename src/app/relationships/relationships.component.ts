@@ -1,7 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+
 import { RelationshipsStateService } from './services/relationships-state.service';
 import { RelationshipsActionService } from './services/relationships-action.service';
+import { IRelationshipResponse } from './models/i-relationship';
 
 @Component({
   selector: 'app-relationships',
@@ -117,8 +120,9 @@ import { RelationshipsActionService } from './services/relationships-action.serv
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationshipsComponent implements OnInit {
-  searchQuery: '';
+  // searchQuery: '';
   items: string[];
+  relationships$: Observable<IRelationshipResponse>;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -129,7 +133,14 @@ export class RelationshipsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.actionSvc.getRelationships().subscribe(obs => console.log(obs));
+    this.actionSvc.getRelationships();
+    this.stateSvc.ready.subscribe(bool => {
+      console.log('bool', bool)
+      if (bool) {
+        this.relationships$ = this.stateSvc.relationships$;
+        this.relationships$.subscribe(obs => console.log(obs));
+      }
+    });
   }
 
   initializeItems() {
