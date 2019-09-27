@@ -15,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
     AddRelationshipComponent
   ],
   imports: [CommonModule, SharedModule, RelationshipsRoutingModule],
+  exports: [AddRelationshipComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RelationshipsModule {}

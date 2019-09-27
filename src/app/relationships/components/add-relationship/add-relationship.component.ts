@@ -27,10 +27,11 @@ import { IInvitation } from '../../models/i-invitation';
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
-            <form onsubmit="processForm(event)">
+            <form>
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
-                  <ion-label position="stacked">Send To (Provide DID)
+                  <ion-label position="stacked"
+                    >Send To (Provide DID)
                     <ion-text color="danger">*</ion-text>
                   </ion-label>
                   <ion-input required type="text"></ion-input>
