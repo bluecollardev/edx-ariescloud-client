@@ -125,11 +125,11 @@ export class ProofsComponent implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'View',
+          text: 'View Proof',
           handler: () => this.router.navigate(['/verify-credentials/view'])
         },
         {
-          text: 'Verify',
+          text: 'Verify Credential',
           handler: () => {
             this.verifyCredPopup();
           }

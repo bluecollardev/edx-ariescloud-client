@@ -10,7 +10,7 @@ import { Router} from '@angular/router';
         <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
           <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">View Credential</ion-title>
+        <ion-title class="ios title-ios hydrated">Credential Proof</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
