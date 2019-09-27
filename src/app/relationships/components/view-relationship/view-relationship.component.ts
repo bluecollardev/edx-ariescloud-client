@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-relationship',
@@ -31,7 +32,7 @@ import { Component, OnInit } from '@angular/core';
                   <ion-label>Date Connected</ion-label>
                   <ion-badge color="medium" item-end>{{ graduationDate }}</ion-badge>
                 </ion-item>
-                
+
                 <ion-item class="flex ion-justify-content-around" lines="none">
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                   <ion-label>Status</ion-label>
@@ -42,19 +43,19 @@ import { Component, OnInit } from '@angular/core';
                   <ion-item-divider>
                     <ion-label>Shortcuts</ion-label>
                   </ion-item-divider>
-                  <ion-item class="flex ion-justify-content-around">
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/messages/view'])">
                     <ion-label>
                       <h2>Messages</h2>
                     </ion-label>
                     <ion-badge color="primary" item-end>2</ion-badge>
                   </ion-item>
-                  <ion-item class="flex ion-justify-content-around">
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/credentials-received'])">
                     <ion-label>
                       <h2>Credentials Received</h2>
                     </ion-label>
                     <ion-badge color="medium" item-end>4</ion-badge>
                   </ion-item>
-                  <ion-item class="flex ion-justify-content-around">
+                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/verify-credentials'])">
                     <ion-label>
                       <h2>Certificates of Proof</h2>
                     </ion-label>
@@ -100,7 +101,9 @@ import { Component, OnInit } from '@angular/core';
 export class ViewRelationshipComponent implements OnInit {
   graduationDate: string = new Date().toDateString()
 
-  constructor() { }
+  constructor(
+    public router: Router
+  ) {}
 
   ngOnInit() {
   }
