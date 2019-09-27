@@ -220,6 +220,54 @@ export class RelationshipMessagesComponent implements OnInit {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
+            this.selectDataPopup();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async selectDataPopup() {
+    const alert = await this.alertController.create({
+      header: 'Select Data',
+      message: 'Please select what information you want to share.',
+      inputs: [
+        {
+          name: 'checkbox1',
+          type: 'checkbox',
+          label: 'Degree',
+          value: 'value1',
+          checked: false
+        },
+        {
+          name: 'checkbox2',
+          type: 'checkbox',
+          label: 'Program',
+          value: 'value2',
+          checked: false
+        },
+        {
+          name: 'checkbox3',
+          type: 'checkbox',
+          label: 'Date of Study',
+          value: 'value3',
+          checked: false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
             this.proofProvidedPopup();
           }
         }
