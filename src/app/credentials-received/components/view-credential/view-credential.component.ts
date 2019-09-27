@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
               </ion-card-content>
               <ion-card-content>
                 <p>
-                  Alice is a verified graduate of Faber University.
+                  <strong>Alice Cooper</strong> is a verified graduate of Faber University.
                 </p>
               </ion-card-content>
 
