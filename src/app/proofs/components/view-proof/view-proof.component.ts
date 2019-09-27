@@ -97,7 +97,7 @@ import { Router} from '@angular/router';
                   (click)="this.verifyCredPopup()"
                 >
                   <ion-icon name="finger-print"></ion-icon>
-                  Verify Credential
+                  Verify Claims
                 </ion-button>
               </div>
             </ion-card>

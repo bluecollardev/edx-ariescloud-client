@@ -66,7 +66,7 @@ export class AppComponent {
       icon: 'person'
     },
     {
-      title: 'Verify Credentials',
+      title: 'Certificates of Proof',
       url: '/verify-credentials/',
        icon: 'finger-print'
     },

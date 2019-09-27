@@ -30,7 +30,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
               <ion-row>
                 <ion-col>
                   <ion-list-header>
-                    <ion-label>My Organization's Credentials</ion-label>
+                    <ion-label>My Organization's Credential Types</ion-label>
                   </ion-list-header>
                 </ion-col>
               </ion-row>

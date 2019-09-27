@@ -18,7 +18,7 @@ import { CredentialActionsService } from '../credentials/services/credential-act
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Verify Credentials</ion-title>
+        <ion-title class="ios title-ios hydrated">Certificates of Proof</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -45,12 +45,52 @@ import { CredentialActionsService } from '../credentials/services/credential-act
                 </ion-item-options>-->
               </ion-item-sliding>
             </ion-list>
-
+            
             <ion-grid style="width: 100%;">
               <ion-row>
                 <ion-col>
                   <ion-list-header>
-                    <ion-label>Credentials Shared With Me</ion-label>
+                    <ion-label>Pending Requests</ion-label>
+                  </ion-list-header>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="stateSvc.credentials | async as creds">
+                <ion-col
+                  *ngFor="let cred of creds.slice(0,2)"
+                  sizeXs="6"
+                  sizeSm="4"
+                  sizeMd="3"
+                  sizeLg="2"
+                >
+                  <ion-card text-center (click)="presentActionSheet()">
+                    <ion-card-header>
+                      {{ cred.issuedTo }}
+                    </ion-card-header>
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-card-content>
+                      <small><strong>{{ cred.name }}</strong></small>
+                      <br />
+                      <small>{{ cred.issuedBy }}</small>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            
+            <div class="ion-padding">
+              <ion-button
+                expand="block"
+                class="ion-no-margin">
+                <ion-icon name="send"></ion-icon>
+                Request Certificate of Proof
+              </ion-button>
+            </div>
+            
+            <ion-grid style="width: 100%;">
+              <ion-row>
+                <ion-col>
+                  <ion-list-header>
+                    <ion-label>Verified Certificates</ion-label>
                   </ion-list-header>
                 </ion-col>
               </ion-row>
@@ -125,17 +165,17 @@ export class ProofsComponent implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'View Proof',
+          text: 'View Certificate',
           handler: () => this.router.navigate(['/verify-credentials/view'])
         },
         {
-          text: 'Verify Credential',
+          text: 'Verify Certificate Claims',
           handler: () => {
             this.verifyCredPopup();
           }
         },
         {
-          text: 'Delete',
+          text: 'Delete Certificate',
           role: 'destructive',
           handler: () => {
             console.log('Delete clicked');
