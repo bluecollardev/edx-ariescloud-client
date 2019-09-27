@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
@@ -114,6 +114,7 @@ import { Router } from '@angular/router';
                   full
                   icon-start
                   margin
+                  (click)="this.displayToast('Success! Your credential was accepted.')"
                 >
                   <ion-icon name="checkmark"></ion-icon>
                   Accept
@@ -188,7 +189,8 @@ export class RelationshipMessagesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -301,5 +303,20 @@ export class RelationshipMessagesComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async displayToast(msg) {
+    const toast = await this.toastController.create({
+      message: msg,
+      buttons: [
+        {
+          side: 'start',
+          icon: 'information-circle'
+        }
+      ],
+      duration: 2000
+    });
+
+    toast.present();
   }
 }
