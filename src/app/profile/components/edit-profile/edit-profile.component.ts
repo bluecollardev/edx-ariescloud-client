@@ -51,9 +51,17 @@ export interface IProfile {
                 </ion-item>
               </ion-list>
 
-              <div class="ion-padding">
+              <div class="ion-padding" style="display: flex; justify-content: space-around">
                 <ion-button
-                  expand="block"
+                  style="flex: 1"
+                  color="light"
+                  (click)="this.router.navigate(['/profile'])"
+                  class="ion-no-margin">
+                  <ion-icon name="close-circle-outline"></ion-icon>
+                  Cancel
+                </ion-button>
+                <ion-button
+                  style="flex: 1; margin-left: 1rem"
                   (click)="submit(fg)"
                   class="ion-no-margin">
                   <ion-icon name="save"></ion-icon>
@@ -74,7 +82,7 @@ export class EditProfileComponent implements OnInit {
   valid = false;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private stateSvc: ProfileStateService,
     private actionSvc: ProfileActionsService,
     private alertController: AlertController

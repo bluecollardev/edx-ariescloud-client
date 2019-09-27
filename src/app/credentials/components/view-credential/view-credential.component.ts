@@ -64,7 +64,7 @@ import { Component, OnInit } from '@angular/core';
                 <ion-badge color="medium" item-end>abcd-1234-xyz</ion-badge>
               </ion-item>
               
-              <ion-item class="flex ion-justify-content-around">
+              <ion-item class="flex ion-justify-content-around" lines="none">
                 <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Document Version</ion-label>
                 <ion-badge color="medium" item-end>1.3</ion-badge>
