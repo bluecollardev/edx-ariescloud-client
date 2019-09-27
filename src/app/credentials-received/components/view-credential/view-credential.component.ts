@@ -40,43 +40,43 @@ import { Router } from '@angular/router';
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Date Issued</ion-label>
-                <ion-badge item-end>{{ graduationDate }}</ion-badge>
+                <ion-badge color="medium" item-end>{{ graduationDate }}</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Degree</ion-label>
-                <ion-badge item-end>Bachelor's of Science</ion-badge>
+                <ion-badge color="medium" item-end>Bachelor's of Science</ion-badge>
               </ion-item>
               
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Program</ion-label>
-                <ion-badge item-end>Computer Science</ion-badge>
+                <ion-badge color="medium" item-end>Computer Science</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>GPA</ion-label>
-                <ion-badge item-end>3.8 / 4.0</ion-badge>
+                <ion-badge color="medium" item-end>3.8 / 4.0</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Status</ion-label>
-                <ion-badge item-end>Graduated</ion-badge>
+                <ion-badge color="medium" item-end>Graduated</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>SSN</ion-label>
-                <ion-badge item-end>abcd-1234-xyz</ion-badge>
+                <ion-badge color="medium" item-end>abcd-1234-xyz</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Document Version</ion-label>
-                <ion-badge item-end>1.3</ion-badge>
+                <ion-badge color="medium" item-end>1.3</ion-badge>
               </ion-item>
 
               <div style="display: flex; flex-direction: column">

@@ -25,18 +25,43 @@ import { Component, OnInit } from '@angular/core';
                 <br />
                 <small><small>My DID: acbd-123-sdf-2345</small></small>
               </ion-card-content>
-              
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>Date Connected</ion-label>
-                <ion-badge item-end>{{ graduationDate }}</ion-badge>
-              </ion-item>
-              
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>Status</ion-label>
-                <ion-badge item-end>Enabled</ion-badge>
-              </ion-item>
+              <ion-list>
+                <ion-item class="flex ion-justify-content-around">
+                  <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
+                  <ion-label>Date Connected</ion-label>
+                  <ion-badge color="medium" item-end>{{ graduationDate }}</ion-badge>
+                </ion-item>
+                
+                <ion-item class="flex ion-justify-content-around" lines="none">
+                  <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
+                  <ion-label>Status</ion-label>
+                  <ion-badge color="medium" item-end>Enabled</ion-badge>
+                </ion-item>
+                
+                <ion-item-group>
+                  <ion-item-divider>
+                    <ion-label>Shortcuts</ion-label>
+                  </ion-item-divider>
+                  <ion-item class="flex ion-justify-content-around">
+                    <ion-label>
+                      <h2>Messages</h2>
+                    </ion-label>
+                    <ion-badge color="primary" item-end>2</ion-badge>
+                  </ion-item>
+                  <ion-item class="flex ion-justify-content-around">
+                    <ion-label>
+                      <h2>Credentials Received</h2>
+                    </ion-label>
+                    <ion-badge color="medium" item-end>4</ion-badge>
+                  </ion-item>
+                  <ion-item class="flex ion-justify-content-around">
+                    <ion-label>
+                      <h2>Certificates of Proof</h2>
+                    </ion-label>
+                    <ion-badge color="medium" item-end>2</ion-badge>
+                  </ion-item>
+                </ion-item-group>
+              </ion-list>
               
               <div style="display: flex">
                 <ion-button
