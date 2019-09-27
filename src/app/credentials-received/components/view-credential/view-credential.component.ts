@@ -74,7 +74,7 @@ import {Component, OnInit} from '@angular/core';
                 <ion-badge item-end>1.3</ion-badge>
               </ion-item>
 
-              <div style="display: flex">
+              <div style="display: flex; flex-direction: column">
                 <ion-button
                   style="flex: 1"
                   color="primary"
@@ -84,7 +84,7 @@ import {Component, OnInit} from '@angular/core';
                   margin
                   [routerLink]="['/credentials-received']"
                 >
-                  <ion-icon name="key"></ion-icon>
+                  <ion-icon name="share"></ion-icon>
                   Share Credential
                 </ion-button>
               </div>

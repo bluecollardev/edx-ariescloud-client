@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
+import { Router} from '@angular/router';
 
 @Component({
   selector: 'app-view-proof',
@@ -74,7 +76,7 @@ import {Component, OnInit} from '@angular/core';
                 <ion-badge item-end>1.3</ion-badge>
               </ion-item>
 
-              <div style="display: flex">
+              <div style="display: flex; flex-direction: column">
                 <ion-button
                   style="flex: 1"
                   color="primary"
@@ -82,10 +84,10 @@ import {Component, OnInit} from '@angular/core';
                   full
                   icon-start
                   margin
-                  [routerLink]="['/verify-credentials']"
+                  (click)="this.verifyCredPopup()"
                 >
-                  <ion-icon name="key"></ion-icon>
-                  Authenticate Credential
+                  <ion-icon name="finger-print"></ion-icon>
+                  Verify Credential
                 </ion-button>
               </div>
             </ion-card>
@@ -99,10 +101,36 @@ import {Component, OnInit} from '@angular/core';
 export class ViewProofComponent implements OnInit {
   graduationDate: string = new Date().toDateString()
 
-  constructor() {
-  }
+  constructor(
+    private router: Router,
+    private alertController: AlertController
+  ) {}
 
   ngOnInit() {
   }
 
+  async verifyCredPopup() {
+    const alert = await this.alertController.create({
+      header: 'Verifying Credential',
+      message: '<strong>Success!</strong> This credential is valid.',
+      buttons: [
+        {
+          text: 'Back',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+            this.router.navigate(['/verify-credentials']);
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 }

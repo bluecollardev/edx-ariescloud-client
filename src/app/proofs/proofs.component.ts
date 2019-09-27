@@ -126,7 +126,7 @@ export class ProofsComponent implements OnInit {
       buttons: [
         {
           text: 'View',
-          handler: () => this.router.navigate(['/credentials-received/view'])
+          handler: () => this.router.navigate(['/verify-credentials/view'])
         },
         {
           text: 'Verify',

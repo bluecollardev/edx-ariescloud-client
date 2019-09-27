@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -94,7 +94,8 @@ export class CredentialsReceivedComponent implements OnInit {
     private router: Router,
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
-    public actionSheetCtrl: ActionSheetController
+    public actionSheetCtrl: ActionSheetController,
+    private alertController: AlertController
   ) {
     this.initializeItems();
   }
@@ -133,7 +134,9 @@ export class CredentialsReceivedComponent implements OnInit {
         },
         {
           text: 'Share',
-          handler: () => this.router.navigate(['/credentials-received/share'])
+          handler: () => {
+            this.shareCredPopup()
+          }
         },
         {
           text: 'Delete',
@@ -153,5 +156,56 @@ export class CredentialsReceivedComponent implements OnInit {
     });
 
     await actionSheet.present();
+  }
+
+  async shareCredPopup() {
+    const alert = await this.alertController.create({
+      header: 'Share Credential',
+      message: 'Please choose a relationship to share this credential with.',
+      inputs: [
+        {
+          name: 'checkbox1',
+          type: 'checkbox',
+          label: 'ACME Inc.',
+          value: 'value1',
+          checked: false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+            this.credSharedPopup();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async credSharedPopup() {
+    const alert = await this.alertController.create({
+      header: 'Credential Shared',
+      message: 'Success! Your credential was shared with ACME Inc.',
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

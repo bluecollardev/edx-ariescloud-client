@@ -45,7 +45,7 @@ import { Component, OnInit } from '@angular/core';
                 <ion-label>Degree</ion-label>
                 <ion-badge item-end>Bachelor's of Science</ion-badge>
               </ion-item>
-          
+              
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>GPA</ion-label>
