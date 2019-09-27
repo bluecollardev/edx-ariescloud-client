@@ -17,7 +17,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Organization Credentials</ion-title>
+        <ion-title class="ios title-ios hydrated">My Organization's Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

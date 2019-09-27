@@ -76,16 +76,6 @@ export class AppComponent {
        icon: 'archive'
     },
     {
-      title: 'Organization Credentials',
-      url: '/credentials/',
-       icon: 'ribbon'
-    },
-    {
-      title: 'Define New Credential',
-      url: '/credentials/create/',
-      icon: 'bookmark'
-    },
-    {
       title: 'My Relationships',
       url: '/relationships/',
       icon: 'people'
@@ -96,10 +86,20 @@ export class AppComponent {
       icon: 'person-add'
     },
     {
+      title: 'My Org. Credentials',
+      url: '/credentials/',
+       icon: 'ribbon'
+    },
+    /*{
+      title: 'Create Org. Credential',
+      url: '/credentials/create/',
+      icon: 'bookmark'
+    },*/
+    {
       title: 'Sign Out',
       url: '/',
       icon: 'log-out'
-    },
+    }
   ];
 
   constructor(private menu: MenuController) {}
