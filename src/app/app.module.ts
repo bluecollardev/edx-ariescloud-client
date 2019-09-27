@@ -29,7 +29,6 @@ import { HttpClientModule } from '@angular/common/http';
     CredentialsModule,
     CredentialsReceivedModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
