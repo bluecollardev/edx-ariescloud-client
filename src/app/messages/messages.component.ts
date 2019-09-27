@@ -40,6 +40,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                     <h2>{{ item }}</h2>
                     <small>DID: abcd-1234-df34-cd34</small>
                   </ion-label>
+                  <ion-badge color="primary" item-end>2</ion-badge>
                 </ion-item>
               </ion-item-sliding>
             </ion-list>
