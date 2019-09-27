@@ -71,7 +71,7 @@ export class AppComponent {
       icon: 'mail'
     },
     {
-      title: 'My Connections',
+      title: 'My Relationships',
       url: '/relationships/',
       icon: 'people'
     },

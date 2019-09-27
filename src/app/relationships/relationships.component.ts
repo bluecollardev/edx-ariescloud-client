@@ -20,7 +20,7 @@ import { IRelationshipResponse } from './models/i-relationship';
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Manage Connections</ion-title
+          >Manage Relationships</ion-title
         >
       </ion-toolbar>
     </ion-header>
@@ -31,7 +31,7 @@ import { IRelationshipResponse } from './models/i-relationship';
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header>
-                Incoming Connection Requests
+                Pending Invitations
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of items.slice(0, 1)">
                 <ion-item [routerLink]="['view']">
@@ -53,25 +53,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 </ion-item-options>
               </ion-item-sliding>
               <ion-list-header>
-                Outgoing Connection Requests
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items.slice(1, 2)">
-                <ion-item [routerLink]="['view']">
-                  <ion-icon name="business" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
-                  </ion-label>
-                </ion-item>
-                <ion-item-options>
-                  <button ion-button color="primary" icon-start>
-                    <ion-icon name="ios-close" class="icon-md"></ion-icon>
-                    Cancel Request
-                  </button>
-                </ion-item-options>
-              </ion-item-sliding>
-              <ion-list-header>
-                My Connections
+                My Relationships
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of items">
                 <ion-item [routerLink]="['view']">
@@ -104,7 +86,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 [routerLink]="['add']"
               >
                 <ion-icon name="person-add"></ion-icon>
-                Add Connection
+                Create Invitation
               </ion-button>
             </div>
           </ion-col>
