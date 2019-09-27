@@ -31,7 +31,7 @@ import { IRelationshipResponse } from './models/i-relationship';
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header>
-                By Connection
+                By Relationship
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of items">
                 <ion-item [routerLink]="['view']">
