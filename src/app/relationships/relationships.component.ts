@@ -64,13 +64,9 @@ import { IRelationshipResponse } from './models/i-relationship';
                   </ion-label>
                 </ion-item>
                 <ion-item-options>
-                  <button ion-button color="light" icon-start>
-                    <ion-icon name="ios-checkmark" class="icon-md"></ion-icon>
-                    Accept
-                  </button>
                   <button ion-button color="primary" icon-start>
                     <ion-icon name="ios-close" class="icon-md"></ion-icon>
-                    Decline
+                    Cancel Request
                   </button>
                 </ion-item-options>
               </ion-item-sliding>
@@ -89,6 +85,10 @@ import { IRelationshipResponse } from './models/i-relationship';
                   <button ion-button color="light" icon-start>
                     <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
                     Disable
+                  </button>
+                  <button ion-button color="light" icon-start>
+                    <ion-icon name="trash" class="icon-md"></ion-icon>
+                    Delete
                   </button>
                 </ion-item-options>
               </ion-item-sliding>
