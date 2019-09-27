@@ -31,7 +31,7 @@ import { IRelationshipResponse } from './models/i-relationship';
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header>
-                Incoming Requests
+                Incoming Connection Requests
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of items.slice(0, 1)">
                 <ion-item [routerLink]="['view']">
@@ -53,7 +53,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 </ion-item-options>
               </ion-item-sliding>
               <ion-list-header>
-                Outgoing Requests
+                Outgoing Connection Requests
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of items.slice(1, 2)">
                 <ion-item [routerLink]="['view']">
