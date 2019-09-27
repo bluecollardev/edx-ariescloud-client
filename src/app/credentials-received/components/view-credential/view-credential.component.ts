@@ -113,7 +113,6 @@ export class ViewCredentialComponent implements OnInit {
   }
 
   async shareCredPopup() {
-    console.log(arguments);
     const alert = await this.alertController.create({
       header: 'Share Credential',
       message: 'Please choose a relationship to share this credential with.',
@@ -123,6 +122,54 @@ export class ViewCredentialComponent implements OnInit {
           type: 'checkbox',
           label: 'ACME Inc.',
           value: 'value1',
+          checked: false
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Ok');
+            this.selectDataPopup();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async selectDataPopup() {
+    const alert = await this.alertController.create({
+      header: 'Select Data',
+      message: 'Please select what information you want to share.',
+      inputs: [
+        {
+          name: 'checkbox1',
+          type: 'checkbox',
+          label: 'Degree',
+          value: 'value1',
+          checked: false
+        },
+        {
+          name: 'checkbox2',
+          type: 'checkbox',
+          label: 'Program',
+          value: 'value2',
+          checked: false
+        },
+        {
+          name: 'checkbox3',
+          type: 'checkbox',
+          label: 'Date of Study',
+          value: 'value3',
           checked: false
         }
       ],
@@ -152,15 +199,6 @@ export class ViewCredentialComponent implements OnInit {
       header: 'Credential Shared',
       message: 'Success! Your credential was shared with ACME Inc.',
       buttons: [
-        {
-          text: 'Back',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-            this.router.navigate(['/credentials-received']);
-          }
-        },
         {
           text: 'Ok',
           handler: () => {
