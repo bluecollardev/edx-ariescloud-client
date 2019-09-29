@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { RelationshipsComponent } from './relationships.component';
 import { AddRelationshipComponent } from './components/add-relationship/add-relationship.component';
 import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
+import { ApproveRelationshipComponent } from './components/approve-relationship/approve-relationship.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'relationships/view/:id',
     component: ViewRelationshipComponent,
+  },
+  {
+    path: 'relationships/approve/:id',
+    component: ApproveRelationshipComponent,
   }
 ];
 

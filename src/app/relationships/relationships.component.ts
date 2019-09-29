@@ -36,7 +36,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 Pending Invitations
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of pendingInvitationItems">
-                <ion-item (click)="this.viewDetail(item.did)">
+                <ion-item (click)="this.acceptInvitation(item.did)">
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item.name }}</h2>
@@ -187,5 +187,9 @@ export class RelationshipsComponent implements OnInit {
 
   viewDetail(did: string) {
     this.router.navigate([`/relationships/view/${did}`]);
+  }
+
+  acceptInvitation(did: string) {
+    this.router.navigate([`/relationships/approve/${did}`]);
   }
 }

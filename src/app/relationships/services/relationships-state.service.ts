@@ -21,6 +21,7 @@ export class RelationshipsStateService {
   ready = this._ready$.asObservable();
 
   invitation$: Observable<IInvitation> = new Observable<IInvitation>();
+  activeInvitation$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
   pendingInvitations$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
   // TODO: I don't know how to just grab one, whatever... I'll just use a stupid array for now
   activeRelationship$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
@@ -74,6 +75,21 @@ export class RelationshipsStateService {
 
   setActiveRelationship(did: string) {
     this.activeRelationship$ = this.relationships$.pipe(
+      map(rs => {
+        return rs.filter(r => {
+          console.log('------------');
+          console.log(r);
+          console.log(r.did);
+          console.log(did);
+          console.log('------------');
+          return r.did === did;
+        });
+      })
+    );
+  }
+
+  setActiveInvitation(did: string) {
+    this.activeInvitation$ = this.pendingInvitations$.pipe(
       map(rs => {
         return rs.filter(r => {
           console.log('------------');

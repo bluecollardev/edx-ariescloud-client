@@ -28,6 +28,20 @@ export class RelationshipsActionService {
     console.log(apiUrl);
   }
 
+  getPendingInvitation(did: string, params: IConnectionParams = {}) {
+    const invitation = this.http.get<IRelationship[]>(
+      `${this.url}relationships/${did}`,
+      { headers: this.headers }
+    );
+
+    this.stateSvc.setActiveInvitation(did);
+
+    console.log('active invitation');
+    console.log(this.stateSvc.activeInvitation$);
+
+    return this.stateSvc.activeInvitation$;
+  }
+
   getPendingInvitations(params: IConnectionParams = {}) {
     const pendingInvitations = this.http.get<IRelationship[]>(
       `${this.url}relationships`,

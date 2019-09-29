@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RelationshipsRoutingModule } from './relationships-routing.module';
 import { RelationshipsComponent } from './relationships.component';
 import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
+import { ApproveRelationshipComponent } from './components/approve-relationship/approve-relationship.component';
 import { AddRelationshipComponent } from './components/add-relationship/add-relationship.component';
 import { SharedModule } from '../shared/shared.module';
 
@@ -11,7 +12,8 @@ import { SharedModule } from '../shared/shared.module';
   declarations: [
     RelationshipsComponent,
     ViewRelationshipComponent,
-    AddRelationshipComponent
+    AddRelationshipComponent,
+    ApproveRelationshipComponent
   ],
   imports: [CommonModule, SharedModule, RelationshipsRoutingModule],
   exports: [AddRelationshipComponent],
