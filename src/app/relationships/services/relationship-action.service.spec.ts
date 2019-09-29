@@ -11,4 +11,14 @@ describe('ActionsService', () => {
     );
     expect(service).toBeTruthy();
   });
+
+  it('should be able to get relationships', () => {
+    const service: RelationshipsActionService = TestBed.get(
+      RelationshipsActionService
+    );
+
+    const relationships = service.getRelationships();
+
+    expect(service).toBeTruthy();
+  });
 });

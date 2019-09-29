@@ -6,7 +6,7 @@ import {
 } from '../models/i-relationship';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { HttpService, IHttpConfig } from 'src/app/core/services/http.service';
+import { HttpService } from 'src/app/core/services/http.service';
 import { IInvitation } from '../models/i-invitation';
 import { MessagesStateService } from './messages-state.service';
 

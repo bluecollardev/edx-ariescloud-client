@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import {
   IRelationshipResponse,
   IConnectionParams
 } from '../models/i-relationship';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { HttpService, IHttpConfig } from 'src/app/core/services/http.service';
+import { HttpService } from 'src/app/core/services/http.service';
 import { IInvitation } from '../models/i-invitation';
-import { RelationshipsStateService } from './relationships-state.service';
+import { RelationshipsStateService, IRelationship } from './relationships-state.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -28,11 +28,22 @@ export class RelationshipsActionService {
     console.log(apiUrl);
   }
 
-  getRelationships(params: IConnectionParams = {}) {
-    return (this.stateSvc.relationships$ = this.http.get<IRelationshipResponse>(
+  getPendingInvitations(params: IConnectionParams = {}) {
+    const pendingInvitations = this.http.get<IRelationship[]>(
       `${this.url}relationships`,
       { headers: this.headers }
-    ));
+    );
+
+    return this.stateSvc.pendingInvitations$;
+  }
+
+  getRelationships(params: IConnectionParams = {}) {
+    const relationships = this.http.get<IRelationship[]>(
+      `${this.url}relationships`,
+      { headers: this.headers }
+    );
+
+    return this.stateSvc.relationships$;
   }
 
   createInvitation() {

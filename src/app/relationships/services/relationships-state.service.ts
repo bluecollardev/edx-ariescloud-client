@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { first, last, map, reduce, find, filter, skipWhile } from 'rxjs/operators';
 import { IInvitation } from '../models/i-invitation';
 import { IRelationshipResponse } from '../models/i-relationship';
 
@@ -8,50 +9,64 @@ export interface IRelationship {
   type: string;
   received: Date;
   did: string;
+  publicDid: string;
+  status: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class RelationshipsStateService {
-  // relationships$: BehaviorSubject<IRelationship[]> = new BehaviorSubject<
-  // IRelationship[]
-  // >(null);
-
-  // relationships = this.relationships$.asObservable();
-
-  invitation$: Observable<IInvitation>;
-  relationships$: Observable<IRelationshipResponse>;
-
   private _ready$ = new BehaviorSubject<boolean>(false);
   ready = this._ready$.asObservable();
+
+  invitation$: Observable<IInvitation> = new Observable<IInvitation>();
+  pendingInvitations$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
+  relationships$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
+
+  constructor() {
+    const pending = of([
+      {
+        name: 'Faber',
+        type: 'issuer',
+        received: new Date(),
+        did: 'xyzdf-213ras-eqadzx-123sd',
+        publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
+        status: 'pending'
+      }
+    ]);
+
+    const relationships = of([
+      {
+        name: 'ACME Inc.',
+        type: 'verifier',
+        received: new Date(),
+        did: 'xyzdf-213ras-eqadzx-123sd',
+        publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
+        status: 'active'
+      }
+    ]);
+
+    this.setRelationships(pending);
+    this.setPendingInvitations(relationships);
+    this.setReady(true);
+  }
 
   setReady(bool: boolean) {
     this._ready$.next(bool);
   }
 
-  // setRelationships(data: IRelationship[]) {
-  //   this.relationships$.next(data);
-  // }
+  setRelationship(data: IRelationship) {
+    return this.relationships$.pipe(
+      map(rs => rs.find(r => r.did === data.did))
+    );
+  }
 
-  constructor() {
-    const relationships = [
-      {
-        name: 'Faber',
-        type: 'foo',
-        received: new Date(),
-        did: 'xyzdf-213ras-eqadzx-123sd',
-        publicDid: 'GqaFzVnQTXVYzqSVnDETwP'
-      },
-      {
-        name: 'Acme',
-        type: 'bar',
-        received: new Date(),
-        did: 'adslfj-1234-cxv324-asfxdf',
-        publicDid: 'NEBWptNanb25KNRmogbPZ3'
-      }
-    ];
+  setRelationships(data: Observable<IRelationship[]>) {
+    this.relationships$ = data;
+  }
 
-    // this.relationships$.next(relationships);
+  setPendingInvitations(data: Observable<IRelationship[]>) {
+    this.pendingInvitations$ = data;
   }
 }

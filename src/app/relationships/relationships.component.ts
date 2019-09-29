@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { first, last, map, reduce, find, filter, skipWhile } from 'rxjs/operators';
 
-import { RelationshipsStateService } from './services/relationships-state.service';
+import { RelationshipsStateService, IRelationship } from './services/relationships-state.service';
 import { RelationshipsActionService } from './services/relationships-action.service';
 import { IRelationshipResponse } from './models/i-relationship';
 
@@ -29,16 +30,16 @@ import { IRelationshipResponse } from './models/i-relationship';
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-            <ion-list>
+            <ion-list *ngIf="pendingInvitations | async as pendingInvitationItems">
               <ion-list-header>
                 Pending Invitations
               </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items.slice(0, 1)">
+              <ion-item-sliding *ngFor="let item of pendingInvitationItems">
                 <ion-item [routerLink]="['view']">
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
+                    <h2>{{ item.name }}</h2>
+                    <small>DID: {{ item.did }}</small>
                   </ion-label>
                 </ion-item>
                 <ion-item-options>
@@ -52,15 +53,17 @@ import { IRelationshipResponse } from './models/i-relationship';
                   </ion-item-option>
                 </ion-item-options>
               </ion-item-sliding>
+            </ion-list>
+            <ion-list *ngIf="relationships | async as relationshipItems">
               <ion-list-header>
                 My Relationships
               </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items">
+              <ion-item-sliding *ngFor="let item of relationshipItems">
                 <ion-item [routerLink]="['view']">
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ item }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
+                    <h2>{{ item.name }}</h2>
+                    <small>DID: {{ item.did }}</small>
                   </ion-label>
                 </ion-item>
                 <ion-item-options>
@@ -99,8 +102,8 @@ import { IRelationshipResponse } from './models/i-relationship';
 })
 export class RelationshipsComponent implements OnInit {
   // searchQuery: '';
-  items: string[];
-  relationships$: Observable<IRelationshipResponse>;
+  pendingInvitations: Observable<IRelationship[]>;
+  relationships: Observable<IRelationship[]>;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -111,30 +114,29 @@ export class RelationshipsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.actionSvc.getPendingInvitations();
     this.actionSvc.getRelationships();
-    /*this.stateSvc.ready.subscribe(bool => {
+    this.stateSvc.ready.subscribe(bool => {
       console.log('bool', bool)
       if (bool) {
-        this.relationships$ = this.stateSvc.relationships$;
-        this.relationships$.subscribe(obs => console.log(obs));
+        this.pendingInvitations = this.stateSvc.pendingInvitations$;
+        this.pendingInvitations.subscribe(obs => {
+          console.log('pending invitations loaded');
+          console.log(obs);
+        });
+
+        this.relationships = this.stateSvc.relationships$;
+        this.relationships.subscribe(obs => {
+          console.log('relationships loaded');
+          console.log(obs);
+        });
       }
-    });*/
+    });
   }
 
   initializeItems() {
-    this.items = [
-      'Faber University',
-      'ACME Inc.',
-      // 'Alice Cooper',
-      'Bob Johnson',
-      'James Kirk'
-      // 'Joanne Roberts',
-      // 'Jordan Stewart',
-      // 'Nicole Pennington',
-      // 'Morgan Wesley',
-      // 'George Phillip',
-      // 'Tamara Jackson'
-    ];
+    this.pendingInvitations = this.actionSvc.getPendingInvitations();
+    this.relationships = this.actionSvc.getRelationships();
   }
 
   getItems(ev: any) {
@@ -146,9 +148,11 @@ export class RelationshipsComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-      this.items = this.items.filter(item => {
-        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      });
+      this.relationships = this.relationships.pipe(
+        map(rs => rs.filter(r => {
+          return r.name.toLowerCase().indexOf(val.toLowerCase()) > -1;
+        }))
+      );
     }
   }
 
