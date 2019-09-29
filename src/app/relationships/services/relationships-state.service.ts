@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { first, last, map, reduce, find, filter, skipWhile } from 'rxjs/operators';
+import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
 import { IInvitation } from '../models/i-invitation';
 import { IRelationshipResponse } from '../models/i-relationship';
 
@@ -22,6 +22,8 @@ export class RelationshipsStateService {
 
   invitation$: Observable<IInvitation> = new Observable<IInvitation>();
   pendingInvitations$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
+  // TODO: I don't know how to just grab one, whatever... I'll just use a stupid array for now
+  activeRelationship$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
   relationships$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
 
   constructor() {
@@ -41,14 +43,22 @@ export class RelationshipsStateService {
         name: 'ACME Inc.',
         type: 'verifier',
         received: new Date(),
-        did: 'xyzdf-213ras-eqadzx-123sd',
+        did: 'xyzdf-678ras-eqadzx-123qr',
+        publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
+        status: 'active'
+      },
+      {
+        name: 'Google Inc.',
+        type: 'verifier',
+        received: new Date(),
+        did: 'xyzdf-678ras-eqadzx-784yx',
         publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
         status: 'active'
       }
     ]);
 
-    this.setRelationships(pending);
-    this.setPendingInvitations(relationships);
+    this.setPendingInvitations(pending);
+    this.setRelationships(relationships);
     this.setReady(true);
   }
 
@@ -57,8 +67,23 @@ export class RelationshipsStateService {
   }
 
   setRelationship(data: IRelationship) {
-    return this.relationships$.pipe(
-      map(rs => rs.find(r => r.did === data.did))
+    // this.activeRelationship$ = this.relationships$.pipe(
+    //  map(rs => rs.filter(r => r.did === data.did)[0])
+    // );
+  }
+
+  setActiveRelationship(did: string) {
+    this.activeRelationship$ = this.relationships$.pipe(
+      map(rs => {
+        return rs.filter(r => {
+          console.log('------------');
+          console.log(r);
+          console.log(r.did);
+          console.log(did);
+          console.log('------------');
+          return r.did === did;
+        });
+      })
     );
   }
 

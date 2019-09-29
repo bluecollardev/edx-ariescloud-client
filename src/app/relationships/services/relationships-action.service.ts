@@ -37,6 +37,20 @@ export class RelationshipsActionService {
     return this.stateSvc.pendingInvitations$;
   }
 
+  getRelationship(did: string, params: IConnectionParams = {}) {
+    const relationship = this.http.get<IRelationship[]>(
+      `${this.url}relationships/${did}`,
+      { headers: this.headers }
+    );
+
+    this.stateSvc.setActiveRelationship(did);
+
+    console.log('active relationship');
+    console.log(this.stateSvc.activeRelationship$);
+
+    return this.stateSvc.activeRelationship$;
+  }
+
   getRelationships(params: IConnectionParams = {}) {
     const relationships = this.http.get<IRelationship[]>(
       `${this.url}relationships`,
@@ -48,6 +62,15 @@ export class RelationshipsActionService {
 
   createInvitation() {
     this.stateSvc.invitation$ = this.http.post<IInvitation>(
+      `${this.url}relationships`,
+      {
+        headers: this.headers
+      }
+    );
+  }
+
+  acceptInvitation() {
+    this.stateSvc.invitation$ = this.http.put<IInvitation>(
       `${this.url}relationships`,
       {
         headers: this.headers

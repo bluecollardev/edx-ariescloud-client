@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { first, last, map, reduce, find, filter, skipWhile } from 'rxjs/operators';
@@ -35,7 +36,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 Pending Invitations
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of pendingInvitationItems">
-                <ion-item [routerLink]="['view']">
+                <ion-item (click)="this.viewDetail(item.did)">
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item.name }}</h2>
@@ -59,7 +60,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 My Relationships
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of relationshipItems">
-                <ion-item [routerLink]="['view']">
+                <ion-item (click)="this.viewDetail(item.did)">
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item.name }}</h2>
@@ -106,6 +107,7 @@ export class RelationshipsComponent implements OnInit {
   relationships: Observable<IRelationship[]>;
 
   constructor(
+    public router: Router,
     public actionSheetCtrl: ActionSheetController,
     private stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService
@@ -114,8 +116,6 @@ export class RelationshipsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.actionSvc.getPendingInvitations();
-    this.actionSvc.getRelationships();
     this.stateSvc.ready.subscribe(bool => {
       console.log('bool', bool)
       if (bool) {
@@ -135,8 +135,8 @@ export class RelationshipsComponent implements OnInit {
   }
 
   initializeItems() {
-    this.pendingInvitations = this.actionSvc.getPendingInvitations();
-    this.relationships = this.actionSvc.getRelationships();
+    this.actionSvc.getPendingInvitations();
+    this.actionSvc.getRelationships();
   }
 
   getItems(ev: any) {
@@ -183,5 +183,9 @@ export class RelationshipsComponent implements OnInit {
     });
 
     // actionSheet.present();
+  }
+
+  viewDetail(did: string) {
+    this.router.navigate([`/relationships/view/${did}`]);
   }
 }
