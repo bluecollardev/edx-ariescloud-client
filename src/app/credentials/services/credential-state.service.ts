@@ -171,7 +171,31 @@ export class CredentialStateService {
         status: 'Graduated',
         version: '1.2',
         schema: 'random-course'
-      }
+      },
+      {
+        id: 'goog-127',
+        issuedBy: 'Google Inc.',
+        issuedTo: 'Alice Cooper',
+        dateIssued: new Date(),
+        name: 'Google Certified Developer',
+        type: 'Course',
+        program: 'Web Developer',
+        status: 'Graduated',
+        version: '1.2',
+        schema: 'certificate'
+      },
+      {
+        id: 'goog-127',
+        issuedBy: 'Google Inc.',
+        issuedTo: 'Alice Cooper',
+        dateIssued: new Date(),
+        name: 'Google Certified Developer',
+        type: 'Course',
+        program: 'Cloud Developer',
+        status: 'Graduated',
+        version: '1.2',
+        schema: 'certificate'
+      },
     ];
 
     const credentialProofs = [

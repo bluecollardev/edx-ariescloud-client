@@ -3,10 +3,10 @@ import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { CredentialStateService, ICredential, IIssuer } from '../credentials/services/credential-state.service';
-import { RelationshipsStateService, IRelationship } from '../relationships/services/relationships-state.service';
-import { CredentialActionsService } from '../credentials/services/credential-actions.service';
-import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
+import { CredentialStateService, ICredential, IIssuer } from '../../../credentials/services/credential-state.service';
+import { RelationshipsStateService, IRelationship } from '../../../relationships/services/relationships-state.service';
+import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
+import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
 
 @Component({
   selector: 'app-credentials-received',
@@ -21,7 +21,7 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">My Credentials</ion-title>
+        <ion-title class="ios title-ios hydrated">Faber University Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -31,29 +31,47 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="stateSvc.issuers$ | async as issuerGroups">
+        <ion-row *ngIf="stateSvc.credentials$ | async as creds">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-list>
-              <ion-item-sliding *ngFor="let issuer of issuerGroups" [routerLink]="['group/' + issuer.did]">
-                <ion-item>
-                  <ion-icon name="business" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ issuer.name }}</h2>
-                    <small>DID: {{ issuer.did }}</small>
-                  </ion-label>
-                  <ion-badge color="primary" item-end>2</ion-badge>
-                </ion-item>
-              </ion-item-sliding>
-            </ion-list>
+            <ion-grid style="width: 100%;">
+              <!--<ion-row>
+                <ion-col>
+                  <ion-list-header>
+                    <ion-label>My Credentials</ion-label>
+                  </ion-list-header>
+                </ion-col>
+              </ion-row>-->
+              <ion-row>
+                <ion-col
+                  *ngFor="let cred of creds"
+                  sizeXs="6"
+                  sizeSm="4"
+                  sizeMd="3"
+                  sizeLg="2"
+                >
+                  <ion-card text-center (click)="this.presentActionSheet()">
+                    <ion-card-header>
+                      {{ cred.issuedBy }}
+                    </ion-card-header>
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-card-content>
+                      <small><strong>{{ cred.name }}</strong></small>
+                      <br />
+                      <small>{{ cred.program }}</small>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./credentials-received.component.scss'],
+  styleUrls: ['./org-credentials.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CredentialsReceivedComponent implements OnInit {
+export class OrgCredentialsComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
@@ -111,7 +129,7 @@ export class CredentialsReceivedComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-     /* this.issuers = this.issuers.filter(item => {
+      /*this.issuers = this.issuers.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });*/
     }

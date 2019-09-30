@@ -33,8 +33,8 @@ import { IRelationshipResponse } from './models/i-relationship';
               <ion-list-header>
                 By Relationship
               </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items">
-                <ion-item [routerLink]="['view']">
+              <ion-item-sliding *ngFor="let item of items" [routerLink]="['view']">
+                <ion-item>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item }}</h2>
