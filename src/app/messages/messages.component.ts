@@ -4,7 +4,12 @@ import { Observable } from 'rxjs';
 
 import { MessagesStateService } from './services/messages-state.service';
 import { MessagesActionService } from './services/messages-action.service';
-import { IRelationshipResponse } from './models/i-relationship';
+
+import { CredentialStateService, ICredential } from '../credentials/services/credential-state.service';
+import { CredentialActionsService } from '../credentials/services/credential-actions.service';
+import { RelationshipsStateService, IRelationship } from '../relationships/services/relationships-state.service';
+import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
+
 
 @Component({
   selector: 'app-relationships',
@@ -26,18 +31,18 @@ import { IRelationshipResponse } from './models/i-relationship';
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row>
+        <ion-row *ngIf="relationships | async as relationships">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header>
                 By Relationship
               </ion-list-header>
-              <ion-item-sliding *ngFor="let item of items" [routerLink]="['view']">
+              <ion-item-sliding *ngFor="let relationship of relationships" [routerLink]="['view']">
                 <ion-item>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ item }}</h2>
+                    <h2>{{ relationship.name }}</h2>
                     <small>DID: abcd-1234-df34-cd34</small>
                   </ion-label>
                   <ion-badge color="primary" item-end>2</ion-badge>
@@ -53,43 +58,35 @@ import { IRelationshipResponse } from './models/i-relationship';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessagesComponent implements OnInit {
-  // searchQuery: '';
-  items: string[];
-  relationships$: Observable<IRelationshipResponse>;
+  searchQuery: '';
+  credentials: Observable<ICredential[]>;
+  relationships: Observable<IRelationship[]>;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
     private stateSvc: MessagesStateService,
-    private actionSvc: MessagesActionService
+    private actionSvc: MessagesActionService,
+    public relationshipsStateSvc: RelationshipsStateService,
+    public relationshipsActionSvc: RelationshipsActionService,
+    // Not used yet...
+    public credentialStateSvc: CredentialStateService,
+    public credentialActionSvc: CredentialActionsService
   ) {
     this.initializeItems();
   }
 
   ngOnInit() {
-    this.actionSvc.getRelationships();
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool)
+    this.relationshipsStateSvc.ready.subscribe(bool => {
+      console.log('bool', bool);
       if (bool) {
-        this.relationships$ = this.stateSvc.relationships$;
-        this.relationships$.subscribe(obs => console.log(obs));
+        this.relationships = this.relationshipsStateSvc.relationships$;
+        this.relationships.subscribe(obs => console.log(obs));
       }
     });
   }
 
-  initializeItems() {
-    this.items = [
-      'Faber University',
-      'ACME Inc.',
-      // 'Alice Cooper',
-      'Bob Johnson',
-      'James Kirk'
-      // 'Joanne Roberts',
-      // 'Jordan Stewart',
-      // 'Nicole Pennington',
-      // 'Morgan Wesley',
-      // 'George Phillip',
-      // 'Tamara Jackson'
-    ];
+  async initializeItems() {
+    await this.relationshipsActionSvc.getRelationships();
   }
 
   getItems(ev: any) {
@@ -101,9 +98,9 @@ export class MessagesComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-      this.items = this.items.filter(item => {
+      /*this.items = this.items.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      });
+      });*/
     }
   }
 

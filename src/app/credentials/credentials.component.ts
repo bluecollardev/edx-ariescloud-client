@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
-import { CredentialStateService } from './services/credential-state.service';
+import { CredentialStateService, ICredentialDef } from './services/credential-state.service';
 import { CredentialActionsService } from './services/credential-actions.service';
 
 @Component({
@@ -34,9 +35,9 @@ import { CredentialActionsService } from './services/credential-actions.service'
                   </ion-list-header>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="stateSvc.credentialDefs$ | async as credDef">
+              <ion-row *ngIf="credentialDefs | async as credDefs">
                 <ion-col
-                  *ngFor="let credDef of credDef"
+                  *ngFor="let credDef of credDefs"
                   sizeXs="6"
                   sizeSm="4"
                   sizeMd="3"
@@ -64,7 +65,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
                 margin
                 [routerLink]="['create']">
                 <ion-icon name="add"></ion-icon>
-                Create New Credential
+                Create New Credential Type
               </ion-button>
             </div>
           </ion-col>
@@ -77,11 +78,11 @@ import { CredentialActionsService } from './services/credential-actions.service'
 })
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
-  credentials: any[];
+  credentialDefs: Observable<ICredentialDef[]>;
 
   constructor(
     private router: Router,
-    public stateSvc: CredentialStateService,
+    private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController
   ) {
@@ -89,6 +90,13 @@ export class CredentialsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.stateSvc.ready.subscribe(bool => {
+      console.log('bool', bool);
+      if (bool) {
+        this.credentialDefs = this.stateSvc.credentialDefs$;
+        this.credentialDefs.subscribe(obs => console.log(obs));
+      }
+    });
   }
 
   async initializeItems() {
@@ -104,9 +112,9 @@ export class CredentialsComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-      this.credentials = this.credentials.filter(item => {
+      /*this.credentialDefs = this.credentialDefs.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      });
+      });*/
     }
   }
 
