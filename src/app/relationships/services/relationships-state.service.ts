@@ -30,7 +30,7 @@ export class RelationshipsStateService {
   constructor() {
     const pending = of([
       {
-        name: 'Faber',
+        name: 'Faber University',
         type: 'issuer',
         received: new Date(),
         did: 'xyzdf-213ras-eqadzx-123sd',

@@ -3,13 +3,7 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 
 import { CredentialActionsService } from '../../services/credential-actions.service';
-import { CredentialStateService } from '../../services/credential-state.service';
-
-export interface ICredDef {
-  name: string;
-  version: string;
-  schema: string[];
-}
+import { CredentialStateService, ICredentialDef } from '../../services/credential-state.service';
 
 @Component({
   template: `
@@ -178,7 +172,7 @@ export class EditCredentialComponent implements OnInit {
     // re-direct url of some kind
   }
 
-  sendCredDef(credDef: ICredDef) {
+  sendCredDef(credDef: ICredentialDef) {
     console.log(credDef);
     this.actionSvc.submitCredDef(credDef);
   }

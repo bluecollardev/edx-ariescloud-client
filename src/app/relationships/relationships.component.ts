@@ -134,9 +134,9 @@ export class RelationshipsComponent implements OnInit {
     });
   }
 
-  initializeItems() {
-    this.actionSvc.getPendingInvitations();
-    this.actionSvc.getRelationships();
+  async initializeItems() {
+    await this.actionSvc.getPendingInvitations();
+    await this.actionSvc.getRelationships();
   }
 
   getItems(ev: any) {

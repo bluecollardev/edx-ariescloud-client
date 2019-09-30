@@ -1,9 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
-import { CredentialStateService } from '../credentials/services/credential-state.service';
+import { CredentialStateService, ICredential } from '../credentials/services/credential-state.service';
+import { RelationshipsStateService, IRelationship } from '../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../credentials/services/credential-actions.service';
+import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
 
 @Component({
   selector: 'app-credentials-received',
@@ -40,7 +43,10 @@ import { CredentialActionsService } from '../credentials/services/credential-act
                 </ion-item>
               </ion-item-sliding>
             </ion-list>
-
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="stateSvc.credentials$ | async as creds">
+          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-grid style="width: 100%;">
               <ion-row>
                 <ion-col>
@@ -49,7 +55,7 @@ import { CredentialActionsService } from '../credentials/services/credential-act
                   </ion-list-header>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="stateSvc.credentials | async as creds">
+              <ion-row>
                 <ion-col
                   *ngFor="let cred of creds"
                   sizeXs="6"
@@ -82,29 +88,50 @@ import { CredentialActionsService } from '../credentials/services/credential-act
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
   issuers: string[];
-  credentials: any[];
+  credentials: Observable<ICredential[]>;
+  relationships: Observable<IRelationship[]>;
 
   constructor(
     private router: Router,
     public stateSvc: CredentialStateService,
+    public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: CredentialActionsService,
+    private relationshipActionSvc: RelationshipsActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController
   ) {
     this.initializeItems();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.stateSvc.ready.subscribe(bool => {
+      console.log('subscribing to service observables');
+      // console.log('bool', bool)
+      if (bool) {
+        this.credentials = this.stateSvc.credentials$;
+        this.credentials.subscribe(obs => {
+          console.log('credentials loaded');
+          console.log(obs);
+        });
+
+        this.relationships = this.relationshipStateSvc.relationships$;
+        this.relationships.subscribe(obs => {
+          console.log('relationships loaded');
+          console.log(obs);
+        });
+      }
+    });
+  }
 
   async initializeItems() {
-    await this.actionSvc.loadCredDefs();
+    await this.actionSvc.getCredentials();
     this.issuers = [];
   }
 
-  getItems(issuers, ev: any) {
-    let filtered = [];
+  async getItems(issuers, ev: any) {
+    const filtered = [];
     // Reset items back to all of the items
-    this.initializeItems();
+    await this.initializeItems();
 
     // set val to the value of the searchbar
     const val = ev.target.value;
