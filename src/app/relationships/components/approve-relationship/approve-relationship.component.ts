@@ -95,7 +95,7 @@ export class ApproveRelationshipComponent implements OnInit {
 
   ngOnInit() {
     this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool)
+      console.log('bool', bool);
       if (bool) {
         this.active = this.stateSvc.pendingInvitations$;
       }

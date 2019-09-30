@@ -50,7 +50,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center (click)="this.presentActionSheet()">
+                  <ion-card text-center (click)="this.presentActionSheet(cred.id)">
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
@@ -96,7 +96,7 @@ export class OrgCredentialsComponent implements OnInit {
   ngOnInit() {
     this.stateSvc.ready.subscribe(bool => {
       console.log('subscribing to service observables');
-      // console.log('bool', bool)
+      // console.log('bool', bool);
       if (bool) {
         this.credentials = this.stateSvc.credentials$;
         this.credentials.subscribe(obs => {
@@ -120,7 +120,7 @@ export class OrgCredentialsComponent implements OnInit {
   }
 
   async setOrgName() {
-    await this.stateSvc.issuers$.pipe(
+     this.stateSvc.issuers$.pipe(
       map(is => {
         return is.filter((i) => i.did === this.route.snapshot.paramMap.get('did'))[0];
       })
@@ -153,12 +153,12 @@ export class OrgCredentialsComponent implements OnInit {
     return filtered;
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(credId: any) {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
           text: 'View',
-          handler: () => this.router.navigate(['/credentials-received/view'])
+          handler: () => this.router.navigate([`/credentials-received/view/${credId}`])
         },
         {
           text: 'Share',

@@ -73,7 +73,7 @@ export class CredentialActionsService {
     return this.stateSvc.activeCredential$;
   }
 
-  getCredentials(params: ICredentialParams) {
+  getCredentials(params?: ICredentialParams) {
     const response = this.http.get<ICredential[]>(
       `${this.url}credentials`,
       { headers: this.headers }

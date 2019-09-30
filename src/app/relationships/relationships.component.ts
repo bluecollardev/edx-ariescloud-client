@@ -117,7 +117,7 @@ export class RelationshipsComponent implements OnInit {
 
   ngOnInit() {
     this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool)
+      console.log('bool', bool);
       if (bool) {
         this.pendingInvitations = this.stateSvc.pendingInvitations$;
         this.pendingInvitations.subscribe(obs => {

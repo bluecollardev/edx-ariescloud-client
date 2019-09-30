@@ -105,7 +105,6 @@ import { IRelationshipResponse } from '../../models/i-relationship';
   styleUrls: ['./view-relationship.component.scss']
 })
 export class ViewRelationshipComponent implements OnInit {
-  graduationDate: string = new Date().toDateString();
   active: Observable<IRelationship[]>;
 
   constructor(
@@ -120,11 +119,10 @@ export class ViewRelationshipComponent implements OnInit {
 
   ngOnInit() {
     this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool)
+      console.log('bool', bool);
       if (bool) {
         this.active = this.stateSvc.activeRelationship$;
       }
     });
   }
-
 }

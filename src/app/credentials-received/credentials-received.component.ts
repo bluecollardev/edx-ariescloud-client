@@ -74,7 +74,7 @@ export class CredentialsReceivedComponent implements OnInit {
   ngOnInit() {
     this.stateSvc.ready.subscribe(bool => {
       console.log('subscribing to service observables');
-      // console.log('bool', bool)
+      // console.log('bool', bool);
       if (bool) {
         this.credentials = this.stateSvc.credentials$;
         this.credentials.subscribe(obs => {

@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { CredentialStateService, ICredential } from '../../services/credential-state.service';
+import { CredentialActionsService } from '../../services/credential-actions.service';
+// import { ICredentialResponse } from '../../models/i-credential';
 
 @Component({
   selector: 'app-view-credential',
@@ -78,11 +84,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view-credential.component.scss']
 })
 export class ViewCredentialComponent implements OnInit {
-  graduationDate: string = new Date().toDateString()
+  active: Observable<ICredential[]>;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    private stateSvc: CredentialStateService,
+    private actionSvc: CredentialActionsService
+  ) {
+    this.actionSvc.getCredentials(); // Load all credentials first
+    this.actionSvc.getCredential(this.route.snapshot.paramMap.get('id'));
   }
 
+  ngOnInit() {
+    this.stateSvc.ready.subscribe(bool => {
+      console.log('bool', bool);
+      if (bool) {
+        this.active = this.stateSvc.activeCredential$;
+      }
+    });
+  }
 }
