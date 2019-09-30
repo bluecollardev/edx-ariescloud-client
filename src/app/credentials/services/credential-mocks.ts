@@ -171,7 +171,8 @@ const certificatesOfProof = [
         restrictions: [{}]
       }
     },
-    requested_predicates: []
+    requested_predicates: [],
+    status: 'pending'
   },
   {
     id: 'abc-124',
@@ -184,7 +185,8 @@ const certificatesOfProof = [
         restrictions: [{}]
       }
     },
-    requested_predicates: []
+    requested_predicates: [],
+    status: 'pending'
   },
   {
     id: 'abc-125',
@@ -197,11 +199,26 @@ const certificatesOfProof = [
         restrictions: [{}]
       }
     },
-    requested_predicates: []
+    requested_predicates: [],
+    status: 'pending'
+  },
+  {
+    id: 'abc-125',
+    issuerDid: 'xyzdf-678ras-adsf324-fg456',
+    name: 'Is Google Certified',
+    version: '1.2',
+    requested_attributes: {
+      attr1_referents: {
+        name: 'ipsum',
+        restrictions: [{}]
+      }
+    },
+    requested_predicates: [],
+    status: 'complete'
   },
   {
     id: 'abc-126',
-    issuerDid: 'xyzdf-678ras-eqadzx-123qr',
+    issuerDid: 'xyzdf-678ras-adsf324-fg456',
     name: 'Passes a Criminal Record Check',
     version: '1.2',
     requested_attributes: {
@@ -210,7 +227,8 @@ const certificatesOfProof = [
         restrictions: [{}]
       }
     },
-    requested_predicates: []
+    requested_predicates: [],
+    status: 'complete'
   }
 ];
 

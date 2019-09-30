@@ -14,7 +14,7 @@ const routes: Routes = [
     component: ViewProofComponent,
   },
   {
-    path: 'verify-credentials/group/:id',
+    path: 'verify-credentials/group/:did',
     component: RelationshipProofsComponent,
   },
   {

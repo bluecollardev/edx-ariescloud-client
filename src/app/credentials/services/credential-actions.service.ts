@@ -178,7 +178,7 @@ export class CredentialActionsService {
     if (params && params.did) {
       return (this.stateSvc.certificatesOfProof$ = this.stateSvc.certificatesOfProof$.pipe(
         map(cs => {
-          const filtered = cs.filter(c => c.id === params.id);
+          const filtered = cs.filter(c => c.issuerDid === params.did);
           console.log(filtered);
           return filtered;
         })

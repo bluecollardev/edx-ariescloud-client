@@ -49,6 +49,14 @@ export class RelationshipsStateService {
         status: 'active'
       },
       {
+        name: 'Wall Street Co.',
+        type: 'verifier',
+        received: new Date(),
+        did: 'xyzdf-678ras-adsf324-fg456',
+        publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
+        status: 'active'
+      },
+      {
         name: 'Google Inc.',
         type: 'verifier',
         received: new Date(),

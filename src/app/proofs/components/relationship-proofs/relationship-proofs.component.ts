@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -32,17 +32,10 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="proofs | async as certificates">
+        <ion-row *ngIf="stateSvc.certificatesOfProof$ | async as certificates">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-grid style="width: 100%;">
-              <ion-row>
-                <ion-col>
-                  <ion-list-header>
-                    <ion-label>Pending Requests</ion-label>
-                  </ion-list-header>
-                </ion-col>
-              </ion-row>
               <ion-row *ngIf="stateSvc.certificatesOfProof$ | async as certificates">
                 <ion-col
                   *ngFor="let certificate of certificates"
@@ -65,7 +58,6 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                 </ion-col>
               </ion-row>
             </ion-grid>
-
             <div class="ion-padding">
               <ion-button
                 expand="block"
@@ -74,37 +66,6 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                 Request Certificate of Proof
               </ion-button>
             </div>
-
-            <ion-grid style="width: 100%;">
-              <ion-row>
-                <ion-col>
-                  <ion-list-header>
-                    <ion-label>Verified Certificates</ion-label>
-                  </ion-list-header>
-                </ion-col>
-              </ion-row>
-              <ion-row *ngIf="stateSvc.credentials$ | async as creds">
-                <ion-col
-                  *ngFor="let cred of creds"
-                  sizeXs="6"
-                  sizeSm="4"
-                  sizeMd="3"
-                  sizeLg="2"
-                >
-                  <ion-card text-center (click)="presentActionSheet()">
-                    <ion-card-header>
-                      {{ cred.issuedTo }}
-                    </ion-card-header>
-                    <ion-icon name="document" class="icon-lg"></ion-icon>
-                    <ion-card-content>
-                      <small><strong>{{ cred.name }}</strong></small>
-                      <br/>
-                      <small>{{ cred.issuedBy }}</small>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -122,6 +83,7 @@ export class RelationshipProofsComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     public stateSvc: CredentialStateService,
     public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: CredentialActionsService,
@@ -165,7 +127,9 @@ export class RelationshipProofsComponent implements OnInit {
   }
 
   async initializeItems() {
-    await this.actionSvc.getCertificates();
+    await this.actionSvc.getCertificates({
+      did: this.route.snapshot.paramMap.get('did')
+    });
   }
 
   async getItems(issuers, ev: any) {

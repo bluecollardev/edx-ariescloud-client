@@ -26,12 +26,6 @@ import { CredentialActionsService, ICertificateParams } from '../../../credentia
               <ion-card-content>
                 <ion-card-title>
                   {{ active.name }}
-                  <br/>
-                  <div style="text-align: left; max-width: 60%; margin: 0 auto">
-                    <small><small><small>Issued by:</small> Faber University</small></small>
-                    <!--<br />
-                    <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
-                  </div>
                 </ion-card-title>
               </ion-card-content>
               <ion-card-content>
