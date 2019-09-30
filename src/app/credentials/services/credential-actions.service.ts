@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { HttpService } from 'src/app/core/services/http.service';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
+
+import { environment } from 'src/environments/environment';
 
 import { CredentialStateService, ICredentialSchema, ICredentialDef, ICredential, ICredentialProof } from './credential-state.service';
 
+import * as CredentialMocks from './credential-mocks';
+
 const apiUrl = environment.apiUrl;
+
+export interface ICredentialParams {
+  did: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +60,7 @@ export class CredentialActionsService {
   }
 
   getCredential(id: string) {
-    const credential = this.http.get<ICredentialDef[]>(
+    const response = this.http.get<ICredential[]>(
       `${this.url}credentials/${id}`,
       { headers: this.headers }
     );
@@ -65,17 +73,29 @@ export class CredentialActionsService {
     return this.stateSvc.activeCredential$;
   }
 
-  getCredentials() {
-    const credentials = this.http.get<ICredentialDef[]>(
+  getCredentials(params: ICredentialParams) {
+    const response = this.http.get<ICredential[]>(
       `${this.url}credentials`,
       { headers: this.headers }
     );
+
+    this.stateSvc.setCredentials(of(CredentialMocks.issuedCredentials));
+
+    if (params && params.did) {
+      return (this.stateSvc.credentials$ = this.stateSvc.credentials$.pipe(
+        map(cs => {
+          const filtered = cs.filter(c => c.issuerDid === params.did);
+          console.log(filtered);
+          return filtered;
+        })
+      ));
+    }
 
     return this.stateSvc.credentials$;
   }
 
   createCredentialSchema() {
-    this.http.post<ICredentialDef[]>(
+    this.http.post<ICredentialSchema[]>(
       `${this.url}credentials`,
       {
         headers: this.headers

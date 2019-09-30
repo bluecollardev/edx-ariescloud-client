@@ -14,12 +14,12 @@ describe('RelationshipsStateService', () => {
     const service: RelationshipsStateService = TestBed.get(RelationshipsStateService);
 
     // Call the API
-    service.setRelationship({
+    /*service.setRelationship({
       name: 'Acme',
       type: 'bar',
       received: new Date(),
       did: 'adslfj-1234-cxv324-asfxdf',
       publicDid: 'NEBWptNanb25KNRmogbPZ3'
-    });
+    });*/
   });
 });

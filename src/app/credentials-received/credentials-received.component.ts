@@ -34,7 +34,7 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
         <ion-row *ngIf="stateSvc.issuers$ | async as issuerGroups">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
-              <ion-item-sliding *ngFor="let issuer of issuerGroups" [routerLink]="['group/' + issuer.did]">
+              <ion-item-sliding *ngFor="let issuer of issuerGroups" (click)="this.router.navigate(['/credentials-received/group/' + issuer.did])">
                 <ion-item>
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>

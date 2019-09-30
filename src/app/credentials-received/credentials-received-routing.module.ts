@@ -18,7 +18,7 @@ const routes: Routes = [
     component: ViewCredentialComponent,
   },
   {
-    path: 'credentials-received/group/:org',
+    path: 'credentials-received/group/:did',
     component: OrgCredentialsComponent,
   }
 ];

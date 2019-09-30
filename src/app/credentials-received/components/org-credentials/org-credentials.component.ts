@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
 
 import { CredentialStateService, ICredential, IIssuer } from '../../../credentials/services/credential-state.service';
 import { RelationshipsStateService, IRelationship } from '../../../relationships/services/relationships-state.service';
@@ -9,7 +10,7 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
 import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
 
 @Component({
-  selector: 'app-credentials-received',
+  selector: 'app-org-credentials',
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
@@ -21,7 +22,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Faber University Credentials</ion-title>
+        <ion-title *ngIf="issuer" class="ios title-ios hydrated">{{ issuer.name }} Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -73,12 +74,14 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
 })
 export class OrgCredentialsComponent implements OnInit {
   searchQuery: '';
+  issuer: IIssuer;
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     public stateSvc: CredentialStateService,
     public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: CredentialActionsService,
@@ -87,6 +90,7 @@ export class OrgCredentialsComponent implements OnInit {
     private alertController: AlertController
   ) {
     this.initializeItems();
+    this.setOrgName();
   }
 
   ngOnInit() {
@@ -115,8 +119,20 @@ export class OrgCredentialsComponent implements OnInit {
     });
   }
 
+  async setOrgName() {
+    await this.stateSvc.issuers$.pipe(
+      map(is => {
+        return is.filter((i) => i.did === this.route.snapshot.paramMap.get('did'))[0];
+      })
+    ).subscribe((issuer) => {
+      this.issuer = issuer;
+    });
+  }
+
   async initializeItems() {
-    await this.actionSvc.getCredentials();
+    await this.actionSvc.getCredentials({
+      did: this.route.snapshot.paramMap.get('did')
+    });
   }
 
   async getItems(issuers, ev: any) {

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
 
+import * as CredentialMocks from './credential-mocks';
+
 export interface ICredentialSchema {
   id: string; // Use GUID
   name: string;
@@ -22,6 +24,7 @@ export interface ICredentialDef {
 export interface ICredential {
   id: string; // Use GUID
   issuedBy: string;
+  issuerDid: string;
   issuedTo: string;
   dateIssued: Date;
   name: string;
@@ -65,189 +68,18 @@ export class CredentialStateService {
   ready = this._ready$.asObservable();
 
   constructor() {
-    const credentialSchemas = [
-      {
-        id: 'university-degree',
-        ownedBy: 'Faber University',
-        name: 'University Degree',
-        version: '1.2',
-        fields: {
-          name: 'string',
-          program: 'program'
-        }
-      },
-      {
-        id: 'course',
-        ownedBy: 'Faber University',
-        name: 'Single Course',
-        version: '1.2',
-        fields: {
-          name: 'string',
-          program: 'program'
-        }
-      }
-    ];
-
-    const credentialDefs = [
-      {
-        id: 'fbu-bsc-cs',
-        issuedBy: 'Faber University',
-        name: 'Bachelor\'s of Science Degree',
-        program: 'Computer Science',
-        version: '1.2',
-        schema: 'university-degree'
-      },
-      {
-        id: 'fbu-bsc-mb',
-        issuedBy: 'Faber University',
-        name: 'Bachelor\'s of Science Degree',
-        program: 'Microbiology',
-        version: '1.2',
-        schema: 'university-degree'
-      },
-      {
-        id: 'fbu-mba-biz',
-        issuedBy: 'Faber University',
-        name: 'Master\'s of Business Administration',
-        program: 'Business',
-        version: '1.2',
-        schema: 'university-degree'
-      },
-      {
-        id: 'fbu-cert-ac',
-        issuedBy: 'Faber University',
-        name: 'Certificate of Course Completion',
-        program: 'Agile Coaching',
-        version: '1.2',
-        schema: 'course'
-      }
-    ];
-
-    const credentials = [
-      {
-        id: 'xyz-123',
-        issuedBy: 'Faber University',
-        issuedTo: 'Alice Cooper',
-        dateIssued: new Date(),
-        name: 'Bachelor\'s of Science Degree',
-        type: 'University Degree',
-        program: 'Computer Science',
-        status: 'Graduated',
-        version: '1.2',
-        schema: 'university-degree'
-      },
-      {
-        id: 'xyz-124',
-        issuedBy: 'Faber University',
-        issuedTo: 'Alice Cooper',
-        dateIssued: new Date(),
-        name: 'Bachelor\'s of Science Degree',
-        type: 'University Degree',
-        program: 'Microbiology',
-        status: 'Graduated',
-        version: '1.2',
-        schema: 'university-degree'
-      },
-      {
-        id: 'xyz-127',
-        issuedBy: 'Faber University',
-        issuedTo: 'Alice Cooper',
-        dateIssued: new Date(),
-        name: 'Master\'s of Business Administration',
-        type: 'University Degree',
-        program: 'Business',
-        status: 'Graduated',
-        version: '1.2',
-        schema: 'university-degree'
-      },
-      {
-        id: 'xyz-132',
-        issuedBy: 'Faber University',
-        issuedTo: 'Alice Cooper',
-        dateIssued: new Date(),
-        name: 'Certificate of Course Completion',
-        type: 'University Degree',
-        program: 'Agile Coaching',
-        status: 'Graduated',
-        version: '1.2',
-        schema: 'random-course'
-      },
-      {
-        id: 'goog-127',
-        issuedBy: 'Google Inc.',
-        issuedTo: 'Alice Cooper',
-        dateIssued: new Date(),
-        name: 'Google Certified Developer',
-        type: 'Course',
-        program: 'Web Developer',
-        status: 'Graduated',
-        version: '1.2',
-        schema: 'certificate'
-      },
-      {
-        id: 'goog-127',
-        issuedBy: 'Google Inc.',
-        issuedTo: 'Alice Cooper',
-        dateIssued: new Date(),
-        name: 'Google Certified Developer',
-        type: 'Course',
-        program: 'Cloud Developer',
-        status: 'Graduated',
-        version: '1.2',
-        schema: 'certificate'
-      },
-    ];
-
-    const credentialProofs = [
-      {
-        id: 'abc-123',
-        name: 'Bachelor\'s of Science Degree',
-        version: '1.2',
-        requested_attributes: {
-          attr1_referents: {
-            name: 'ipsum',
-            restrictions: [{}]
-          }
-        },
-        requested_predicates: []
-      },
-      {
-        id: 'abc-124',
-        name: 'Bachelor\'s of Science Degree',
-        version: '1.2',
-        requested_attributes: {
-          attr1_referents: {
-            name: 'ipsum',
-            restrictions: [{}]
-          }
-        },
-        requested_predicates: []
-      },
-      {
-        id: 'abc-125',
-        name: 'Bachelor\'s of Science Degree',
-        version: '1.2',
-        requested_attributes: {
-          attr1_referents: {
-            name: 'ipsum',
-            restrictions: [{}]
-          }
-        },
-        requested_predicates: []
-      }
-    ];
-
     /*const governmentCredential = {
       email: 'alice@faber.edu',
       name: 'Alice',
       tax_id: '123-45-6789'
     };*/
 
-    // this.setActiveCredentialProofs(proofs);
-    this.setCredentials(of(credentials));
-    this.setIssuers(of(this.buildIssuers(credentials)));
-    this.setCredentialSchemas(of(credentialSchemas));
-    this.setCredentialDefs(of(credentialDefs));
+    // TODO: Remove these!
+    // this.setActiveCredentialProofs(did, of(credentialProofs));
+    // this.setCredentials(of(credentials));
+    this.setIssuers(of(this.buildIssuers(CredentialMocks.issuedCredentials)));
+    // this.setCredentialSchemas(of(credentialSchemas));
+    this.setCredentialDefs(of(CredentialMocks.credentialDefs));
 
     this.setReady(true);
   }
@@ -344,7 +176,7 @@ export class CredentialStateService {
     .map((cred) => ({
       name: cred.issuedBy,
       type: 'Organization',
-      did: 'abcd-1234-bd45-a9d8'
+      did: cred.issuerDid
     }));
 
     return issuers;
