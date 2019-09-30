@@ -117,6 +117,41 @@ export class CredentialActionsService {
     return this.stateSvc.activeCredential$;
   }
 
+  getCredentialDef(id: string) {
+    const response = this.http.get<ICredentialDef[]>(
+      `${this.url}credentials/${id}`,
+      { headers: this.headers }
+    );
+
+    this.stateSvc.setActiveCredentialDef(id);
+
+    console.log('active credential');
+    console.log(this.stateSvc.activeCredentialDef$);
+
+    return this.stateSvc.activeCredentialDef$;
+  }
+
+  getCredentialDefs(params?: ICredentialParams) {
+    const response = this.http.get<ICredentialDef[]>(
+      `${this.url}credentials`,
+      { headers: this.headers }
+    );
+
+    this.stateSvc.setCredentialDefs(of(CredentialMocks.credentialDefs));
+
+    if (params && params.did) {
+      return (this.stateSvc.credentialDefs$ = this.stateSvc.credentialDefs$.pipe(
+        map(cs => {
+          const filtered = cs.filter(c => c.issuerDid === params.did);
+          console.log(filtered);
+          return filtered;
+        })
+      ));
+    }
+
+    return this.stateSvc.credentials$;
+  }
+
   createCredentialDef() {
     this.http.post<ICredentialDef[]>(
       `${this.url}credentials`,

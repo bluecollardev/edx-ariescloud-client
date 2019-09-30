@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { CredentialStateService, ICredential } from '../../services/credential-state.service';
+import { CredentialStateService, ICredentialDef } from '../../services/credential-state.service';
 import { CredentialActionsService } from '../../services/credential-actions.service';
+
 // import { ICredentialResponse } from '../../models/i-credential';
 
 @Component({
@@ -21,35 +23,45 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
-            <ion-card text-center>
+            <ion-card text-center *ngIf="active">
               <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
           
               <ion-card-content>
                 <ion-card-title>
-                  Bachelor's of Science
+                  {{ active.name }}
                   <br />
-                  <small>Faber University</small>
+                  <div style="text-align: left; max-width: 60%; margin: 0 auto">
+                    <small><small><small>Issued by:</small> {{ active.issuedBy }}</small></small>
+                    <!--<br />
+                    <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
+                  </div>
                 </ion-card-title>
                 <small><small>Tax ID: 123-45-6789</small></small>
                 <br />
-                <small><small>DID: acbd-123-sdf-2345</small></small>
+                <small><small>DID: {{ active.did }}</small></small>
               </ion-card-content>
               <ion-card-content>
                 <p>
-                  Alice is a verified graduate of Faber University.
+                  Alice is a verified graduate of the {{ active.program }} program at {{ active.issuedBy }}.
                 </p>
               </ion-card-content>
               
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Date Issued</ion-label>
-                <ion-badge color="medium" item-end>{{ graduationDate }}</ion-badge>
+                <ion-badge color="medium" item-end></ion-badge>
               </ion-item>
           
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Degree</ion-label>
                 <ion-badge color="medium" item-end>Bachelor's of Science</ion-badge>
+              </ion-item>
+              
+              <ion-item class="flex ion-justify-content-around">
+                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
+                <ion-label>Program</ion-label>
+                <ion-badge color="medium" item-end>{{ active.program }}</ion-badge>
               </ion-item>
               
               <ion-item class="flex ion-justify-content-around">
@@ -84,7 +96,7 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
   styleUrls: ['./view-credential.component.scss']
 })
 export class ViewCredentialComponent implements OnInit {
-  active: Observable<ICredential[]>;
+  active: ICredentialDef;
 
   constructor(
     public route: ActivatedRoute,
@@ -92,16 +104,21 @@ export class ViewCredentialComponent implements OnInit {
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService
   ) {
-    this.actionSvc.getCredentials(); // Load all credentials first
-    this.actionSvc.getCredential(this.route.snapshot.paramMap.get('id'));
+    this.actionSvc.getCredentialDefs(); // Load all credentials first
+    this.actionSvc.getCredentialDef(this.route.snapshot.paramMap.get('id'));
+    this.setActiveCredentialDef();
   }
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool);
-      if (bool) {
-        this.active = this.stateSvc.activeCredential$;
-      }
+  }
+
+  async setActiveCredentialDef() {
+    this.stateSvc.activeCredentialDef$.pipe(
+      map(is => {
+        return is.filter((i) => i.id === this.route.snapshot.paramMap.get('id'))[0];
+      })
+    ).subscribe((credentialDef) => {
+      this.active = credentialDef;
     });
   }
 }

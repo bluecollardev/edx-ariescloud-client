@@ -15,7 +15,7 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
           <ion-menu-button
             class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Edit Credential</ion-title>
+        <ion-title class="ios title-ios hydrated">Edit Credential Type</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

@@ -15,6 +15,7 @@ export interface ICredentialSchema {
 export interface ICredentialDef {
   id: string; // Use GUID
   issuedBy: string;
+  issuerDid: string;
   name: string;
   program: string;
   version: string;
