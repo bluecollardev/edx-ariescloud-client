@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { CredentialStateService, ICertificateOfProof } from '../../../credentials/services/credential-state.service';
+import { CredentialActionsService, ICertificateParams } from '../../../credentials/services/credential-actions.service';
 
 @Component({
   selector: 'app-view-proof',
@@ -22,7 +25,7 @@ import { Router} from '@angular/router';
 
               <ion-card-content>
                 <ion-card-title>
-                  Bachelor's of Science
+                  {{ active.name }}
                   <br/>
                   <div style="text-align: left; max-width: 60%; margin: 0 auto">
                     <small><small><small>Issued by:</small> Faber University</small></small>
@@ -30,60 +33,17 @@ import { Router} from '@angular/router';
                     <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
                   </div>
                 </ion-card-title>
-                <small>
-                  <small>Tax ID: 123-45-6789 </small>
-                </small>
-                <br />
-                <small>
-                  <small> DID: acbd-123-sdf-2345</small>
-                </small>
               </ion-card-content>
               <ion-card-content>
                 <p>
-                  <strong>Alice Cooper</strong> is a verified graduate of Faber University.
+                  <strong>Alice Cooper</strong> {{ active.name.toLowerCase() }}.
                 </p>
               </ion-card-content>
 
               <ion-item class="flex ion-justify-content-around">
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>Date Issued</ion-label>
-                <ion-badge color="medium" item-end>{{ graduationDate }}</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
-                <ion-label>Degree</ion-label>
-                <ion-badge color="medium" item-end>Bachelor's of Science</ion-badge>
-              </ion-item>
-              
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
-                <ion-label>Program</ion-label>
-                <ion-badge color="medium" item-end>Computer Science</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>GPA</ion-label>
-                <ion-badge color="medium" item-end>3.8 / 4.0</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Status</ion-label>
-                <ion-badge color="medium" item-end>Graduated</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>SSN</ion-label>
-                <ion-badge color="medium" item-end>abcd-1234-xyz</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
-                <ion-label>Document Version</ion-label>
-                <ion-badge item-end>1.3</ion-badge>
+                <ion-badge color="medium" item-end>Verified</ion-badge>
               </ion-item>
 
               <div style="display: flex; flex-direction: column">
@@ -109,14 +69,31 @@ import { Router} from '@angular/router';
   styleUrls: ['./view-proof.component.scss']
 })
 export class ViewProofComponent implements OnInit {
-  graduationDate: string = new Date().toDateString()
+  active: ICertificateOfProof;
 
   constructor(
-    private router: Router,
+    public route: ActivatedRoute,
+    public router: Router,
+    private stateSvc: CredentialStateService,
+    private actionSvc: CredentialActionsService,
     private alertController: AlertController
-  ) {}
+  ) {
+    this.actionSvc.getCertificates(); // Load all credentials first
+    this.actionSvc.getCertificate(this.route.snapshot.paramMap.get('id'));
+    this.setActiveCertificate();
+  }
 
   ngOnInit() {
+  }
+
+  async setActiveCertificate() {
+    this.stateSvc.activeCertificateOfProof$.pipe(
+      map(is => {
+        return is.filter((i) => i.id === this.route.snapshot.paramMap.get('id'))[0];
+      })
+    ).subscribe((certificate) => {
+      this.active = certificate;
+    });
   }
 
   async verifyCredPopup() {

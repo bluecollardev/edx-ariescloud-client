@@ -1,18 +1,18 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {ActionSheetController, AlertController} from '@ionic/angular';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   CredentialStateService,
   ICertificateOfProof,
   ICredential,
   IIssuer
-} from '../credentials/services/credential-state.service';
-import {RelationshipsStateService, IRelationship} from '../relationships/services/relationships-state.service';
-import {CredentialActionsService} from '../credentials/services/credential-actions.service';
-import {RelationshipsActionService} from '../relationships/services/relationships-action.service';
+} from '../../../credentials/services/credential-state.service';
+import { RelationshipsStateService, IRelationship } from '../../../relationships/services/relationships-state.service';
+import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
+import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
 
 @Component({
   selector: 'app-credentials',
@@ -32,33 +32,88 @@ import {RelationshipsActionService} from '../relationships/services/relationship
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="relationships | async as relationships">
+        <ion-row *ngIf="proofs | async as certificates">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-            <ion-list>
-              <ion-list-header>
-                By Relationship
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let relationship of relationships" (click)="this.router.navigate(['/verify-credentials/group/' + relationship.did])">
-                <ion-item>
-                  <ion-icon name="person" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ relationship.name }}</h2>
-                    <small>DID: {{ relationship.did   }}</small>
-                  </ion-label>
-                  <ion-badge color="primary" item-end>2</ion-badge>
-                </ion-item>
-              </ion-item-sliding>
-            </ion-list>
+            <ion-grid style="width: 100%;">
+              <ion-row>
+                <ion-col>
+                  <ion-list-header>
+                    <ion-label>Pending Requests</ion-label>
+                  </ion-list-header>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="stateSvc.certificatesOfProof$ | async as certificates">
+                <ion-col
+                  *ngFor="let certificate of certificates"
+                  sizeXs="6"
+                  sizeSm="4"
+                  sizeMd="3"
+                  sizeLg="2"
+                >
+                  <ion-card text-center (click)="presentActionSheet(certificate.id)">
+                    <ion-card-header>
+                      {{ certificate.issuedTo }}
+                    </ion-card-header>
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-card-content>
+                      <small><strong>{{  certificate.name }}</strong></small>
+                      <br/>
+                      <small>{{ certificate.issuedBy }}</small>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <div class="ion-padding">
+              <ion-button
+                expand="block"
+                class="ion-no-margin">
+                <ion-icon name="send"></ion-icon>
+                Request Certificate of Proof
+              </ion-button>
+            </div>
+
+            <ion-grid style="width: 100%;">
+              <ion-row>
+                <ion-col>
+                  <ion-list-header>
+                    <ion-label>Verified Certificates</ion-label>
+                  </ion-list-header>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="stateSvc.credentials$ | async as creds">
+                <ion-col
+                  *ngFor="let cred of creds"
+                  sizeXs="6"
+                  sizeSm="4"
+                  sizeMd="3"
+                  sizeLg="2"
+                >
+                  <ion-card text-center (click)="presentActionSheet()">
+                    <ion-card-header>
+                      {{ cred.issuedTo }}
+                    </ion-card-header>
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-card-content>
+                      <small><strong>{{ cred.name }}</strong></small>
+                      <br/>
+                      <small>{{ cred.issuedBy }}</small>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./proofs.component.scss'],
+  styleUrls: ['./relationship-proofs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProofsComponent implements OnInit {
+export class RelationshipProofsComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
@@ -131,12 +186,12 @@ export class ProofsComponent implements OnInit {
     return filtered;
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(certId: string) {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
           text: 'View Certificate',
-          handler: () => this.router.navigate(['/verify-credentials/view'])
+          handler: () => this.router.navigate(['/verify-credentials/view/' + certId])
         },
         {
           text: 'Verify Certificate Claims',

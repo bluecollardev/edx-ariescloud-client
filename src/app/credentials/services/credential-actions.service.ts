@@ -6,7 +6,7 @@ import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/
 
 import { environment } from 'src/environments/environment';
 
-import { CredentialStateService, ICredentialSchema, ICredentialDef, ICredential, ICredentialProof } from './credential-state.service';
+import { CredentialStateService, ICredentialSchema, ICredentialDef, ICredential, ICertificateOfProof } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
 
@@ -14,6 +14,11 @@ const apiUrl = environment.apiUrl;
 
 export interface ICredentialParams {
   did: string;
+}
+
+export interface ICertificateParams {
+  did?: string;
+  id?: string;
 }
 
 @Injectable({
@@ -35,28 +40,6 @@ export class CredentialActionsService {
   submitCredDef(credDef: ICredentialDef) {
     // this is a stub for an http send service
     console.log('cred def', credDef);
-  }
-
-  async loadCredDefs() {
-    const response = {
-      status: 200,
-      data: []
-    };
-
-    const data = of(response.data);
-    this.stateSvc.setCredentials(data);
-
-    return this.stateSvc.credentials$;
-  }
-
-  async loadCredProofs() {
-    const response = {
-      status: 200,
-      data: []
-    };
-
-    const data = response.data;
-    this.stateSvc.setProofs(data);
   }
 
   getCredential(id: string) {
@@ -168,5 +151,40 @@ export class CredentialActionsService {
         headers: this.headers
       }
     );
+  }
+
+  getCertificate(id: string) {
+    const response = this.http.get<ICertificateOfProof[]>(
+      `${this.url}credentials/${id}`,
+      { headers: this.headers }
+    );
+
+    this.stateSvc.setActiveCertificate(id);
+
+    console.log('active certificate');
+    console.log(this.stateSvc.activeCertificateOfProof$);
+
+    return this.stateSvc.activeCertificateOfProof$;
+  }
+
+  getCertificates(params?: ICertificateParams) {
+    const response = this.http.get<ICertificateOfProof[]>(
+      `${this.url}credentials`,
+      { headers: this.headers }
+    );
+
+    this.stateSvc.setCertificates(of(CredentialMocks.certificatesOfProof));
+
+    if (params && params.did) {
+      return (this.stateSvc.certificatesOfProof$ = this.stateSvc.certificatesOfProof$.pipe(
+        map(cs => {
+          const filtered = cs.filter(c => c.id === params.id);
+          console.log(filtered);
+          return filtered;
+        })
+      ));
+    }
+
+    return this.stateSvc.certificatesOfProof$;
   }
 }

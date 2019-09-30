@@ -159,10 +159,11 @@ const issuedCredentials = [
   },
 ];
 
-const credentialProofs = [
+const certificatesOfProof = [
   {
     id: 'abc-123',
-    name: 'Bachelor\'s of Science Degree',
+    issuerDid: 'xyzdf-678ras-eqadzx-123qr',
+    name: 'Has an Undergraduate Degree',
     version: '1.2',
     requested_attributes: {
       attr1_referents: {
@@ -174,7 +175,8 @@ const credentialProofs = [
   },
   {
     id: 'abc-124',
-    name: 'Bachelor\'s of Science Degree',
+    issuerDid: 'xyzdf-678ras-eqadzx-123qr',
+    name: 'Has Certificate in IT',
     version: '1.2',
     requested_attributes: {
       attr1_referents: {
@@ -186,7 +188,21 @@ const credentialProofs = [
   },
   {
     id: 'abc-125',
-    name: 'Bachelor\'s of Science Degree',
+    issuerDid: 'xyzdf-678ras-eqadzx-123qr',
+    name: 'Is Certified in Scrum',
+    version: '1.2',
+    requested_attributes: {
+      attr1_referents: {
+        name: 'ipsum',
+        restrictions: [{}]
+      }
+    },
+    requested_predicates: []
+  },
+  {
+    id: 'abc-126',
+    issuerDid: 'xyzdf-678ras-eqadzx-123qr',
+    name: 'Passes a Criminal Record Check',
     version: '1.2',
     requested_attributes: {
       attr1_referents: {
@@ -198,4 +214,4 @@ const credentialProofs = [
   }
 ];
 
-export { credentialSchemas, credentialDefs, issuedCredentials, credentialProofs }
+export { credentialSchemas, credentialDefs, issuedCredentials, certificatesOfProof };

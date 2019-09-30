@@ -100,7 +100,7 @@ export class CredentialsComponent implements OnInit {
   }
 
   async initializeItems() {
-    await this.actionSvc.loadCredDefs();
+    await this.actionSvc.getCredentialDefs();
   }
 
   getItems(ev: any) {

@@ -36,12 +36,13 @@ export interface ICredential {
   schema: string;
 }
 
-export interface ICredentialProof {
+export interface ICertificateOfProof {
   id: string; // Use GUID
+  issuerDid: string;
   name: string;
   version: string;
   requested_attributes: object;
-  requested_predicated: object;
+  requested_predicates: object;
 }
 
 export interface IIssuer {
@@ -55,15 +56,14 @@ export interface IIssuer {
 })
 export class CredentialStateService {
   issuers$: Observable<IIssuer[]> = new Observable<IIssuer[]>();
-  proofs$: Observable<any[]> = new Observable<any[]>();
-
   credentialSchemas$: Observable<ICredentialSchema[]> = new Observable<ICredentialSchema[]>();
   activeCredentialSchema$: Observable<ICredentialSchema[]> = new Observable<ICredentialSchema[]>();
   credentialDefs$: Observable<ICredentialDef[]> = new Observable<ICredentialDef[]>();
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<ICredentialDef[]>();
   credentials$: Observable<ICredential[]> = new Observable<ICredential[]>();
   activeCredential$: Observable<ICredential[]> = new Observable<ICredential[]>();
-  activeCredentialProofs$: Observable<ICredentialProof[]> = new Observable<ICredentialProof[]>();
+  certificatesOfProof$: Observable<ICertificateOfProof[]> = new Observable<ICertificateOfProof[]>();
+  activeCertificateOfProof$: Observable<ICertificateOfProof[]> = new Observable<ICertificateOfProof[]>();
 
   private _ready$ = new BehaviorSubject<boolean>(false);
   ready = this._ready$.asObservable();
@@ -76,11 +76,12 @@ export class CredentialStateService {
     };*/
 
     // TODO: Remove these!
-    // this.setActiveCredentialProofs(did, of(credentialProofs));
+    // this.setActiveCredentialProofs(did, of(certificatesOfProof));
     // this.setCredentials(of(credentials));
     this.setIssuers(of(this.buildIssuers(CredentialMocks.issuedCredentials)));
     // this.setCredentialSchemas(of(credentialSchemas));
     this.setCredentialDefs(of(CredentialMocks.credentialDefs));
+    this.setCertificates(of(CredentialMocks.certificatesOfProof));
 
     this.setReady(true);
   }
@@ -89,8 +90,23 @@ export class CredentialStateService {
     this._ready$.next(bool);
   }
 
-  setProofs(data: any[]) {
-    this.proofs$ = of(data);
+  setActiveCertificate(cid: string) {
+    this.activeCertificateOfProof$ = this.certificatesOfProof$.pipe(
+      map(cs => {
+        return cs.filter(c => {
+          console.log('------------');
+          console.log(c);
+          console.log(c.id);
+          console.log(cid);
+          console.log('------------');
+          return c.id === cid;
+        });
+      })
+    );
+  }
+
+  setCertificates(data: Observable<ICertificateOfProof[]>) {
+    this.certificatesOfProof$ = data;
   }
 
   setCredential(data: ICredential) {
@@ -115,10 +131,6 @@ export class CredentialStateService {
 
   setCredentials(data: Observable<ICredential[]>) {
     this.credentials$ = data;
-  }
-
-  setActiveCredentialProofs(cid: string, data: Observable<ICredentialProof[]>) {
-    this.activeCredentialProofs$ = data;
   }
 
   setCredentialSchema(data: ICredential) {
