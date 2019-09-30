@@ -34,9 +34,9 @@ import { CredentialActionsService } from './services/credential-actions.service'
                   </ion-list-header>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="stateSvc.credentials | async as creds">
+              <ion-row *ngIf="stateSvc.credentialDefs$ | async as credDef">
                 <ion-col
-                  *ngFor="let cred of creds"
+                  *ngFor="let credDef of credDef"
                   sizeXs="6"
                   sizeSm="4"
                   sizeMd="3"
@@ -45,9 +45,9 @@ import { CredentialActionsService } from './services/credential-actions.service'
                     <ion-card-header></ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      <small><strong>{{ cred.name }}</strong></small>
+                      <small><strong>{{ credDef.name }}</strong></small>
                       <br />
-                      <small>{{ cred.program }}</small>
+                      <small>{{ credDef.program }}</small>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
