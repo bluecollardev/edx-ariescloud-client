@@ -26,10 +26,14 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="stateSvc.issuers | async as issuers">
+        <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-            <ion-list *ngFor="let issuer of issuers">
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="stateSvc.issuers$ | async as issuerGroups">
+          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+            <ion-list *ngFor="let issuer of issuerGroups">
               <ion-list-header>
                 {{ issuer.type }}
               </ion-list-header>
@@ -87,9 +91,9 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
 })
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
-  issuers: string[];
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
+  issuers: Observable<any[]>;
 
   constructor(
     private router: Router,
@@ -119,13 +123,18 @@ export class CredentialsReceivedComponent implements OnInit {
           console.log('relationships loaded');
           console.log(obs);
         });
+
+        this.issuers = this.stateSvc.issuers$;
+        this.issuers.subscribe(obs => {
+          console.log('issuers loaded');
+          console.log(obs);
+        });
       }
     });
   }
 
   async initializeItems() {
     await this.actionSvc.getCredentials();
-    this.issuers = [];
   }
 
   async getItems(issuers, ev: any) {
@@ -134,14 +143,14 @@ export class CredentialsReceivedComponent implements OnInit {
     await this.initializeItems();
 
     // set val to the value of the searchbar
-    const val = ev.target.value;
+    /*const val = ev.target.value;
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
       this.issuers = this.issuers.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });
-    }
+    }*/
 
     return filtered;
   }

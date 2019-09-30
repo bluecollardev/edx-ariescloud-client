@@ -40,11 +40,17 @@ export interface ICredentialProof {
   requested_predicated: object;
 }
 
+export interface IIssuer {
+  name: string;
+  type: string;
+  did: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class CredentialStateService {
-  issuers$: Observable<any[]> = new Observable<any[]>();
+  issuers$: Observable<IIssuer[]> = new Observable<IIssuer[]>();
   proofs$: Observable<any[]> = new Observable<any[]>();
 
   credentialSchemas$: Observable<ICredentialSchema[]> = new Observable<ICredentialSchema[]>();
@@ -59,7 +65,7 @@ export class CredentialStateService {
   ready = this._ready$.asObservable();
 
   constructor() {
-    const credentialSchemas = of([
+    const credentialSchemas = [
       {
         id: 'university-degree',
         ownedBy: 'Faber University',
@@ -80,9 +86,9 @@ export class CredentialStateService {
           program: 'program'
         }
       }
-    ]);
+    ];
 
-    const credentialDefs = of([
+    const credentialDefs = [
       {
         id: 'fbu-bsc-cs',
         issuedBy: 'Faber University',
@@ -115,9 +121,9 @@ export class CredentialStateService {
         version: '1.2',
         schema: 'course'
       }
-    ]);
+    ];
 
-    const credentials = of([
+    const credentials = [
       {
         id: 'xyz-123',
         issuedBy: 'Faber University',
@@ -166,9 +172,9 @@ export class CredentialStateService {
         version: '1.2',
         schema: 'random-course'
       }
-    ]);
+    ];
 
-    const credentialProofs = of([
+    const credentialProofs = [
       {
         id: 'abc-123',
         name: 'Bachelor\'s of Science Degree',
@@ -205,7 +211,7 @@ export class CredentialStateService {
         },
         requested_predicates: []
       }
-    ]);
+    ];
 
     /*const governmentCredential = {
       email: 'alice@faber.edu',
@@ -214,9 +220,11 @@ export class CredentialStateService {
     };*/
 
     // this.setActiveCredentialProofs(proofs);
-    this.setCredentials(credentials);
-    this.setCredentialSchemas(credentialSchemas);
-    this.setCredentialDefs(credentialDefs);
+    this.setCredentials(of(credentials));
+    this.setIssuers(of(this.buildIssuers(credentials)));
+    this.setCredentialSchemas(of(credentialSchemas));
+    this.setCredentialDefs(of(credentialDefs));
+
     this.setReady(true);
   }
 
@@ -303,19 +311,22 @@ export class CredentialStateService {
     this.credentialDefs$ = data;
   }
 
-  setIssuers(creds: any[]) {
-    const data = creds
-      .filter((cred, idx, arr) => {
-        return arr
-          .map((item) => item.issuedBy)
-          .indexOf(cred.issuedBy) === idx;
-      })
-      .map((cred) => ({
-        name: cred.issuedBy,
-        type: 'Organization',
-        did: 'abcd-1234-bd45-a9d8'
-      }));
+  buildIssuers(credentials: any[]) {
+    const issuers = credentials.filter((cred, idx, arr) => {
+      return arr
+        .map((item) => item.issuedBy)
+        .indexOf(cred.issuedBy) === idx;
+    })
+    .map((cred) => ({
+      name: cred.issuedBy,
+      type: 'Organization',
+      did: 'abcd-1234-bd45-a9d8'
+    }));
 
-    this.issuers$ = of(data);
+    return issuers;
+  }
+
+  setIssuers(data: Observable<IIssuer[]>) {
+    this.issuers$ = data;
   }
 }
