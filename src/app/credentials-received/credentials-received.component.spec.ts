@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CredentialsReceivedComponent } from './credentials-received.component';
+import { CoreModule } from '../core/core.module';
+import { SharedModule } from '../shared/shared.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CredentialsComponent', () => {
   let component: CredentialsReceivedComponent;
@@ -8,9 +11,9 @@ describe('CredentialsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CredentialsReceivedComponent ]
-    })
-    .compileComponents();
+      declarations: [CredentialsReceivedComponent],
+      imports: [CoreModule, SharedModule, RouterTestingModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

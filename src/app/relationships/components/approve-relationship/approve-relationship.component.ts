@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { RelationshipsStateService, IRelationship } from '../../services/relationships-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from '../../services/relationships-state.service';
 import { RelationshipsActionService } from '../../services/relationships-action.service';
 import { IRelationshipResponse } from '../../models/i-relationship';
 
@@ -11,8 +14,13 @@ import { IRelationshipResponse } from '../../models/i-relationship';
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
-        <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
-          <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated">Accept Invitation</ion-title>
       </ion-toolbar>
@@ -22,12 +30,16 @@ import { IRelationshipResponse } from '../../models/i-relationship';
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <ion-card text-center *ngFor="let relationship of relationships">
-              <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
+              <img
+                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
+              />
               <ion-card-content>
                 <ion-card-title>
                   {{ relationship.name }}
                 </ion-card-title>
-                <small><small>Their ID:  {{ relationship.did }}</small></small>
+                <small
+                  ><small>Their ID: {{ relationship.did }}</small></small
+                >
                 <br />
                 <small><small>My DID: acbd-123-sdf-2345</small></small>
               </ion-card-content>
@@ -35,16 +47,21 @@ import { IRelationshipResponse } from '../../models/i-relationship';
                 <ion-item class="flex ion-justify-content-around">
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                   <ion-label>Invitiation Sent</ion-label>
-                  <ion-badge color="medium" item-end>{{ relationship.received.toLocaleDateString() }}</ion-badge>
+                  <ion-badge color="medium" item-end>{{
+                    relationship.received.toLocaleDateString()
+                  }}</ion-badge>
                 </ion-item>
 
                 <ion-item class="flex ion-justify-content-around" lines="none">
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                   <ion-label>Status</ion-label>
-                  <ion-badge color="medium" item-end>{{ relationship.status.charAt(0).toUpperCase() + relationship.status.slice(1, relationship.status.length) }}</ion-badge>
+                  <ion-badge color="medium" item-end>{{
+                    relationship.status.charAt(0).toUpperCase() +
+                      relationship.status.slice(1, relationship.status.length)
+                  }}</ion-badge>
                 </ion-item>
               </ion-list>
-              
+
               <div style="display: flex">
                 <ion-button
                   style="flex: 1"
@@ -86,7 +103,7 @@ export class ApproveRelationshipComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    private stateSvc: RelationshipsStateService,
+    // private stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService
   ) {
     this.actionSvc.getPendingInvitations(); // Load all invitations first
@@ -94,12 +111,11 @@ export class ApproveRelationshipComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool);
-      if (bool) {
-        this.active = this.stateSvc.pendingInvitations$;
-      }
-    });
+    // this.stateSvc.ready.subscribe(bool => {
+    //   console.log('bool', bool);
+    //   if (bool) {
+    //     this.active = this.stateSvc.pendingInvitations$;
+    //   }
+    // });
   }
-
 }

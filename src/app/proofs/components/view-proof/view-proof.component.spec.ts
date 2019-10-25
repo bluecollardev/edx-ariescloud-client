@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewProofComponent } from './view-proof.component';
+import { CoreModule } from 'src/app/core/core.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ViewCredentialComponent', () => {
   let component: ViewProofComponent;
@@ -8,9 +11,9 @@ describe('ViewCredentialComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewProofComponent ]
-    })
-    .compileComponents();
+      declarations: [ViewProofComponent],
+      imports: [CoreModule, SharedModule, RouterTestingModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditCredentialComponent } from './edit-credential.component';
+import { CoreModule } from 'src/app/core/core.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('EditCredentialComponent', () => {
   let component: EditCredentialComponent;
@@ -8,9 +11,9 @@ describe('EditCredentialComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditCredentialComponent ]
-    })
-    .compileComponents();
+      declarations: [EditCredentialComponent],
+      imports: [CoreModule, SharedModule, RouterTestingModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
