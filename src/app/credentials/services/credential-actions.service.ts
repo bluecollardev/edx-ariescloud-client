@@ -24,6 +24,7 @@ import {
 } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
+import { version } from 'punycode';
 
 const apiUrl = environment.apiUrl;
 
@@ -52,9 +53,18 @@ export class CredentialActionsService {
     console.log(apiUrl);
   }
 
-  submitCredDef(credDef: ICredentialDef) {
+  async submitCredDef(credDef: ICredentialDef) {
     // this is a stub for an http send service
-    console.log('cred def', credDef);
+    // console.log('cred def', credDef);
+    console.log('the cred def', credDef);
+    let res = await this.httpSvc
+      .post('credential-definitions', {
+        schema_name: credDef.name,
+        schema_version: credDef.version,
+        attributes: credDef.schema
+      })
+      .toPromise();
+    console.log('the result', res);
   }
 
   getCredential(id: string) {
