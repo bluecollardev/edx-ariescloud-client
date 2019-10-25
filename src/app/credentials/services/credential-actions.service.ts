@@ -2,11 +2,26 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from 'src/app/core/services/http.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
+import {
+  first,
+  last,
+  map,
+  reduce,
+  find,
+  filter,
+  skipWhile,
+  single
+} from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
-import { CredentialStateService, ICredentialSchema, ICredentialDef, ICredential, ICertificateOfProof } from './credential-state.service';
+import {
+  CredentialStateService,
+  ICredentialSchema,
+  ICredentialDef,
+  ICredential,
+  ICertificateOfProof
+} from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
 
@@ -57,33 +72,25 @@ export class CredentialActionsService {
   }
 
   getCredentials(params?: ICredentialParams) {
-    const response = this.http.get<ICredential[]>(
-      `${this.url}credentials`,
-      { headers: this.headers }
-    );
+    return this.httpSvc.get<ICredential[]>('credentials');
 
-    this.stateSvc.setCredentials(of(CredentialMocks.issuedCredentials));
+    // this.stateSvc.setCredentials(of(CredentialMocks.issuedCredentials));
 
-    if (params && params.did) {
-      return (this.stateSvc.credentials$ = this.stateSvc.credentials$.pipe(
-        map(cs => {
-          const filtered = cs.filter(c => c.issuerDid === params.did);
-          console.log(filtered);
-          return filtered;
-        })
-      ));
-    }
-
-    return this.stateSvc.credentials$;
+    // if (params && params.did) {
+    //   return (this.stateSvc.credentials$ = this.stateSvc.credentials$.pipe(
+    //     map(cs => {
+    //       const filtered = cs.filter(c => c.issuerDid === params.did);
+    //       console.log(filtered);
+    //       return filtered;
+    //     })
+    //   ));
+    // }
   }
 
   createCredentialSchema() {
-    this.http.post<ICredentialSchema[]>(
-      `${this.url}credentials`,
-      {
-        headers: this.headers
-      }
-    );
+    this.http.post<ICredentialSchema[]>(`${this.url}credentials`, {
+      headers: this.headers
+    });
   }
 
   getCredentialSchema(id: string) {
@@ -115,10 +122,9 @@ export class CredentialActionsService {
   }
 
   getCredentialDefs(params?: ICredentialParams) {
-    const response = this.http.get<ICredentialDef[]>(
-      `${this.url}credentials`,
-      { headers: this.headers }
-    );
+    const response = this.http.get<ICredentialDef[]>(`${this.url}credentials`, {
+      headers: this.headers
+    });
 
     this.stateSvc.setCredentialDefs(of(CredentialMocks.credentialDefs));
 
@@ -136,21 +142,15 @@ export class CredentialActionsService {
   }
 
   createCredentialDef() {
-    this.http.post<ICredentialDef[]>(
-      `${this.url}credentials`,
-      {
-        headers: this.headers
-      }
-    );
+    this.http.post<ICredentialDef[]>(`${this.url}credentials`, {
+      headers: this.headers
+    });
   }
 
   acceptCredential() {
-    this.http.put<ICredentialDef[]>(
-      `${this.url}credentials`,
-      {
-        headers: this.headers
-      }
-    );
+    this.http.put<ICredentialDef[]>(`${this.url}credentials`, {
+      headers: this.headers
+    });
   }
 
   getCertificate(id: string) {

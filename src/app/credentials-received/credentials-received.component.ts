@@ -3,10 +3,21 @@ import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { CredentialStateService, ICredential, IIssuer } from '../credentials/services/credential-state.service';
-import { RelationshipsStateService, IRelationship } from '../relationships/services/relationships-state.service';
+import {
+  CredentialStateService,
+  ICredential,
+  IIssuer
+} from '../credentials/services/credential-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from '../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../credentials/services/credential-actions.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+const url = environment.apiUrl;
 
 @Component({
   selector: 'app-credentials-received',
@@ -34,7 +45,14 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
         <ion-row *ngIf="stateSvc.issuers$ | async as issuerGroups">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
-              <ion-item-sliding *ngFor="let issuer of issuerGroups" (click)="this.router.navigate(['/credentials-received/group/' + issuer.did])">
+              <ion-item-sliding
+                *ngFor="let issuer of issuerGroups"
+                (click)="
+                  this.router.navigate([
+                    '/credentials-received/group/' + issuer.did
+                  ])
+                "
+              >
                 <ion-item>
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
@@ -58,6 +76,7 @@ export class CredentialsReceivedComponent implements OnInit {
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
+  _url: string;
 
   constructor(
     public router: Router,
@@ -66,34 +85,25 @@ export class CredentialsReceivedComponent implements OnInit {
     private actionSvc: CredentialActionsService,
     private relationshipActionSvc: RelationshipsActionService,
     public actionSheetCtrl: ActionSheetController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private http: HttpClient
   ) {
-    this.initializeItems();
+    this._url = url;
+    // this.initializeItems();
   }
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('subscribing to service observables');
-      // console.log('bool', bool);
-      if (bool) {
-        this.credentials = this.stateSvc.credentials$;
-        this.credentials.subscribe(obs => {
-          console.log('credentials loaded');
-          console.log(obs);
-        });
+    this.stateSvc.credentials$ = this.http.get<ICredential[]>(
+      `${this._url}credentials`
+    );
+    this.credentials = this.stateSvc.credentials$;
 
-        this.relationships = this.relationshipStateSvc.relationships$;
-        this.relationships.subscribe(obs => {
-          console.log('relationships loaded');
-          console.log(obs);
-        });
+    this.relationships = this.relationshipStateSvc.relationships$;
 
-        this.issuers = this.stateSvc.issuers$;
-        this.issuers.subscribe(obs => {
-          console.log('issuers loaded');
-          console.log(obs);
-        });
-      }
+    this.issuers = this.stateSvc.issuers$;
+    this.issuers.subscribe(obs => {
+      console.log('issuers loaded');
+      console.log(obs);
     });
   }
 
@@ -111,7 +121,7 @@ export class CredentialsReceivedComponent implements OnInit {
 
     // if the value is an empty string don't filter the items
     if (val && val.trim() !== '') {
-     /* this.issuers = this.issuers.filter(item => {
+      /* this.issuers = this.issuers.filter(item => {
         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
       });*/
     }
@@ -173,7 +183,8 @@ export class CredentialsReceivedComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
@@ -221,7 +232,8 @@ export class CredentialsReceivedComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');

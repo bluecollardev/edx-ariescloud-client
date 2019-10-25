@@ -40,7 +40,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+            <ion-searchbar></ion-searchbar>
             <ion-list
               *ngIf="
                 stateSvc.pendingInvitations$ | async as pendingInvitationItems
@@ -136,7 +136,7 @@ export class RelationshipsComponent implements OnInit {
     );
     console.log(pending);
     this.stateSvc.pendingInvitations$ = of(pending);
-    this.stateSvc.activeInvitation$ = this.actionSvc.getRelationshipByState(
+    this.stateSvc.activeRelationship$ = this.actionSvc.getRelationshipByState(
       'active'
     );
   }

@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
+import {
+  first,
+  last,
+  map,
+  reduce,
+  find,
+  filter,
+  skipWhile,
+  single
+} from 'rxjs/operators';
 
 import * as CredentialMocks from './credential-mocks';
 
@@ -56,14 +65,28 @@ export interface IIssuer {
 })
 export class CredentialStateService {
   issuers$: Observable<IIssuer[]> = new Observable<IIssuer[]>();
-  credentialSchemas$: Observable<ICredentialSchema[]> = new Observable<ICredentialSchema[]>();
-  activeCredentialSchema$: Observable<ICredentialSchema[]> = new Observable<ICredentialSchema[]>();
-  credentialDefs$: Observable<ICredentialDef[]> = new Observable<ICredentialDef[]>();
-  activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<ICredentialDef[]>();
-  credentials$: Observable<ICredential[]> = new Observable<ICredential[]>();
-  activeCredential$: Observable<ICredential[]> = new Observable<ICredential[]>();
-  certificatesOfProof$: Observable<ICertificateOfProof[]> = new Observable<ICertificateOfProof[]>();
-  activeCertificateOfProof$: Observable<ICertificateOfProof[]> = new Observable<ICertificateOfProof[]>();
+  credentialSchemas$: Observable<ICredentialSchema[]> = new Observable<
+    ICredentialSchema[]
+  >();
+  activeCredentialSchema$: Observable<ICredentialSchema[]> = new Observable<
+    ICredentialSchema[]
+  >();
+  credentialDefs$: Observable<ICredentialDef[]> = new Observable<
+    ICredentialDef[]
+  >();
+  activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
+    ICredentialDef[]
+  >();
+  credentials$: Observable<ICredential[]>;
+  activeCredential$: Observable<ICredential[]> = new Observable<
+    ICredential[]
+  >();
+  certificatesOfProof$: Observable<ICertificateOfProof[]> = new Observable<
+    ICertificateOfProof[]
+  >();
+  activeCertificateOfProof$: Observable<ICertificateOfProof[]> = new Observable<
+    ICertificateOfProof[]
+  >();
 
   private _ready$ = new BehaviorSubject<boolean>(false);
   ready = this._ready$.asObservable();
@@ -109,11 +132,6 @@ export class CredentialStateService {
     this.certificatesOfProof$ = data;
   }
 
-  setCredential(data: ICredential) {
-
-
-  }
-
   setActiveCredential(cid: string) {
     this.activeCredential$ = this.credentials$.pipe(
       map(cs => {
@@ -133,9 +151,7 @@ export class CredentialStateService {
     this.credentials$ = data;
   }
 
-  setCredentialSchema(data: ICredential) {
-
-  }
+  setCredentialSchema(data: ICredential) {}
 
   setActiveCredentialSchema(cid: string) {
     this.activeCredentialSchema$ = this.credentialSchemas$.pipe(
@@ -156,10 +172,7 @@ export class CredentialStateService {
     this.credentialSchemas$ = data;
   }
 
-  setCredentialDef(data: ICredentialDef) {
-
-
-  }
+  setCredentialDef(data: ICredentialDef) {}
 
   setActiveCredentialDef(cid: string) {
     this.activeCredentialDef$ = this.credentialDefs$.pipe(
@@ -181,16 +194,15 @@ export class CredentialStateService {
   }
 
   buildIssuers(credentials: any[]) {
-    const issuers = credentials.filter((cred, idx, arr) => {
-      return arr
-        .map((item) => item.issuedBy)
-        .indexOf(cred.issuedBy) === idx;
-    })
-    .map((cred) => ({
-      name: cred.issuedBy,
-      type: 'Organization',
-      did: cred.issuerDid
-    }));
+    const issuers = credentials
+      .filter((cred, idx, arr) => {
+        return arr.map(item => item.issuedBy).indexOf(cred.issuedBy) === idx;
+      })
+      .map(cred => ({
+        name: cred.issuedBy,
+        type: 'Organization',
+        did: cred.issuerDid
+      }));
 
     return issuers;
   }
