@@ -60,7 +60,7 @@ export class CredentialsReceivedComponent implements OnInit {
   issuers: Observable<IIssuer[]>;
 
   constructor(
-    private router: Router,
+    public router: Router,
     public stateSvc: CredentialStateService,
     public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: CredentialActionsService,

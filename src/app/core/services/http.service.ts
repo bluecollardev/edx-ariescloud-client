@@ -5,6 +5,19 @@ import { environment } from '../../../environments/environment';
 
 const apiUrl = environment.apiUrl;
 
+export interface IMessage {
+  _id: string;
+  state: string;
+  connectionId: string;
+  initiator: string;
+}
+
+export interface IMessageResult {
+  proofs: IMessage[];
+  connections: IMessage[];
+  issues: IMessage[];
+}
+
 export type APISegmentType =
   | 'proofs'
   | 'issues'
@@ -12,7 +25,16 @@ export type APISegmentType =
   | 'invitations'
   | 'messages'
   | 'credentials'
-  | 'credential-definitions';
+  | 'credential-definitions'
+  | 'profile';
+
+export interface IInvitationResult {
+  '@type': string;
+  '@id': string;
+  recipientKeys: string[];
+  serviceEndpoint: string;
+  label: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +47,14 @@ export class HttpService {
   }
 
   get<T>(segment: APISegmentType) {
-    return this.http.get<T>(`${this.url}`);
+    return this.http.get<T>(`${this.url}${segment}`);
+  }
+
+  post<T>(segment: APISegmentType, params = {}) {
+    return this.http.post<T>(`${this.url}${segment}`, params);
+  }
+
+  postById<T>(segment: APISegmentType, id: string, params = {}) {
+    return this.http.post<T>(`${this.url}${segment}/${id}`, params);
   }
 }

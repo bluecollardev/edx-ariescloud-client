@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [IonicModule],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  declarations: [],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
   exports: [ReactiveFormsModule, FormsModule, IonicModule]
 })
 export class SharedModule {}

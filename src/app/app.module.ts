@@ -14,6 +14,7 @@ import { CredentialsModule } from './credentials/credentials.module';
 import { CredentialsReceivedModule } from './credentials-received/credentials-received.module';
 import { ProofsModule } from './proofs/proofs.module';
 import { HttpClientModule } from '@angular/common/http';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -21,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     IonicModule.forRoot(),
+    SharedModule,
     HttpClientModule,
     ProfileModule,
     MessagesModule,

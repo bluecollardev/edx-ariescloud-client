@@ -1,12 +1,22 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
-import { Observable } from 'rxjs';
-import { first, last, map, reduce, find, filter, skipWhile } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import {
+  first,
+  last,
+  map,
+  reduce,
+  find,
+  filter,
+  skipWhile
+} from 'rxjs/operators';
 
-import { RelationshipsStateService, IRelationship } from './services/relationships-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from './services/relationships-state.service';
 import { RelationshipsActionService } from './services/relationships-action.service';
-import { IRelationshipResponse } from './models/i-relationship';
 
 @Component({
   selector: 'app-relationships',
@@ -31,7 +41,11 @@ import { IRelationshipResponse } from './models/i-relationship';
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-            <ion-list *ngIf="pendingInvitations | async as pendingInvitationItems">
+            <ion-list
+              *ngIf="
+                stateSvc.pendingInvitations$ | async as pendingInvitationItems
+              "
+            >
               <ion-list-header>
                 Pending Invitations
               </ion-list-header>
@@ -41,6 +55,9 @@ import { IRelationshipResponse } from './models/i-relationship';
                   <ion-label>
                     <h2>{{ item.name }}</h2>
                     <small>DID: {{ item.did }}</small>
+                    <ion-row>
+                      <small>State: {{ item.state }}</small>
+                    </ion-row>
                   </ion-label>
                 </ion-item>
                 <ion-item-options>
@@ -55,7 +72,9 @@ import { IRelationshipResponse } from './models/i-relationship';
                 </ion-item-options>
               </ion-item-sliding>
             </ion-list>
-            <ion-list *ngIf="relationships | async as relationshipItems">
+            <ion-list
+              *ngIf="stateSvc.activeRelationship$ | async as relationshipItems"
+            >
               <ion-list-header>
                 My Relationships
               </ion-list-header>
@@ -90,7 +109,7 @@ import { IRelationshipResponse } from './models/i-relationship';
                 [routerLink]="['add']"
               >
                 <ion-icon name="person-add"></ion-icon>
-                Create Invitation
+                Accept Invitation
               </ion-button>
             </div>
           </ion-col>
@@ -98,63 +117,48 @@ import { IRelationshipResponse } from './models/i-relationship';
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./relationships.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./relationships.component.scss']
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationshipsComponent implements OnInit {
-  // searchQuery: '';
-  pendingInvitations: Observable<IRelationship[]>;
-  relationships: Observable<IRelationship[]>;
-
+  searchQuery: '';
   constructor(
     public router: Router,
     public actionSheetCtrl: ActionSheetController,
-    private stateSvc: RelationshipsStateService,
+    public stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService
-  ) {
-    this.initializeItems();
+  ) {}
+
+  async ngOnInit() {
+    const pending$ = await this.actionSvc.getRelationships().toPromise();
+    const pending = pending$.filter(
+      itm => itm.state !== 'active' && itm.state !== 'invitation'
+    );
+    console.log(pending);
+    this.stateSvc.pendingInvitations$ = of(pending);
+    this.stateSvc.activeInvitation$ = this.actionSvc.getRelationshipByState(
+      'active'
+    );
   }
 
-  ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool);
-      if (bool) {
-        this.pendingInvitations = this.stateSvc.pendingInvitations$;
-        this.pendingInvitations.subscribe(obs => {
-          console.log('pending invitations loaded');
-          console.log(obs);
-        });
+  // getItems(ev: any) {
+  //   // Reset items back to all of the items
+  //   // this.initializeItems();
 
-        this.relationships = this.stateSvc.relationships$;
-        this.relationships.subscribe(obs => {
-          console.log('relationships loaded');
-          console.log(obs);
-        });
-      }
-    });
-  }
+  //   // set val to the value of the searchbar
+  //   const val = ev.target.value;
 
-  async initializeItems() {
-    await this.actionSvc.getPendingInvitations();
-    await this.actionSvc.getRelationships();
-  }
-
-  getItems(ev: any) {
-    // Reset items back to all of the items
-    this.initializeItems();
-
-    // set val to the value of the searchbar
-    const val = ev.target.value;
-
-    // if the value is an empty string don't filter the items
-    if (val && val.trim() !== '') {
-      this.relationships = this.relationships.pipe(
-        map(rs => rs.filter(r => {
-          return r.name.toLowerCase().indexOf(val.toLowerCase()) > -1;
-        }))
-      );
-    }
-  }
+  //   // if the value is an empty string don't filter the items
+  //   if (val && val.trim() !== '') {
+  //     this.relationships = this.relationships.pipe(
+  //       map(rs =>
+  //         rs.filter(r => {
+  //           return r.name.toLowerCase().indexOf(val.toLowerCase()) > -1;
+  //         })
+  //       )
+  //     );
+  //   }
+  // }
 
   presentActionSheet() {
     const actionSheet = this.actionSheetCtrl.create({

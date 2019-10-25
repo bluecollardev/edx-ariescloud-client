@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import {
-  IRelationshipResponse,
-  IConnectionParams
-} from '../models/i-relationship';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { HttpService } from 'src/app/core/services/http.service';
-import { IInvitation } from '../models/i-invitation';
+import {
+  HttpService,
+  IMessageResult,
+  IInvitationResult
+} from 'src/app/core/services/http.service';
 import { MessagesStateService } from './messages-state.service';
 
 const apiUrl = environment.apiUrl;
@@ -20,7 +18,6 @@ export class MessagesActionService {
   url: string;
 
   constructor(
-    private http: HttpClient,
     private httpSvc: HttpService,
     private stateSvc: MessagesStateService
   ) {
@@ -28,26 +25,13 @@ export class MessagesActionService {
     console.log('the url', this.url);
 
     // this.httpSvc.getConfig().then(config => this.init(config));
-    this.init();
   }
 
-  init() {
-    this.stateSvc.setReady(true);
-  }
-
-  getRelationships(params: IConnectionParams = {}) {
-    return (this.stateSvc.relationships$ = this.http.get<IRelationshipResponse>(
-      `${this.url}relationships`,
-      { headers: this.headers }
-    ));
+  getMessages() {
+    return this.httpSvc.get<IMessageResult>('messages');
   }
 
   createInvitation() {
-    this.stateSvc.invitation$ = this.http.post<IInvitation>(
-      `${this.url}relationships`,
-      {
-        headers: this.headers
-      }
-    );
+    return this.httpSvc.get<IInvitationResult>('invitations');
   }
 }

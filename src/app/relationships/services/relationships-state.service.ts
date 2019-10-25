@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
+import {
+  first,
+  last,
+  map,
+  reduce,
+  find,
+  filter,
+  skipWhile,
+  single
+} from 'rxjs/operators';
 import { IInvitation } from '../models/i-invitation';
 import { IRelationshipResponse } from '../models/i-relationship';
 
@@ -10,7 +19,7 @@ export interface IRelationship {
   received: Date;
   did: string;
   publicDid: string;
-  status: string;
+  state: string;
 }
 
 @Injectable({
@@ -21,11 +30,19 @@ export class RelationshipsStateService {
   ready = this._ready$.asObservable();
 
   invitation$: Observable<IInvitation> = new Observable<IInvitation>();
-  activeInvitation$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
-  pendingInvitations$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
+  activeInvitation$: Observable<IRelationship[]> = new Observable<
+    IRelationship[]
+  >();
+  pendingInvitations$: Observable<IRelationship[]> = new Observable<
+    IRelationship[]
+  >();
   // TODO: I don't know how to just grab one, whatever... I'll just use a stupid array for now
-  activeRelationship$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
-  relationships$: Observable<IRelationship[]> = new Observable<IRelationship[]>();
+  activeRelationship$: Observable<IRelationship[]> = new Observable<
+    IRelationship[]
+  >();
+  relationships$: Observable<IRelationship[]> = new Observable<
+    IRelationship[]
+  >();
 
   constructor() {
     const pending = of([
@@ -66,8 +83,8 @@ export class RelationshipsStateService {
       }
     ]);
 
-    this.setPendingInvitations(pending);
-    this.setRelationships(relationships);
+    // this.setPendingInvitations(pending);
+    // this.setRelationships(relationships);
     this.setReady(true);
   }
 

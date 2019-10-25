@@ -5,6 +5,11 @@ import { AlertController } from '@ionic/angular';
 
 import { ProfileStateService } from '../../services/profile-state.service';
 import { ProfileActionsService } from '../../services/profile-actions.service';
+import {
+  HttpService,
+  IInvitationResult
+} from 'src/app/core/services/http.service';
+import { Observable } from 'rxjs';
 
 export interface IProfile {
   orgName: string;
@@ -17,8 +22,13 @@ export interface IProfile {
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
-        <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
-          <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated">Edit Profile</ion-title>
       </ion-toolbar>
@@ -28,45 +38,62 @@ export interface IProfile {
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <form [formGroup]="fg">
-              <ion-list lines="full" class="ion-no-margin ion-no-padding">
+              <ion-list
+                lines="full"
+                class="ion-no-margin ion-no-padding"
+                *ngIf="invite$ | async as invitation"
+              >
+                <ion-card>
+                  <ion-card-header>Invitation </ion-card-header>
+                  <ion-card-content>{{ invitation | json }}</ion-card-content>
+                </ion-card>
+                <!--
                 <ion-item>
-                  <ion-label position="stacked">Org. Name
+                  <ion-label position="stacked"
+                    >First Name
                     <ion-text color="danger">*</ion-text>
                   </ion-label>
-                  <ion-input required type="text" formControlName="orgName"></ion-input>
+                  <ion-input
+                    required
+                    type="text"
+                    formControlName="firstName"
+                  ></ion-input>
                 </ion-item>
 
                 <ion-item>
-                  <ion-label position="stacked">First Name
+                  <ion-label position="stacked"
+                    >Last Name
                     <ion-text color="danger">*</ion-text>
                   </ion-label>
-                  <ion-input required type="text" formControlName="firstName"></ion-input>
+                  <ion-input
+                    required
+                    type="text"
+                    formControlName="lastName"
+                  ></ion-input>
                 </ion-item>
-
-                <ion-item>
-                  <ion-label position="stacked">Last Name
-                    <ion-text color="danger">*</ion-text>
-                  </ion-label>
-                  <ion-input required type="text" formControlName="lastName"></ion-input>
-                </ion-item>
+-->
               </ion-list>
-
-              <div class="ion-padding" style="display: flex; justify-content: space-around">
+              <div
+                class="ion-padding"
+                style="display: flex; justify-content: space-around"
+              >
                 <ion-button
                   style="flex: 1"
                   color="light"
                   (click)="this.router.navigate(['/profile'])"
-                  class="ion-no-margin">
+                  class="ion-no-margin"
+                >
                   <ion-icon name="close"></ion-icon>
-                  Cancel
+                  Close
                 </ion-button>
-                <ion-button
+                <!--  <ion-button
                   style="flex: 1; margin-left: 1rem"
                   (click)="submit(fg)"
                   class="ion-no-margin">
                   <ion-icon name="save"></ion-icon>
                   Save Profile
                 </ion-button>
+                -->
               </div>
             </form>
           </ion-col>
@@ -80,12 +107,11 @@ export interface IProfile {
 export class EditProfileComponent implements OnInit {
   fg: FormGroup;
   valid = false;
-
+  invite$: Observable<IInvitationResult>;
   constructor(
     public router: Router,
-    private stateSvc: ProfileStateService,
     private actionSvc: ProfileActionsService,
-    private alertController: AlertController
+    private httpSvc: HttpService
   ) {}
 
   ngOnInit() {
@@ -98,6 +124,7 @@ export class EditProfileComponent implements OnInit {
     this.fg = fg;
 
     fg.valueChanges.subscribe(obs => console.log(obs));
+    this.invite$ = this.httpSvc.get<IInvitationResult>('invitations');
   }
 
   submit(fg: FormGroup) {

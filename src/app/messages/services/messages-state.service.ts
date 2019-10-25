@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IInvitation } from '../models/i-invitation';
 import { IRelationshipResponse } from '../models/i-relationship';
+import { IMessageResult } from 'src/app/core/services/http.service';
 
 export interface IRelationship {
   name: string;
@@ -21,18 +22,7 @@ export class MessagesStateService {
   // relationships = this.relationships$.asObservable();
 
   invitation$: Observable<IInvitation>;
-  relationships$: Observable<IRelationshipResponse>;
-
-  private _ready$ = new BehaviorSubject<boolean>(false);
-  ready = this._ready$.asObservable();
-
-  setReady(bool: boolean) {
-    this._ready$.next(bool);
-  }
-
-  // setRelationships(data: IRelationship[]) {
-  //   this.relationships$.next(data);
-  // }
+  messages$: Observable<IMessageResult>;
 
   constructor() {
     const relationships = [

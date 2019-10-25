@@ -1,8 +1,8 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {ActionSheetController, AlertController} from '@ionic/angular';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   CredentialStateService,
@@ -10,9 +10,12 @@ import {
   ICredential,
   IIssuer
 } from '../credentials/services/credential-state.service';
-import {RelationshipsStateService, IRelationship} from '../relationships/services/relationships-state.service';
-import {CredentialActionsService} from '../credentials/services/credential-actions.service';
-import {RelationshipsActionService} from '../relationships/services/relationships-action.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from '../relationships/services/relationships-state.service';
+import { CredentialActionsService } from '../credentials/services/credential-actions.service';
+import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
 
 @Component({
   selector: 'app-credentials',
@@ -27,7 +30,9 @@ import {RelationshipsActionService} from '../relationships/services/relationship
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Certificates of Proof</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Certificates of Proof</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -39,12 +44,19 @@ import {RelationshipsActionService} from '../relationships/services/relationship
               <ion-list-header>
                 By Relationship
               </ion-list-header>
-              <ion-item-sliding *ngFor="let relationship of relationships" (click)="this.router.navigate(['/verify-credentials/group/' + relationship.did])">
+              <ion-item-sliding
+                *ngFor="let relationship of relationships"
+                (click)="
+                  this.router.navigate([
+                    '/verify-credentials/group/' + relationship.did
+                  ])
+                "
+              >
                 <ion-item>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ relationship.name }}</h2>
-                    <small>DID: {{ relationship.did   }}</small>
+                    <small>DID: {{ relationship.did }}</small>
                   </ion-label>
                   <ion-badge color="primary" item-end>2</ion-badge>
                 </ion-item>
@@ -66,7 +78,7 @@ export class ProofsComponent implements OnInit {
   proofs: Observable<ICertificateOfProof[]>;
 
   constructor(
-    private router: Router,
+    public router: Router,
     public stateSvc: CredentialStateService,
     public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: CredentialActionsService,
@@ -167,7 +179,8 @@ export class ProofsComponent implements OnInit {
   async verifyCredPopup() {
     const alert = await this.alertController.create({
       header: 'Certificate Claims Verified',
-      message: '<strong>Success!</strong> All claims within this certificate are valid.',
+      message:
+        '<strong>Success!</strong> All claims within this certificate are valid.',
       buttons: [
         {
           text: 'Cancel',
@@ -176,7 +189,8 @@ export class ProofsComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');

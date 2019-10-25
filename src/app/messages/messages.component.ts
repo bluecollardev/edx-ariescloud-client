@@ -5,11 +5,16 @@ import { Observable } from 'rxjs';
 import { MessagesStateService } from './services/messages-state.service';
 import { MessagesActionService } from './services/messages-action.service';
 
-import { CredentialStateService, ICredential } from '../credentials/services/credential-state.service';
+import {
+  CredentialStateService,
+  ICredential
+} from '../credentials/services/credential-state.service';
 import { CredentialActionsService } from '../credentials/services/credential-actions.service';
-import { RelationshipsStateService, IRelationship } from '../relationships/services/relationships-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from '../relationships/services/relationships-state.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
-
 
 @Component({
   selector: 'app-relationships',
@@ -24,26 +29,32 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-          >My Messages</ion-title
-        >
+        <ion-title class="ios title-ios hydrated">My Messages</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="relationships | async as relationships">
+        <ion-row *ngIf="stateSvc.messages$ | async as relationships">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
-              <ion-list-header>
-                By Relationship
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let relationship of relationships" [routerLink]="['view']">
+              <ion-list-header> Messages </ion-list-header>
+              <ion-item-sliding
+                *ngFor="let relationship of relationships"
+                [routerLink]="['view']"
+              >
                 <ion-item>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ relationship.name }}</h2>
-                    <small>DID: abcd-1234-df34-cd34</small>
+                    <h2>{{ relationship.label }}</h2>
+                    <small>Type: {{ relationship.type }}</small>
+                    <ion-row>
+                      <small>State: {{ relationship.state }}</small>
+                    </ion-row>
+
+                    <ion-row
+                      ><small> Updated: {{ relationship.updated }}</small>
+                    </ion-row>
                   </ion-label>
                   <ion-badge color="primary" item-end>2</ion-badge>
                 </ion-item>
@@ -64,34 +75,22 @@ export class MessagesComponent implements OnInit {
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
-    private stateSvc: MessagesStateService,
+    public stateSvc: MessagesStateService,
     private actionSvc: MessagesActionService,
     public relationshipsStateSvc: RelationshipsStateService,
     public relationshipsActionSvc: RelationshipsActionService,
     // Not used yet...
     public credentialStateSvc: CredentialStateService,
     public credentialActionSvc: CredentialActionsService
-  ) {
-    this.initializeItems();
-  }
+  ) {}
 
   ngOnInit() {
-    this.relationshipsStateSvc.ready.subscribe(bool => {
-      console.log('bool', bool);
-      if (bool) {
-        this.relationships = this.relationshipsStateSvc.relationships$;
-        this.relationships.subscribe(obs => console.log(obs));
-      }
-    });
-  }
-
-  async initializeItems() {
-    await this.relationshipsActionSvc.getRelationships();
+    const messages$ = this.actionSvc.getMessages();
+    this.stateSvc.messages$ = messages$;
   }
 
   getItems(ev: any) {
     // Reset items back to all of the items
-    this.initializeItems();
 
     // set val to the value of the searchbar
     const val = ev.target.value;

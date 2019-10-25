@@ -17,23 +17,30 @@ export interface IProfile {
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
-        <ion-buttons slot="start" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
-          <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated">My Profile</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content *ngIf="stateSvc.profile$ | async as profile">
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <ion-card text-center>
-              <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
+              <img
+                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
+              />
               <ion-card-content>
                 <ion-card-title>
-                  Alice Cooper
+                  {{ profile.label }}
                 </ion-card-title>
-                <small><small>My DID: acbd-123-sdf-2345</small></small>
+                <!--<small><small>My DID: acbd-123-sdf-2345</small></small>-->
               </ion-card-content>
               <div style="display: flex">
                 <ion-button
@@ -46,7 +53,7 @@ export interface IProfile {
                   [routerLink]="['edit']"
                 >
                   <ion-icon name="create"></ion-icon>
-                  Edit Profile
+                  Create Invitation
                 </ion-button>
               </div>
               <ion-list>
@@ -54,17 +61,30 @@ export interface IProfile {
                   <ion-item-divider>
                     <ion-label>Shortcuts</ion-label>
                   </ion-item-divider>
-                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/messages'])">
+                  <ion-item
+                    button
+                    class="flex ion-justify-content-around"
+                    (click)="this.router.navigate(['/messages'])"
+                  >
                     <ion-label>
                       <h2>Messages</h2>
                     </ion-label>
-                    <ion-badge color="primary" item-end>2</ion-badge>
+                    <ion-badge color="primary" item-end>{{
+                      profile.messageCount
+                    }}</ion-badge>
                   </ion-item>
-                  <ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/credentials-received'])" lines="none">
+                  <ion-item
+                    button
+                    class="flex ion-justify-content-around"
+                    (click)="this.router.navigate(['/credentials-received'])"
+                    lines="none"
+                  >
                     <ion-label>
                       <h2>Credentials Received</h2>
                     </ion-label>
-                    <ion-badge color="medium" item-end>4</ion-badge>
+                    <ion-badge color="medium" item-end>{{
+                      profile.credsCount
+                    }}</ion-badge>
                   </ion-item>
                   <!--<ion-item button class="flex ion-justify-content-around" (click)="this.router.navigate(['/verify-credentials'])">
                     <ion-label>
@@ -86,11 +106,13 @@ export interface IProfile {
 export class ProfileComponent implements OnInit {
   constructor(
     public router: Router,
-    private stateSvc: ProfileStateService,
+    public stateSvc: ProfileStateService,
     private actionSvc: ProfileActionsService,
     private alertController: AlertController
   ) {}
 
   ngOnInit() {
+    const obs = this.actionSvc.getProfile();
+    this.stateSvc.profile$ = obs;
   }
 }

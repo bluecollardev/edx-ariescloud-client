@@ -8,7 +8,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { HttpService } from 'src/app/core/services/http.service';
 import { IInvitation } from '../models/i-invitation';
-import { RelationshipsStateService, IRelationship } from './relationships-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from './relationships-state.service';
 
 const apiUrl = environment.apiUrl;
 
@@ -65,15 +68,21 @@ export class RelationshipsActionService {
     return this.stateSvc.activeRelationship$;
   }
 
-  getRelationships(params: IConnectionParams = {}) {
-    const relationships = this.http.get<IRelationship[]>(
-      `${this.url}relationships`,
-      { headers: this.headers }
-    );
+  getRelationships() {
+    const relationships = this.httpSvc.get<IRelationship[]>('relationships');
 
-    return this.stateSvc.relationships$;
+    return relationships;
   }
 
+  getRelationshipByState(state: string) {
+    const relationships = this.http.get<IRelationship[]>(
+      `${this.url}relationships`,
+      {
+        params: { state }
+      }
+    );
+    return relationships;
+  }
   createInvitation() {
     this.stateSvc.invitation$ = this.http.post<IInvitation>(
       `${this.url}relationships`,
@@ -83,12 +92,9 @@ export class RelationshipsActionService {
     );
   }
 
-  acceptInvitation() {
-    this.stateSvc.invitation$ = this.http.put<IInvitation>(
-      `${this.url}relationships`,
-      {
-        headers: this.headers
-      }
-    );
+  async acceptInvitation(invite: any) {
+    return await this.httpSvc.post<IInvitation>('invitations', invite);
+    // const text = await this.stateSvc.invitation$.toPromise();
+    // console.log(text);
   }
 }

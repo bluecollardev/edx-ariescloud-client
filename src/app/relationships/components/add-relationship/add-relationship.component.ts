@@ -3,6 +3,8 @@ import { RelationshipsStateService } from '../../services/relationships-state.se
 import { RelationshipsActionService } from '../../services/relationships-action.service';
 import { Observable } from 'rxjs';
 import { IInvitation } from '../../models/i-invitation';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-relationship',
@@ -17,7 +19,7 @@ import { IInvitation } from '../../models/i-invitation';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">New Invitation</ion-title>
+        <ion-title class="ios title-ios hydrated">Accept Invitation</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -27,20 +29,25 @@ import { IInvitation } from '../../models/i-invitation';
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
-            <form>
+            <form [formGroup]="fg">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
                   <ion-label position="stacked"
-                    >Send To (Provide DID)
+                    >Invitation
                     <ion-text color="danger">*</ion-text>
                   </ion-label>
-                  <ion-input required type="text"></ion-input>
+                  <ion-input
+                    required
+                    type="text"
+                    formControlName="invite"
+                  ></ion-input>
                 </ion-item>
-
+                <!--
                 <ion-item>
                   <ion-label position="stacked">Notes</ion-label>
                   <ion-textarea></ion-textarea>
                 </ion-item>
+                -->
               </ion-list>
 
               <div style="display: flex">
@@ -51,10 +58,10 @@ import { IInvitation } from '../../models/i-invitation';
                   full
                   icon-start
                   margin
-                  [routerLink]="['/relationships']"
+                  (click)="submit(fg.controls['invite'].value)"
                 >
                   <ion-icon name="send"></ion-icon>
-                  Send Invitation
+                  Accept Invitation
                 </ion-button>
               </div>
             </form>
@@ -67,15 +74,26 @@ import { IInvitation } from '../../models/i-invitation';
 })
 export class AddRelationshipComponent implements OnInit {
   invitation$: Observable<IInvitation>;
+  fc: FormControl;
+  fg: FormGroup;
   constructor(
     private stateSvc: RelationshipsStateService,
-    private actionSvc: RelationshipsActionService
+    private actionSvc: RelationshipsActionService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.actionSvc.createInvitation();
-    this.stateSvc.ready.subscribe(bool => {
-      // if (bool) this.invitation$ = this.stateSvc.invitation$;
-    });
+    let fc = new FormControl('', [Validators.minLength(10)]);
+    this.fg = new FormGroup({ invite: fc });
+  }
+
+  async submit(fc: any) {
+    try {
+      const invite = JSON.parse(fc);
+      const res = await this.actionSvc.acceptInvitation(invite);
+      if (!res) return;
+      return this.router.navigate(['/relationships']);
+    } catch (err) {}
   }
 }
+// [routerLink]="['/relationships']"

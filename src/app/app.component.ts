@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { HttpService } from './core/services/http.service';
+import { IProfileResult } from './profile/services/profile-actions.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,36 +11,71 @@ import { MenuController } from '@ionic/angular';
       <ion-menu contentId="content">
         <ion-header>
           <ion-toolbar color="primary">
-            <ion-title><ion-icon name="analytics"></ion-icon> Aries Client</ion-title>
+            <ion-title
+              ><ion-icon name="analytics"></ion-icon> Aries Client</ion-title
+            >
           </ion-toolbar>
         </ion-header>
 
         <ion-content>
           <div *ngFor="let p of pages">
-
             <!-- Standard Menu Item -->
             <ion-menu-toggle *ngIf="p.url" autoHide="false">
-              <ion-item [routerLink]="p.url" routerDirection="root" routerLinkActive="active">
+              <ion-item
+                [routerLink]="p.url"
+                routerDirection="root"
+                routerLinkActive="active"
+              >
                 <ion-icon [name]="p.icon" slot="start"></ion-icon>
                 <ion-label>
                   {{ p.title }}
                 </ion-label>
-                <ion-badge *ngIf="p.hasBadge" color="primary" item-end>2</ion-badge>
+                <ion-badge
+                  *ngIf="p.hasBadge && p.icon === 'mail'"
+                  color="primary"
+                  item-end
+                  >{{ mssgCount$ | async }}</ion-badge
+                >
+                <ion-badge
+                  *ngIf="p.hasBadge && p.icon === 'archive'"
+                  color="primary"
+                  item-end
+                  >{{ credsCount$ | async }}</ion-badge
+                >
               </ion-item>
             </ion-menu-toggle>
             <!-- Item with Children -->
 
-            <ion-item button *ngIf="p.children?.length > 0" (click)="p.open = !p.open" [class.parent-active]="p.open" detail="false">
-              <ion-icon slot="start" name="arrow-forward" *ngIf="!p.open"></ion-icon>
-              <ion-icon slot="start" name="arrow-down" *ngIf="p.open"></ion-icon>
+            <ion-item
+              button
+              *ngIf="p.children?.length > 0"
+              (click)="p.open = !p.open"
+              [class.parent-active]="p.open"
+              detail="false"
+            >
+              <ion-icon
+                slot="start"
+                name="arrow-forward"
+                *ngIf="!p.open"
+              ></ion-icon>
+              <ion-icon
+                slot="start"
+                name="arrow-down"
+                *ngIf="p.open"
+              ></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
 
             <!-- Children List for clicked Item -->
             <ion-list *ngIf="p.open" class="ion-no-margin">
               <ion-menu-toggle>
-                <ion-item *ngFor="let sub of p.children" class="sub-item" [routerLink]="sub.url" routerDirection="root"
-                  routerLinkActive="active">
+                <ion-item
+                  *ngFor="let sub of p.children"
+                  class="sub-item"
+                  [routerLink]="sub.url"
+                  routerDirection="root"
+                  routerLinkActive="active"
+                >
                   <ion-icon [name]="sub.icon" slot="start"></ion-icon>
                   <ion-label>
                     {{ sub.title }}
@@ -54,7 +92,11 @@ import { MenuController } from '@ionic/angular';
   `,
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  mssgCount$: Observable<number>;
+  credsCount$: Observable<number>;
+
+  certCount$: Observable<number>;
   title = 'edx-ariescloud-client';
 
   pages = [
@@ -83,6 +125,7 @@ export class AppComponent {
     {
       title: 'Credentials Received',
       url: '/credentials-received/',
+      hasBadge: true,
       icon: 'archive'
     },
     {
@@ -102,7 +145,20 @@ export class AppComponent {
     }
   ];
 
-  constructor(private menu: MenuController) {}
+  constructor(private menu: MenuController, private httpSvc: HttpService) {}
+
+  async ngOnInit() {
+    try {
+      const profile = await this.httpSvc
+        .get<IProfileResult>('profile')
+        .toPromise();
+      this.mssgCount$ = of(profile.messageCount);
+      this.certCount$ = of(2);
+      this.credsCount$ = of(profile.credsCount);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   openFirst() {
     this.menu.enable(true, 'first');

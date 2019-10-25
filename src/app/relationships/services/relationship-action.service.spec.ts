@@ -1,9 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RelationshipsActionService } from './relationships-action.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ActionsService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule]
+    })
+  );
 
   it('should be created', () => {
     const service: RelationshipsActionService = TestBed.get(
