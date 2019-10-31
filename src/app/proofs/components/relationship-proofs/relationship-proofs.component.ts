@@ -10,7 +10,10 @@ import {
   ICredential,
   IIssuer
 } from '../../../credentials/services/credential-state.service';
-import { RelationshipsStateService, IRelationship } from '../../../relationships/services/relationships-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from '../../../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
 import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
 
@@ -27,7 +30,9 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Certificates of Proof</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Certificates of Proof</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -36,7 +41,9 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-grid style="width: 100%;">
-              <ion-row *ngIf="stateSvc.certificatesOfProof$ | async as certificates">
+              <ion-row
+                *ngIf="stateSvc.certificatesOfProof$ | async as certificates"
+              >
                 <ion-col
                   *ngFor="let certificate of certificates"
                   sizeXs="6"
@@ -44,14 +51,19 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center (click)="presentActionSheet(certificate.id)">
+                  <ion-card
+                    text-center
+                    (click)="presentActionSheet(certificate.id)"
+                  >
                     <ion-card-header>
                       {{ certificate.issuedTo }}
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      <small><strong>{{  certificate.name }}</strong></small>
-                      <br/>
+                      <small
+                        ><strong>{{ certificate.name }}</strong></small
+                      >
+                      <br />
                       <small>{{ certificate.issuedBy }}</small>
                     </ion-card-content>
                   </ion-card>
@@ -59,9 +71,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
               </ion-row>
             </ion-grid>
             <div class="ion-padding">
-              <ion-button
-                expand="block"
-                class="ion-no-margin">
+              <ion-button expand="block" class="ion-no-margin">
                 <ion-icon name="send"></ion-icon>
                 Request Certificate of Proof
               </ion-button>
@@ -90,40 +100,17 @@ export class RelationshipProofsComponent implements OnInit {
     private relationshipActionSvc: RelationshipsActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController
-  ) {
-    this.initializeItems();
-  }
+  ) {}
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('subscribing to service observables');
-      // console.log('bool', bool);
-      if (bool) {
-        this.credentials = this.stateSvc.credentials$;
-        this.credentials.subscribe(obs => {
-          console.log('credentials loaded');
-          console.log(obs);
-        });
+    // console.log('bool', bool);
+    this.credentials = this.stateSvc.credentials$;
 
-        this.relationships = this.relationshipStateSvc.relationships$;
-        this.relationships.subscribe(obs => {
-          console.log('relationships loaded');
-          console.log(obs);
-        });
+    this.relationships = this.relationshipStateSvc.relationships$;
 
-        this.issuers = this.stateSvc.issuers$;
-        this.issuers.subscribe(obs => {
-          console.log('issuers loaded');
-          console.log(obs);
-        });
+    this.issuers = this.stateSvc.issuers$;
 
-        this.proofs = this.stateSvc.certificatesOfProof$;
-        this.proofs.subscribe(obs => {
-          console.log('proofs loaded');
-          console.log(obs);
-        });
-      }
-    });
+    this.proofs = this.stateSvc.certificatesOfProof$;
   }
 
   async initializeItems() {
@@ -155,7 +142,8 @@ export class RelationshipProofsComponent implements OnInit {
       buttons: [
         {
           text: 'View Certificate',
-          handler: () => this.router.navigate(['/verify-credentials/view/' + certId])
+          handler: () =>
+            this.router.navigate(['/verify-credentials/view/' + certId])
         },
         {
           text: 'Verify Certificate Claims',
@@ -186,7 +174,8 @@ export class RelationshipProofsComponent implements OnInit {
   async verifyCredPopup() {
     const alert = await this.alertController.create({
       header: 'Certificate Claims Verified',
-      message: '<strong>Success!</strong> All claims within this certificate are valid.',
+      message:
+        '<strong>Success!</strong> All claims within this certificate are valid.',
       buttons: [
         {
           text: 'Cancel',
@@ -195,7 +184,8 @@ export class RelationshipProofsComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');

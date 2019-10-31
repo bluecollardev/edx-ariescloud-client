@@ -19,25 +19,5 @@ export class ProofStateService {
     this.credentials$.next(data);
   }
 
-  constructor() {
-    const proof = {
-      name: 'University Degree',
-      version: '1.2',
-      requested_attributes: {
-        attr1_referents: {
-          name: 'zzzzz',
-          restrictions: [{}]
-        }
-      },
-      requested_predicates: []
-    };
-
-    const governmentCredential = {
-      email: 'alice@faber.edu',
-      name: 'Alice',
-      tax_id: '123-45-6789'
-    };
-
-    this.setProofs([proof]);
-  }
+  constructor() {}
 }

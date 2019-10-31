@@ -2,10 +2,26 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { first, last, map, reduce, find, filter, skipWhile, single } from 'rxjs/operators';
+import {
+  first,
+  last,
+  map,
+  reduce,
+  find,
+  filter,
+  skipWhile,
+  single
+} from 'rxjs/operators';
 
-import { CredentialStateService, ICredential, IIssuer } from '../../../credentials/services/credential-state.service';
-import { RelationshipsStateService, IRelationship } from '../../../relationships/services/relationships-state.service';
+import {
+  CredentialStateService,
+  ICredential,
+  IIssuer
+} from '../../../credentials/services/credential-state.service';
+import {
+  RelationshipsStateService,
+  IRelationship
+} from '../../../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
 import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
 
@@ -22,7 +38,9 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title *ngIf="issuer" class="ios title-ios hydrated">{{ issuer.name }} Credentials</ion-title>
+        <ion-title *ngIf="issuer" class="ios title-ios hydrated"
+          >{{ issuer.name }} Credentials</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -50,13 +68,18 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                   sizeMd="3"
                   sizeLg="2"
                 >
-                  <ion-card text-center (click)="this.presentActionSheet(cred.id)">
+                  <ion-card
+                    text-center
+                    (click)="this.presentActionSheet(cred.id)"
+                  >
                     <ion-card-header>
                       {{ cred.issuedBy }}
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      <small><strong>{{ cred.name }}</strong></small>
+                      <small
+                        ><strong>{{ cred.name }}</strong></small
+                      >
                       <br />
                       <small>{{ cred.program }}</small>
                     </ion-card-content>
@@ -94,39 +117,26 @@ export class OrgCredentialsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('subscribing to service observables');
-      // console.log('bool', bool);
-      if (bool) {
-        this.credentials = this.stateSvc.credentials$;
-        this.credentials.subscribe(obs => {
-          console.log('credentials loaded');
-          console.log(obs);
-        });
+    // console.log('bool', bool);
+    this.credentials = this.stateSvc.credentials$;
 
-        this.relationships = this.relationshipStateSvc.relationships$;
-        this.relationships.subscribe(obs => {
-          console.log('relationships loaded');
-          console.log(obs);
-        });
+    this.relationships = this.relationshipStateSvc.relationships$;
 
-        this.issuers = this.stateSvc.issuers$;
-        this.issuers.subscribe(obs => {
-          console.log('issuers loaded');
-          console.log(obs);
-        });
-      }
-    });
+    this.issuers = this.stateSvc.issuers$;
   }
 
   async setOrgName() {
-     this.stateSvc.issuers$.pipe(
-      map(is => {
-        return is.filter((i) => i.did === this.route.snapshot.paramMap.get('did'))[0];
-      })
-    ).subscribe((issuer) => {
-      this.issuer = issuer;
-    });
+    this.stateSvc.issuers$
+      .pipe(
+        map(is => {
+          return is.filter(
+            i => i.did === this.route.snapshot.paramMap.get('did')
+          )[0];
+        })
+      )
+      .subscribe(issuer => {
+        this.issuer = issuer;
+      });
   }
 
   async initializeItems() {
@@ -158,7 +168,8 @@ export class OrgCredentialsComponent implements OnInit {
       buttons: [
         {
           text: 'View',
-          handler: () => this.router.navigate([`/credentials-received/view/${credId}`])
+          handler: () =>
+            this.router.navigate([`/credentials-received/view/${credId}`])
         },
         {
           text: 'Share',
@@ -207,7 +218,8 @@ export class OrgCredentialsComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
@@ -255,7 +267,8 @@ export class OrgCredentialsComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');

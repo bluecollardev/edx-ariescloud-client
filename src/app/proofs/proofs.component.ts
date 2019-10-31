@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 import {
   CredentialStateService,
@@ -14,7 +14,7 @@ import {
   RelationshipsStateService,
   IRelationship
 } from '../relationships/services/relationships-state.service';
-import { CredentialActionsService } from '../credentials/services/credential-actions.service';
+import { ProofActionService } from './services/proof-action.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
 
 @Component({
@@ -80,9 +80,8 @@ export class ProofsComponent implements OnInit {
   constructor(
     public router: Router,
     public stateSvc: CredentialStateService,
-    public relationshipStateSvc: RelationshipsStateService,
-    private actionSvc: CredentialActionsService,
-    private relationshipActionSvc: RelationshipsActionService,
+    public relationShipActionService: RelationshipsActionService,
+    private actionSvc: ProofActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController
   ) {
@@ -90,45 +89,26 @@ export class ProofsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('subscribing to service observables');
-      // console.log('bool', bool);
-      if (bool) {
-        this.credentials = this.stateSvc.credentials$;
-        this.credentials.subscribe(obs => {
-          console.log('credentials loaded');
-          console.log(obs);
-        });
+    // console.log('bool', bool);
+    this.credentials = this.stateSvc.credentials$;
 
-        this.relationships = this.relationshipStateSvc.relationships$;
-        this.relationships.subscribe(obs => {
-          console.log('relationships loaded');
-          console.log(obs);
-        });
+    this.relationships = this.relationShipActionService.getRelationshipByState(
+      'active'
+    );
 
-        this.issuers = this.stateSvc.issuers$;
-        this.issuers.subscribe(obs => {
-          console.log('issuers loaded');
-          console.log(obs);
-        });
-
-        this.proofs = this.stateSvc.certificatesOfProof$;
-        this.proofs.subscribe(obs => {
-          console.log('proofs loaded');
-          console.log(obs);
-        });
-      }
-    });
+    this.issuers = this.stateSvc.issuers$;
+    this.stateSvc.certificatesOfProof$ = this.actionSvc.getProofs();
+    this.proofs = this.stateSvc.certificatesOfProof$;
   }
 
   async initializeItems() {
-    await this.actionSvc.getCertificates();
+    // await this.actionSvc.getCertificates();
   }
 
   async getItems(issuers, ev: any) {
     const filtered = [];
     // Reset items back to all of the items
-    await this.initializeItems();
+    // await this.initializeItems();
 
     // set val to the value of the searchbar
     const val = ev.target.value;
