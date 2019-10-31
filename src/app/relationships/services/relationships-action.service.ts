@@ -28,30 +28,6 @@ export class RelationshipsActionService {
     private stateSvc: RelationshipsStateService
   ) {
     this.url = apiUrl;
-    console.log(apiUrl);
-  }
-
-  getPendingInvitation(did: string, params: IConnectionParams = {}) {
-    const invitation = this.http.get<IRelationship[]>(
-      `${this.url}relationships/${did}`,
-      { headers: this.headers }
-    );
-
-    this.stateSvc.setActiveInvitation(did);
-
-    console.log('active invitation');
-    console.log(this.stateSvc.activeInvitation$);
-
-    return this.stateSvc.activeInvitation$;
-  }
-
-  getPendingInvitations(params: IConnectionParams = {}) {
-    const pendingInvitations = this.http.get<IRelationship[]>(
-      `${this.url}relationships`,
-      { headers: this.headers }
-    );
-
-    return this.stateSvc.pendingInvitations$;
   }
 
   getRelationship(did: string, params: IConnectionParams = {}) {
@@ -69,6 +45,14 @@ export class RelationshipsActionService {
     const relationships = this.httpSvc.get<IRelationship[]>('relationships');
 
     return relationships;
+  }
+
+  getRelationshipById(id: string) {
+    const relationship = this.httpSvc.getById<IRelationship>(
+      'relationships',
+      id
+    );
+    return relationship;
   }
 
   getRelationshipByState(state: string) {

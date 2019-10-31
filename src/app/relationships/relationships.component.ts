@@ -1,12 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
-import {  of } from 'rxjs';
+import { of } from 'rxjs';
 
-
-import {
-  RelationshipsStateService,
-} from './services/relationships-state.service';
+import { RelationshipsStateService } from './services/relationships-state.service';
 import { RelationshipsActionService } from './services/relationships-action.service';
 
 @Component({
@@ -41,7 +38,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                 Pending Invitations
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of pendingInvitationItems">
-                <ion-item (click)="this.acceptInvitation(item.did)">
+                <ion-item (click)="this.acceptInvitation(item._id)">
                   <ion-icon name="business" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item.name }}</h2>
@@ -70,7 +67,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                 My Relationships
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of relationshipItems">
-                <ion-item (click)="this.viewDetail(item.did)">
+                <ion-item (click)="this.viewDetail(item._id)">
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item.name }}</h2>

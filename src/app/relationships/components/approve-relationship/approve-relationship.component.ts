@@ -7,7 +7,7 @@ import {
   IRelationship
 } from '../../services/relationships-state.service';
 import { RelationshipsActionService } from '../../services/relationships-action.service';
-import { IRelationshipResponse } from '../../models/i-relationship';
+import { HttpService } from 'src/app/core/services/http.service';
 
 @Component({
   selector: 'app-approve-relationship',
@@ -25,11 +25,11 @@ import { IRelationshipResponse } from '../../models/i-relationship';
         <ion-title class="ios title-ios hydrated">Accept Invitation</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content *ngIf="active | async as relationships">
+    <ion-content *ngIf="active | async as relationship">
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
-            <ion-card text-center *ngFor="let relationship of relationships">
+            <ion-card text-center>
               <img
                 src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
               />
@@ -48,7 +48,7 @@ import { IRelationshipResponse } from '../../models/i-relationship';
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                   <ion-label>Invitiation Sent</ion-label>
                   <ion-badge color="medium" item-end>{{
-                    relationship.received.toLocaleDateString()
+                    relationship.created
                   }}</ion-badge>
                 </ion-item>
 
@@ -56,8 +56,7 @@ import { IRelationshipResponse } from '../../models/i-relationship';
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                   <ion-label>Status</ion-label>
                   <ion-badge color="medium" item-end>{{
-                    relationship.status.charAt(0).toUpperCase() +
-                      relationship.status.slice(1, relationship.status.length)
+                    relationship.state
                   }}</ion-badge>
                 </ion-item>
               </ion-list>
@@ -70,9 +69,11 @@ import { IRelationshipResponse } from '../../models/i-relationship';
                   full
                   icon-start
                   margin
-                  [routerLink]="['/relationships']"
                 >
-                  <ion-icon name="close"></ion-icon>
+                  <ion-icon
+                    name="close"
+                    (click)="decline(relationship._id)"
+                  ></ion-icon>
                   Decline
                 </ion-button>
                 <ion-button
@@ -82,7 +83,7 @@ import { IRelationshipResponse } from '../../models/i-relationship';
                   full
                   icon-start
                   margin
-                  [routerLink]="['/relationships']"
+                  (click)="accept(relationship._id)"
                 >
                   <ion-icon name="checkmark"></ion-icon>
                   Accept
@@ -98,24 +99,35 @@ import { IRelationshipResponse } from '../../models/i-relationship';
 })
 export class ApproveRelationshipComponent implements OnInit {
   graduationDate: string = new Date().toDateString();
-  active: Observable<IRelationship[]>;
+  active: Observable<IRelationship>;
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    // private stateSvc: RelationshipsStateService,
-    private actionSvc: RelationshipsActionService
+    private actionSvc: RelationshipsActionService,
+    private httpSvc: HttpService
   ) {
-    this.actionSvc.getPendingInvitations(); // Load all invitations first
-    this.actionSvc.getPendingInvitation(this.route.snapshot.paramMap.get('id'));
+    // this.actionSvc.getPendingInvitations(); // Load all invitations first
+    // this.actionSvc.getPendingInvitation(this.route.snapshot.paramMap.get('id'));
   }
 
   ngOnInit() {
-    // this.stateSvc.ready.subscribe(bool => {
-    //   console.log('bool', bool);
-    //   if (bool) {
-    //     this.active = this.stateSvc.pendingInvitations$;
-    //   }
-    // });
+    this.active = this.actionSvc.getRelationshipById(
+      this.route.snapshot.paramMap.get('id')
+    );
+  }
+
+  async accept(id: string) {
+    const res = await this.httpSvc.postById('relationships', id).toPromise();
+    if (res) {
+      this.router.navigate(['/relationships']);
+    }
+  }
+
+  async decline(id: string) {
+    const res = await this.httpSvc.delete('relationships', id);
+    if (res) {
+      this.router.navigate(['/relationships']);
+    }
   }
 }
