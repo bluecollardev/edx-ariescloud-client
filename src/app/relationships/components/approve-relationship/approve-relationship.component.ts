@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -69,11 +69,9 @@ import { HttpService } from 'src/app/core/services/http.service';
                   full
                   icon-start
                   margin
+                  (click)="decline(relationship._id)"
                 >
-                  <ion-icon
-                    name="close"
-                    (click)="decline(relationship._id)"
-                  ></ion-icon>
+                  <ion-icon name="close"></ion-icon>
                   Decline
                 </ion-button>
                 <ion-button
@@ -97,7 +95,7 @@ import { HttpService } from 'src/app/core/services/http.service';
   `,
   styleUrls: ['./approve-relationship.component.scss']
 })
-export class ApproveRelationshipComponent implements OnInit {
+export class ApproveRelationshipComponent implements OnInit, OnDestroy {
   graduationDate: string = new Date().toDateString();
   active: Observable<IRelationship>;
 
@@ -106,10 +104,7 @@ export class ApproveRelationshipComponent implements OnInit {
     public router: Router,
     private actionSvc: RelationshipsActionService,
     private httpSvc: HttpService
-  ) {
-    // this.actionSvc.getPendingInvitations(); // Load all invitations first
-    // this.actionSvc.getPendingInvitation(this.route.snapshot.paramMap.get('id'));
-  }
+  ) {}
 
   ngOnInit() {
     this.active = this.actionSvc.getRelationshipById(
@@ -117,16 +112,23 @@ export class ApproveRelationshipComponent implements OnInit {
     );
   }
 
+  async ngOnDestroy() {
+    return await this.actionSvc.resetRelState();
+  }
+
   async accept(id: string) {
     const res = await this.httpSvc.postById('relationships', id).toPromise();
     if (res) {
+      await this.actionSvc.resetRelState();
       this.router.navigate(['/relationships']);
     }
   }
 
   async decline(id: string) {
-    const res = await this.httpSvc.delete('relationships', id);
+    const res = await this.httpSvc.delete<any>('relationships', id).toPromise();
+    console.log('res', res);
     if (res) {
+      await this.actionSvc.resetRelState();
       this.router.navigate(['/relationships']);
     }
   }

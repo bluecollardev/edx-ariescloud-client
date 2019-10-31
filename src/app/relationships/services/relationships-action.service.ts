@@ -80,4 +80,13 @@ export class RelationshipsActionService {
     // const text = await this.stateSvc.invitation$.toPromise();
     // console.log(text);
   }
+
+  async resetRelState() {
+    const pending$ = await this.getRelationships().toPromise();
+    const pending = pending$.filter(
+      itm => itm.state !== 'active' && itm.state !== 'invitation'
+    );
+    this.stateSvc.pendingInvitations$ = of(pending);
+    this.stateSvc.activeRelationship$ = this.getRelationshipByState('active');
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RelationshipsStateService } from '../../services/relationships-state.service';
 import { RelationshipsActionService } from '../../services/relationships-action.service';
 import { Observable } from 'rxjs';
@@ -72,7 +72,7 @@ import { Router } from '@angular/router';
   `,
   styleUrls: ['./add-relationship.component.scss']
 })
-export class AddRelationshipComponent implements OnInit {
+export class AddRelationshipComponent implements OnInit, OnDestroy {
   invitation$: Observable<IInvitation>;
   fc: FormControl;
   fg: FormGroup;
@@ -87,11 +87,16 @@ export class AddRelationshipComponent implements OnInit {
     this.fg = new FormGroup({ invite: fc });
   }
 
+  async ngOnDestroy() {
+    return await this.actionSvc.resetRelState();
+  }
+
   async submit(fc: any) {
     try {
       const invite = JSON.parse(fc);
       const res = await this.actionSvc.acceptInvitation(invite);
-      if (!res) return;
+      if (!res) return await this.actionSvc.resetRelState();
+      await this.actionSvc.resetRelState();
       return this.router.navigate(['/relationships']);
     } catch (err) {}
   }

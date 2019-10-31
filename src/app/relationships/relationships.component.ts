@@ -122,7 +122,6 @@ export class RelationshipsComponent implements OnInit {
     const pending = pending$.filter(
       itm => itm.state !== 'active' && itm.state !== 'invitation'
     );
-    console.log(pending);
     this.stateSvc.pendingInvitations$ = of(pending);
     this.stateSvc.activeRelationship$ = this.actionSvc.getRelationshipByState(
       'active'
