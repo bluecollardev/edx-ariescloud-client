@@ -51,7 +51,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
                 >
                   <ion-card
                     text-center
-                    (click)="presentActionSheet(credDef.id)"
+                    (click)="presentActionSheet(credDef._id)"
                   >
                     <ion-card-header></ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
@@ -91,6 +91,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
+  _id: any;
 
   constructor(
     private router: Router,
@@ -126,17 +127,21 @@ export class CredentialsComponent implements OnInit {
   }
 
   async presentActionSheet(credDefId: any) {
+    console.log('the cred def id', credDefId);
+    this._id = credDefId;
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
           text: 'View',
-          handler: () =>
-            this.router.navigate([`/credentials/view/${credDefId}`])
+          handler: () => {
+            this.router.navigate([`/credentials/view/${this._id}`]);
+          }
         },
         {
           text: 'Edit',
-          handler: () =>
-            this.router.navigate([`/credentials/edit/${credDefId}`])
+          handler: () => {
+            this.router.navigate([`/credentials/edit/${this._id}`]);
+          }
         },
         {
           text: 'Delete',
