@@ -42,7 +42,7 @@ const url = environment.apiUrl;
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="stateSvc.issuers$ | async as issuerGroups">
+        <ion-row *ngIf="credentials | async as issuerGroups">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
               <ion-item-sliding
@@ -92,29 +92,19 @@ export class CredentialsReceivedComponent implements OnInit {
     // this.initializeItems();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.stateSvc.credentials$ = this.http.get<ICredential[]>(
       `${this._url}credentials`
     );
     this.credentials = this.stateSvc.credentials$;
 
-    this.relationships = this.relationshipStateSvc.relationships$;
-
-    this.issuers = this.stateSvc.issuers$;
-    this.issuers.subscribe(obs => {
-      console.log('issuers loaded');
-      console.log(obs);
-    });
-  }
-
-  async initializeItems() {
-    await this.actionSvc.getCredentials();
+    let test = await this.credentials.toPromise();
+    console.log(test);
   }
 
   async getItems(issuers, ev: any) {
     const filtered = [];
     // Reset items back to all of the items
-    await this.initializeItems();
 
     // set val to the value of the searchbar
     const val = ev.target.value;
