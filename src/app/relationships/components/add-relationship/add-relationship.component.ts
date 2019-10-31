@@ -83,7 +83,7 @@ export class AddRelationshipComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let fc = new FormControl('', [Validators.minLength(10)]);
+    const fc = new FormControl('', [Validators.minLength(10)]);
     this.fg = new FormGroup({ invite: fc });
   }
 

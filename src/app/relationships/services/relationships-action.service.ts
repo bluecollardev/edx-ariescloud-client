@@ -90,7 +90,9 @@ export class RelationshipsActionService {
   }
 
   async acceptInvitation(invite: any) {
-    return await this.httpSvc.post<IInvitation>('invitations', invite);
+    return await this.httpSvc
+      .post<IInvitation>('invitations', invite)
+      .toPromise();
     // const text = await this.stateSvc.invitation$.toPromise();
     // console.log(text);
   }

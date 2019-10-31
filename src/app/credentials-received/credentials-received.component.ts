@@ -97,9 +97,6 @@ export class CredentialsReceivedComponent implements OnInit {
       `${this._url}credentials`
     );
     this.credentials = this.stateSvc.credentials$;
-
-    let test = await this.credentials.toPromise();
-    console.log(test);
   }
 
   async getItems(issuers, ev: any) {
