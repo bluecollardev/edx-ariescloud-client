@@ -1,9 +1,13 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 
 import { CredentialActionsService } from '../../services/credential-actions.service';
-import { CredentialStateService, ICredentialDef } from '../../services/credential-state.service';
+import {
+  CredentialStateService,
+  ICredentialDef
+} from '../../services/credential-state.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   template: `
@@ -11,23 +15,28 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
       <ion-toolbar class="ios hydrated">
         <ion-buttons
           slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
           <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Edit Credential Type</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Edit Credential Type</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <form [formGroup]="fg">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
-                  <ion-label position="stacked">Credential Name
+                  <ion-label position="stacked"
+                    >Credential Name
                     <ion-text color="danger">*</ion-text>
                   </ion-label>
                   <ion-input type="text" formControlName="name"></ion-input>
@@ -37,13 +46,14 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label position="stacked">Select Schema
+                        <ion-label position="stacked"
+                          >Select Schema
                           <ion-text color="danger">*</ion-text>
                         </ion-label>
                         <ion-select required formControlName="version">
                           <ion-select-option>v1.1</ion-select-option>
                           <ion-select-option>v1.2</ion-select-option>
-                          <ion-select-option selected>v1.3</ion-select-option>
+                          <ion-select-option>v1.3</ion-select-option>
                           <ion-select-option>v2.0</ion-select-option>
                         </ion-select>
                       </ion-item>
@@ -59,11 +69,10 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label position="stacked">Create Data Field</ion-label>
-                        <ion-input
-                          required
-                          type="text"
-                          [formControl]="baseFc">
+                        <ion-label position="stacked"
+                          >Create Data Field</ion-label
+                        >
+                        <ion-input required type="text" [formControl]="baseFc">
                         </ion-input>
                       </ion-item>
                     </ion-col>
@@ -73,11 +82,7 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
                       </ion-button>
                     </ion-col>
                   </ion-row>
-                  <ion-row>
-                    <ion-col>
-                      <ion-label *ngIf="baseFc.invalid">Error message</ion-label>
-                    </ion-col>
-                  </ion-row>
+
                   <ion-row
                     *ngFor="
                       let itm of fg.controls['schema']['controls'];
@@ -105,7 +110,8 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
                 <ion-button
                   expand="block"
                   (click)="submit(fg)"
-                  class="ion-no-margin">
+                  class="ion-no-margin"
+                >
                   <ion-icon name="save"></ion-icon>
                   Update Credential
                 </ion-button>
@@ -116,8 +122,8 @@ import { CredentialStateService, ICredentialDef } from '../../services/credentia
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./edit-credential.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./edit-credential.component.scss']
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditCredentialComponent implements OnInit {
   fg: FormGroup;
@@ -125,21 +131,40 @@ export class EditCredentialComponent implements OnInit {
   valid = false;
 
   constructor(
+    private route: ActivatedRoute,
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     private alertController: AlertController
-  ) {}
-
-  ngOnInit() {
+  ) {
     const fg = new FormGroup({
       name: new FormControl('', [Validators.required]),
       version: new FormControl('', [Validators.required]),
       schema: new FormArray([])
     });
-
     this.fg = fg;
+  }
 
-    fg.valueChanges.subscribe(obs => console.log(obs));
+  async ngOnInit() {
+    const schema$ = this.actionSvc.getCredentialDef(
+      this.route.snapshot.paramMap.get('id')
+    );
+
+    const schema = await schema$.toPromise();
+
+    this.fg.controls.name.setValue(schema.name);
+    this.fg.controls.version.setValue(schema.version);
+    const fa = new FormArray([]);
+    for (const attr of schema.attributes) {
+      fa.push(new FormControl(attr));
+    }
+    this.fg.controls.schema = fa;
+    this.fg.updateValueAndValidity();
+    console.log('schema', schema);
+    // const fg = new FormGroup({
+    //   name: new FormControl('', [Validators.required]),
+    //   version: new FormControl('', [Validators.required]),
+    //   schema: new FormArray([])
+    // });
   }
 
   addFc(fg: FormGroup, baseFc: FormControl) {
@@ -195,7 +220,8 @@ export class EditCredentialComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');

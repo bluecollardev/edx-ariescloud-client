@@ -20,6 +20,7 @@ export interface ICredentialDef {
   program: string;
   version: string;
   schema: string;
+  attributes: string[];
 }
 
 export interface ICredential {

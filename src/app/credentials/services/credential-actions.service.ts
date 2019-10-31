@@ -89,17 +89,13 @@ export class CredentialActionsService {
   }
 
   getCredentialDef(id: string) {
-    const response = this.http.get<ICredentialDef[]>(
-      `${this.url}credentials/${id}`,
-      { headers: this.headers }
+    const response = this.httpSvc.getById<ICredentialDef>(
+      'credential-definitions',
+      id
     );
+    // this.stateSvc.setActiveCredentialDef(id);
 
-    this.stateSvc.setActiveCredentialDef(id);
-
-    console.log('active credential');
-    console.log(this.stateSvc.activeCredentialDef$);
-
-    return this.stateSvc.activeCredentialDef$;
+    return response;
   }
 
   getCredentialDefs(params?: ICredentialParams) {
