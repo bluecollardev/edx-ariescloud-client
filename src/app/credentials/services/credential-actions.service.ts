@@ -2,16 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from 'src/app/core/services/http.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import {
-  first,
-  last,
-  map,
-  reduce,
-  find,
-  filter,
-  skipWhile,
-  single
-} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
@@ -68,17 +59,7 @@ export class CredentialActionsService {
   }
 
   getCredential(id: string) {
-    const response = this.http.get<ICredential[]>(
-      `${this.url}credentials/${id}`,
-      { headers: this.headers }
-    );
-
-    this.stateSvc.setActiveCredential(id);
-
-    console.log('active credential');
-    console.log(this.stateSvc.activeCredential$);
-
-    return this.stateSvc.activeCredential$;
+    return this.httpSvc.getById<ICredentialDef>('credential-definitions', id);
   }
 
   getCredentials(params?: ICredentialParams) {

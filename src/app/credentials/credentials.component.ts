@@ -91,7 +91,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
-  _id: any;
+  _id: string;
 
   constructor(
     private router: Router,
