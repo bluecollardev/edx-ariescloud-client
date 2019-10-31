@@ -1,20 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
-import { Observable, of } from 'rxjs';
-import {
-  first,
-  last,
-  map,
-  reduce,
-  find,
-  filter,
-  skipWhile
-} from 'rxjs/operators';
+import {  of } from 'rxjs';
+
 
 import {
   RelationshipsStateService,
-  IRelationship
 } from './services/relationships-state.service';
 import { RelationshipsActionService } from './services/relationships-action.service';
 

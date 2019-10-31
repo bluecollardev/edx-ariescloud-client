@@ -1,15 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import {
-  first,
-  last,
-  map,
-  reduce,
-  find,
-  filter,
-  skipWhile,
-  single
-} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import * as CredentialMocks from './credential-mocks';
 
@@ -71,9 +62,7 @@ export class CredentialStateService {
   activeCredentialSchema$: Observable<ICredentialSchema[]> = new Observable<
     ICredentialSchema[]
   >();
-  credentialDefs$: Observable<ICredentialDef[]> = new Observable<
-    ICredentialDef[]
-  >();
+  credentialDefs$: Observable<ICredentialDef[]>;
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
     ICredentialDef[]
   >();
@@ -88,9 +77,6 @@ export class CredentialStateService {
     ICertificateOfProof[]
   >();
 
-  private _ready$ = new BehaviorSubject<boolean>(false);
-  ready = this._ready$.asObservable();
-
   constructor() {
     /*const governmentCredential = {
       email: 'alice@faber.edu',
@@ -103,29 +89,23 @@ export class CredentialStateService {
     // this.setCredentials(of(credentials));
     this.setIssuers(of(this.buildIssuers(CredentialMocks.issuedCredentials)));
     // this.setCredentialSchemas(of(credentialSchemas));
-    this.setCredentialDefs(of(CredentialMocks.credentialDefs));
+    // this.setCredentialDefs(of(CredentialMocks.credentialDefs));
     this.setCertificates(of(CredentialMocks.certificatesOfProof));
-
-    this.setReady(true);
-  }
-
-  setReady(bool: boolean) {
-    this._ready$.next(bool);
   }
 
   setActiveCertificate(cid: string) {
-    this.activeCertificateOfProof$ = this.certificatesOfProof$.pipe(
-      map(cs => {
-        return cs.filter(c => {
-          console.log('------------');
-          console.log(c);
-          console.log(c.id);
-          console.log(cid);
-          console.log('------------');
-          return c.id === cid;
-        });
-      })
-    );
+    // this.activeCertificateOfProof$ = this.certificatesOfProof$.pipe(
+    //   map(cs => {
+    //     return cs.filter(c => {
+    //       console.log('------------');
+    //       console.log(c);
+    //       console.log(c.id);
+    //       console.log(cid);
+    //       console.log('------------');
+    //       return c.id === cid;
+    //     });
+    //   })
+    // );
   }
 
   setCertificates(data: Observable<ICertificateOfProof[]>) {

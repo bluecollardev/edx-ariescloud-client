@@ -62,9 +62,6 @@ export class RelationshipsActionService {
 
     this.stateSvc.setActiveRelationship(did);
 
-    console.log('active relationship');
-    console.log(this.stateSvc.activeRelationship$);
-
     return this.stateSvc.activeRelationship$;
   }
 
@@ -78,7 +75,7 @@ export class RelationshipsActionService {
     const relationships = this.http.get<IRelationship[]>(
       `${this.url}relationships`,
       {
-        params: { state }
+        params: { state: state }
       }
     );
     return relationships;

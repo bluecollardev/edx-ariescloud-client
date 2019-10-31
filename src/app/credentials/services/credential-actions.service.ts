@@ -82,19 +82,9 @@ export class CredentialActionsService {
   }
 
   getCredentials(params?: ICredentialParams) {
-    return this.httpSvc.get<ICredential[]>('credentials');
+    let obs = this.httpSvc.get<ICredential[]>('credentials');
 
-    // this.stateSvc.setCredentials(of(CredentialMocks.issuedCredentials));
-
-    // if (params && params.did) {
-    //   return (this.stateSvc.credentials$ = this.stateSvc.credentials$.pipe(
-    //     map(cs => {
-    //       const filtered = cs.filter(c => c.issuerDid === params.did);
-    //       console.log(filtered);
-    //       return filtered;
-    //     })
-    //   ));
-    // }
+    obs.toPromise().then(itm => console.log(itm));
   }
 
   createCredentialSchema() {
@@ -132,23 +122,24 @@ export class CredentialActionsService {
   }
 
   getCredentialDefs(params?: ICredentialParams) {
-    const response = this.http.get<ICredentialDef[]>(`${this.url}credentials`, {
-      headers: this.headers
-    });
+    const response = this.httpSvc.get<ICredentialDef[]>(
+      'credential-definitions'
+    );
+    return response;
 
-    this.stateSvc.setCredentialDefs(of(CredentialMocks.credentialDefs));
+    // this.stateSvc.setCredentialDefs(of(CredentialMocks.credentialDefs));
 
-    if (params && params.did) {
-      return (this.stateSvc.credentialDefs$ = this.stateSvc.credentialDefs$.pipe(
-        map(cs => {
-          const filtered = cs.filter(c => c.issuerDid === params.did);
-          console.log(filtered);
-          return filtered;
-        })
-      ));
-    }
+    // if (params && params.did) {
+    //   return (this.stateSvc.credentialDefs$ = this.stateSvc.credentialDefs$.pipe(
+    //     map(cs => {
+    //       const filtered = cs.filter(c => c.issuerDid === params.did);
+    //       console.log(filtered);
+    //       return filtered;
+    //     })
+    //   ));
+    // }
 
-    return this.stateSvc.credentials$;
+    // return this.stateSvc.credentials$;
   }
 
   createCredentialDef() {

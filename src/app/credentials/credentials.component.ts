@@ -1,9 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
-import { CredentialStateService, ICredentialDef } from './services/credential-state.service';
+import {
+  CredentialStateService,
+  ICredentialDef
+} from './services/credential-state.service';
 import { CredentialActionsService } from './services/credential-actions.service';
 
 @Component({
@@ -13,12 +16,15 @@ import { CredentialActionsService } from './services/credential-actions.service'
       <ion-toolbar class="ios hydrated">
         <ion-buttons
           slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
           <ion-menu-button
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Manage Credential Types</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Manage Credential Types</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -35,18 +41,24 @@ import { CredentialActionsService } from './services/credential-actions.service'
                   </ion-list-header>
                 </ion-col>
               </ion-row>
-              <ion-row *ngIf="credentialDefs | async as credDefs">
+              <ion-row *ngIf="stateSvc.credentialDefs$ | async as credDefs">
                 <ion-col
                   *ngFor="let credDef of credDefs"
                   sizeXs="6"
                   sizeSm="4"
                   sizeMd="3"
-                  sizeLg="2">
-                  <ion-card text-center (click)="presentActionSheet(credDef.id)">
+                  sizeLg="2"
+                >
+                  <ion-card
+                    text-center
+                    (click)="presentActionSheet(credDef.id)"
+                  >
                     <ion-card-header></ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
-                      <small><strong>{{ credDef.name }}</strong></small>
+                      <small
+                        ><strong>{{ credDef.name }}</strong></small
+                      >
                       <br />
                       <small>{{ credDef.program }}</small>
                     </ion-card-content>
@@ -63,7 +75,8 @@ import { CredentialActionsService } from './services/credential-actions.service'
                 full
                 icon-start
                 margin
-                [routerLink]="['create']">
+                [routerLink]="['create']"
+              >
                 <ion-icon name="add"></ion-icon>
                 Create New Credential Type
               </ion-button>
@@ -73,8 +86,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./credentials.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./credentials.component.scss']
 })
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
@@ -82,30 +94,25 @@ export class CredentialsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private stateSvc: CredentialStateService,
+    public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController
   ) {
-    this.initializeItems();
+    // this.initializeItems();
   }
 
   ngOnInit() {
-    this.stateSvc.ready.subscribe(bool => {
-      console.log('bool', bool);
-      if (bool) {
-        this.credentialDefs = this.stateSvc.credentialDefs$;
-        this.credentialDefs.subscribe(obs => console.log(obs));
-      }
-    });
-  }
+    this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
 
-  async initializeItems() {
-    await this.actionSvc.getCredentialDefs();
+    this.credentialDefs = this.stateSvc.credentialDefs$;
+
+    // this.credentialDefs.subscribe(obs => console.log(obs));
+    // this.credentialDefs.subscribe(obs => console.log(obs));
   }
 
   getItems(ev: any) {
     // Reset items back to all of the items
-    this.initializeItems();
+    // this.initializeItems();
 
     // set val to the value of the searchbar
     const val = ev.target.value;
@@ -123,11 +130,13 @@ export class CredentialsComponent implements OnInit {
       buttons: [
         {
           text: 'View',
-          handler: () => this.router.navigate([`/credentials/view/${credDefId}`])
+          handler: () =>
+            this.router.navigate([`/credentials/view/${credDefId}`])
         },
         {
           text: 'Edit',
-          handler: () => this.router.navigate([`/credentials/edit/${credDefId}`])
+          handler: () =>
+            this.router.navigate([`/credentials/edit/${credDefId}`])
         },
         {
           text: 'Delete',
