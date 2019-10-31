@@ -48,14 +48,15 @@ export class CredentialActionsService {
     // this is a stub for an http send service
     // console.log('cred def', credDef);
     console.log('the cred def', credDef);
-    let res = await this.httpSvc
+    const res = await this.httpSvc
       .post('credential-definitions', {
         schema_name: credDef.name,
         schema_version: credDef.version,
         attributes: credDef.schema
       })
       .toPromise();
-    console.log('the result', res);
+
+    return res;
   }
 
   getCredential(id: string) {

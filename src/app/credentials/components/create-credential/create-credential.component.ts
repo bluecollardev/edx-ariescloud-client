@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import {
   CredentialStateService,
   ICredentialDef
 } from '../../services/credential-state.service';
+import { Router } from '@angular/router';
 
 @Component({
   template: `
@@ -81,13 +82,7 @@ import {
                       </ion-button>
                     </ion-col>
                   </ion-row>
-                  <ion-row>
-                    <ion-col>
-                      <ion-label *ngIf="baseFc.invalid"
-                        >Error message</ion-label
-                      >
-                    </ion-col>
-                  </ion-row>
+
                   <ion-row
                     *ngFor="
                       let itm of fg.controls['schema']['controls'];
@@ -131,6 +126,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateCredentialComponent implements OnInit {
+  loading = false;
   fg: FormGroup;
   baseFc = new FormControl(null);
   valid = false;
@@ -138,7 +134,9 @@ export class CreateCredentialComponent implements OnInit {
   constructor(
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router,
+    public loadingController: LoadingController
   ) {}
 
   ngOnInit() {
@@ -150,7 +148,7 @@ export class CreateCredentialComponent implements OnInit {
 
     this.fg = fg;
 
-    fg.valueChanges.subscribe(obs => console.log(obs));
+    // fg.valueChanges.subscribe(obs => console.log(obs));
   }
 
   addFc(fg: FormGroup, baseFc: FormControl) {
@@ -167,7 +165,6 @@ export class CreateCredentialComponent implements OnInit {
 
   removeFc(fg: FormGroup, i: number) {
     // tslint:disable-next-line: no-string-literal
-    console.log('index', i);
     const schema = fg.controls.schema['controls'];
     schema.splice(i, 1);
     fg.controls.schema['controls'] = schema;
@@ -188,9 +185,19 @@ export class CreateCredentialComponent implements OnInit {
     // re-direct url of some kind
   }
 
-  sendCredDef(credDef: ICredentialDef) {
-    console.log(credDef);
-    this.actionSvc.submitCredDef(credDef);
+  async sendCredDef(credDef: ICredentialDef) {
+    const loading = await this.loadingController.create({
+      message: 'Creating credential definition',
+      duration: 10000
+    });
+    await loading.present();
+    const res = await this.actionSvc.submitCredDef(credDef);
+    if (res) {
+      this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
+      loading.dismiss();
+      this.router.navigate(['/credentials']);
+    }
+    loading.dismiss();
   }
 
   async newSchemaPopup() {

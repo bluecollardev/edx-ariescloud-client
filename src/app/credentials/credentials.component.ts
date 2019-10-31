@@ -127,7 +127,6 @@ export class CredentialsComponent implements OnInit {
   }
 
   async presentActionSheet(credDefId: any) {
-    console.log('the cred def id', credDefId);
     this._id = credDefId;
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
@@ -144,7 +143,7 @@ export class CredentialsComponent implements OnInit {
           }
         },
         {
-          text: 'Delete',
+          text: 'Hide',
           role: 'destructive',
           handler: () => {
             console.log('Delete clicked');
