@@ -108,7 +108,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                 full
                 icon-start
                 margin
-                [routerLink]="['edit']"
+                [routerLink]="['invite']"
               >
                 <ion-icon name="add"></ion-icon>
                 Create Invite

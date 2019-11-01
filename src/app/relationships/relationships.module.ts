@@ -6,6 +6,7 @@ import { RelationshipsComponent } from './relationships.component';
 import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
 import { ApproveRelationshipComponent } from './components/approve-relationship/approve-relationship.component';
 import { AddRelationshipComponent } from './components/add-relationship/add-relationship.component';
+import { CreateInvitationComponent } from './components/create-invitation/create-invitation.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -13,7 +14,8 @@ import { SharedModule } from '../shared/shared.module';
     RelationshipsComponent,
     ViewRelationshipComponent,
     AddRelationshipComponent,
-    ApproveRelationshipComponent
+    ApproveRelationshipComponent,
+    CreateInvitationComponent
   ],
   imports: [CommonModule, SharedModule, RelationshipsRoutingModule],
   exports: [AddRelationshipComponent],
