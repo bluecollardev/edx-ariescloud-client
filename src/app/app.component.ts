@@ -100,7 +100,7 @@ export class AppComponent implements OnInit {
 
   pages = [
     {
-      title: 'Network',
+      title: 'My VON Network',
       url: '/relationships/',
       icon: 'people'
     },

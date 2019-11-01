@@ -23,7 +23,7 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Manage Credentials</ion-title
+          >Credentials</ion-title
         >
       </ion-toolbar>
     </ion-header>
@@ -41,7 +41,7 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let credDef of credDefs">
-                <ion-item (click)="presentActionSheet(credDef._id)">
+                <ion-item [routerLink]="['credentials/issue']">
                   <ion-icon name="document" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ credDef.name }}</h2>

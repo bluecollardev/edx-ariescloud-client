@@ -20,7 +20,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >My Network</ion-title
+          >My VON Network</ion-title
         >
       </ion-toolbar>
     </ion-header>
