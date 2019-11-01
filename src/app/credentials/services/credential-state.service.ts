@@ -161,12 +161,12 @@ export class CredentialStateService {
     this.activeCredentialDef$ = this.credentialDefs$.pipe(
       map(cs => {
         return cs.filter(c => {
-          console.log('------------');
-          console.log(c);
-          console.log(c.id);
-          console.log(cid);
-          console.log('------------');
-          return c.id === cid;
+          // console.log('------------');
+          // console.log(c.id);
+          // console.log(cid);
+          // console.log('------------');
+          // return c.id === cid;
+          return true;
         });
       })
     );

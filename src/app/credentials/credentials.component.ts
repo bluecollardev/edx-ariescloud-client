@@ -36,7 +36,7 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
             >
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
-                  <span class="ion-padding">Credentials Issued</span>
+                  <span class="ion-padding">Issued Credentials By Type</span>
                   <!--<ion-searchbar></ion-searchbar>-->
                 </div>
               </ion-list-header>
