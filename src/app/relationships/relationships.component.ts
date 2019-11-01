@@ -44,6 +44,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                     <h2>{{ item.name }}</h2>
                     <small>DID: {{ item.did }}</small>
                   </ion-label>
+                  <ion-badge color="primary" item-end><ion-icon name="mail" class="icon-md"></ion-icon><sup><strong> 2</strong></sup></ion-badge>
                 </ion-item>
                 <ion-item-options>
                   <ion-item-option color="danger" type="button" icon-start>
