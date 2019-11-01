@@ -137,6 +137,20 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
             </ion-col>
           </ion-row>
         </ion-grid>
+        <div style="display: flex">
+          <ion-button
+            style="flex: 1"
+            color="primary"
+            clear
+            full
+            icon-start
+            margin
+            [routerLink]="['/credentials']"
+          >
+            <ion-icon name="checkmark"></ion-icon>
+            Issue Credential(s)
+          </ion-button>
+        </div>
       </form>
     </ion-content>
   `,
