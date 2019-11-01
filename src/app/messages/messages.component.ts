@@ -34,7 +34,9 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="stateSvc.messages$ | async as relationships">
+        <ion-row
+          *ngIf="stateSvc.messages$ | async as relationships; else loading"
+        >
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
@@ -64,6 +66,10 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
         </ion-row>
       </ion-grid>
     </ion-content>
+    <ng-template #loading
+      ><ion-spinner style="margin: auto auto;"></ion-spinner
+      ><ion-label>Loading</ion-label></ng-template
+    >
   `,
   styleUrls: ['./messages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
