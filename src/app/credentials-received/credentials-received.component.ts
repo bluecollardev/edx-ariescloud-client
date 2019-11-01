@@ -1,5 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import {
+  ActionSheetController,
+  AlertController,
+  LoadingController
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -13,9 +17,9 @@ import {
   IRelationship
 } from '../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../credentials/services/credential-actions.service';
-import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { HttpService } from '../core/services/http.service';
 
 const url = environment.apiUrl;
 
@@ -42,6 +46,7 @@ const url = environment.apiUrl;
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
           </ion-col>
         </ion-row>
+        <ion-row><h5>Issued to Me</h5></ion-row>
         <ion-row *ngIf="credentials | async as issuerGroups">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
@@ -68,6 +73,29 @@ const url = environment.apiUrl;
           </ion-col>
         </ion-row>
       </ion-grid>
+      <ion-grid>
+        <ng-container *ngIf="pending$ | async as pendingCreds">
+          <ion-row><h5>Pending</h5></ion-row>
+          <ion-row>
+            <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+              <ion-list>
+                <ion-item-sliding
+                  *ngFor="let cred of pendingCreds"
+                  (click)="pendingActionSheet(cred._id)"
+                >
+                  <ion-item>
+                    <ion-icon name="business" class="icon-lg"></ion-icon>
+                    <ion-label>
+                      <h2>{{ cred.name }}</h2>
+                      <small>STATE: {{ cred.state }}</small>
+                    </ion-label>
+                  </ion-item>
+                </ion-item-sliding>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </ng-container>
+      </ion-grid>
     </ion-content>
   `,
   styleUrls: ['./credentials-received.component.scss'],
@@ -76,18 +104,26 @@ const url = environment.apiUrl;
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
-  relationships: Observable<IRelationship[]>;
-  issuers: Observable<IIssuer[]>;
+  pending$: Observable<IIssuer[]>;
   _url: string;
+
+  actionMap = {
+    offer_received: true,
+    offer_sent: false,
+    request_received: true,
+    request_sent: false
+  };
+  _id: string;
 
   constructor(
     public router: Router,
     public stateSvc: CredentialStateService,
     public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: CredentialActionsService,
-    private relationshipActionSvc: RelationshipsActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
+    private httpSvc: HttpService,
+    public loadingController: LoadingController,
     private http: HttpClient
   ) {
     this._url = url;
@@ -95,10 +131,18 @@ export class CredentialsReceivedComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
     this.stateSvc.credentials$ = this.http.get<ICredential[]>(
       `${this._url}credentials`
     );
     this.credentials = this.stateSvc.credentials$;
+
+    this.stateSvc.pending$ = this.actionSvc.getPendingIssues();
+
+    this.pending$ = this.stateSvc.pending$;
   }
 
   async getItems(issuers, ev: any) {
@@ -117,6 +161,8 @@ export class CredentialsReceivedComponent implements OnInit {
 
     return filtered;
   }
+
+  advance(id: string) {}
 
   async presentActionSheet() {
     const actionSheet = await this.actionSheetCtrl.create({
@@ -143,6 +189,48 @@ export class CredentialsReceivedComponent implements OnInit {
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+
+    await actionSheet.present();
+  }
+
+  async pendingActionSheet(id: string) {
+    this._id = id;
+    console.log(id);
+    const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Accept',
+          handler: async () => {
+            const loading = await this.loadingController.create({
+              message: 'Accepting credential stage',
+              duration: 10000
+            });
+            await loading.present();
+            try {
+              const post = await this.httpSvc
+                .postById('issues', this._id)
+                .toPromise();
+              if (post) {
+                this.loadData();
+
+                loading.dismiss();
+                return true;
+              }
+            } catch {
+              loading.dismiss();
+              return false;
+            }
+          }
+        },
+        {
+          text: 'Decline',
+          handler: async () => {
+            const rm = await this.httpSvc.delete('issues', this._id);
+            return true;
           }
         }
       ]

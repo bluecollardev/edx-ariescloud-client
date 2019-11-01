@@ -32,7 +32,7 @@ export interface ICredential {
   name: string;
   type: string;
   program: string;
-  status: string;
+  state: string;
   version: string;
   schema: string;
   did: string;
@@ -79,6 +79,8 @@ export class CredentialStateService {
   activeCertificateOfProof$: Observable<ICertificateOfProof[]> = new Observable<
     ICertificateOfProof[]
   >();
+
+  pending$: Observable<ICredential[]>;
 
   constructor() {
     /*const governmentCredential = {

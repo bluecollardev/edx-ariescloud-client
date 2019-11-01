@@ -11,7 +11,8 @@ import {
   ICredentialSchema,
   ICredentialDef,
   ICredential,
-  ICertificateOfProof
+  ICertificateOfProof,
+  IIssuer
 } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
@@ -100,6 +101,16 @@ export class CredentialActionsService {
     // this.stateSvc.setActiveCredentialDef(id);
 
     return response;
+  }
+
+  getPendingIssues() {
+    return this.httpSvc
+      .get<ICredential[]>('issues')
+      .pipe(
+        map(obs =>
+          obs.filter(itm => itm.state !== 'stored' && itm.state !== 'issued')
+        )
+      );
   }
 
   getCredentialDefs(params?: ICredentialParams) {

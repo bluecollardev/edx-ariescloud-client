@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ICredentialDef } from '../services/credential-state.service';
 import { CredentialActionsService } from '../services/credential-actions.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { RelationshipsActionService } from 'src/app/relationships/services/relationships-action.service';
 import { IRelationship } from 'src/app/messages/services/messages-state.service';
 import { tap, map } from 'rxjs/operators';
+import { LoadingController } from '@ionic/angular';
+import { HttpService } from 'src/app/core/services/http.service';
 
 @Component({
   selector: 'app-issue-credential',
@@ -107,7 +109,10 @@ export class IssueCredentialComponent implements OnInit {
   constructor(
     private actionSvc: CredentialActionsService,
     private relationshipsActionSvc: RelationshipsActionService,
-    private Route: ActivatedRoute
+    private Route: ActivatedRoute,
+    private router: Router,
+    private httpSvc: HttpService,
+    public loadingController: LoadingController
   ) {
     this.fg = new FormGroup({
       connectionId: new FormControl(''),
@@ -140,6 +145,11 @@ export class IssueCredentialComponent implements OnInit {
   }
 
   async submit() {
+    const loading = await this.loadingController.create({
+      message: 'Submitting the credential',
+      duration: 10000
+    });
+    await loading.present();
     const fa = await this.fa$.toPromise();
 
     const ret = {
@@ -149,5 +159,15 @@ export class IssueCredentialComponent implements OnInit {
       attrs: fa.value
     };
     console.log(ret);
+    try {
+      const res = await this.httpSvc.post('issues', ret).toPromise();
+      if (res) {
+        console.log('result', res);
+        await this.loadingController.dismiss();
+        this.router.navigate(['/credentials']);
+      }
+    } catch (err) {
+      this.loadingController.dismiss();
+    }
   }
 }
