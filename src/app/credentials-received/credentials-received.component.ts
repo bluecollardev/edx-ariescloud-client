@@ -81,7 +81,8 @@ const url = environment.apiUrl;
               <ion-list>
                 <ion-item-sliding
                   *ngFor="let cred of pendingCreds"
-                  (click)="pendingActionSheet(cred._id)"
+                  (click)="pendingActionSheet(cred._id, cred.state)"
+                  [disabled]="!actionMap[cred.state]"
                 >
                   <ion-item>
                     <ion-icon name="business" class="icon-lg"></ion-icon>
@@ -111,7 +112,8 @@ export class CredentialsReceivedComponent implements OnInit {
     offer_received: true,
     offer_sent: false,
     request_received: true,
-    request_sent: false
+    request_sent: false,
+    credential_received: true
   };
   _id: string;
 
@@ -197,9 +199,10 @@ export class CredentialsReceivedComponent implements OnInit {
     await actionSheet.present();
   }
 
-  async pendingActionSheet(id: string) {
+  async pendingActionSheet(id: string, state: string) {
+    if (!this.actionMap[state]) return;
     this._id = id;
-    console.log(id);
+
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
@@ -215,7 +218,7 @@ export class CredentialsReceivedComponent implements OnInit {
                 .postById('issues', this._id)
                 .toPromise();
               if (post) {
-                this.loadData();
+                setTimeout(() => this.loadData(), 200);
 
                 loading.dismiss();
                 return true;

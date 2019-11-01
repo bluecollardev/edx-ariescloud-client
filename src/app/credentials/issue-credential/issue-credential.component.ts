@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ICredentialDef } from '../services/credential-state.service';
+import {
+  ICredentialDef,
+  ICredential
+} from '../services/credential-state.service';
 import { CredentialActionsService } from '../services/credential-actions.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
@@ -140,8 +143,6 @@ export class IssueCredentialComponent implements OnInit {
     this.relationship$ = this.relationshipsActionSvc
       .getRelationships()
       .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
-
-    this.credDef$.subscribe(obs => console.log(obs));
   }
 
   async submit() {
@@ -163,11 +164,12 @@ export class IssueCredentialComponent implements OnInit {
       const res = await this.httpSvc.post('issues', ret).toPromise();
       if (res) {
         console.log('result', res);
-        await this.loadingController.dismiss();
+        loading.dismiss();
         this.router.navigate(['/credentials']);
       }
     } catch (err) {
-      this.loadingController.dismiss();
+      console.log('error', err);
+      loading.dismiss();
     }
   }
 }
