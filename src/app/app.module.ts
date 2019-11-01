@@ -7,7 +7,6 @@ import { HomeComponent } from './home.component';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { RouteReuseStrategy } from '@angular/router';
-import { ProfileModule } from './profile/profile.module';
 import { MessagesModule } from './messages/messages.module';
 import { RelationshipsModule } from './relationships/relationships.module';
 import { CredentialsModule } from './credentials/credentials.module';
@@ -24,7 +23,6 @@ import { SharedModule } from './shared/shared.module';
     IonicModule.forRoot(),
     SharedModule,
     HttpClientModule,
-    ProfileModule,
     MessagesModule,
     RelationshipsModule,
     ProofsModule,

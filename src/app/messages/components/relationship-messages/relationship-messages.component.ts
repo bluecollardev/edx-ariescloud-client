@@ -149,7 +149,7 @@ import { Router } from '@angular/router';
                 </ion-button>
               </div>
             </ion-card>
-            <ion-card text-center>
+            <!--<ion-card text-center>
               <ion-card-content>
                 <ion-card-title>
                   <small><small>Invitation to Connect</small></small>
@@ -176,7 +176,7 @@ import { Router } from '@angular/router';
                   Invitation Accepted
                 </ion-button>
               </div>
-            </ion-card>
+            </ion-card>-->
           </ion-col>
         </ion-row>
       </ion-grid>

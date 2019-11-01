@@ -4,6 +4,7 @@ import { CredentialsComponent } from './credentials.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
+import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,14 @@ const routes: Routes = [
   {
     path: 'credentials/view/:id',
     component: ViewCredentialComponent,
+  },
+  {
+    path: 'credentials/issue',
+    component: IssueCredentialComponent,
+  },
+  {
+    path: 'credentials/issue/:id',
+    component: IssueCredentialComponent,
   },
   {
     path: 'credentials/edit',

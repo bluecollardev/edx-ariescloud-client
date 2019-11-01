@@ -3,8 +3,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
-import { ProfileStateService } from '../../services/profile-state.service';
-import { ProfileActionsService } from '../../services/profile-actions.service';
 import {
   HttpService,
   IInvitationResult
@@ -30,7 +28,7 @@ export interface IProfile {
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Edit Profile</ion-title>
+        <ion-title class="ios title-ios hydrated">Copy Invitation</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -80,7 +78,7 @@ export interface IProfile {
                 <ion-button
                   style="flex: 1"
                   color="light"
-                  (click)="this.router.navigate(['/profile'])"
+                  (click)="this.router.navigate(['/relationships'])"
                   class="ion-no-margin"
                 >
                   <ion-icon name="close"></ion-icon>
@@ -101,16 +99,16 @@ export interface IProfile {
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./edit-profile.component.scss'],
+  styleUrls: ['./create-invitation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditProfileComponent implements OnInit {
+export class CreateInvitationComponent implements OnInit {
   fg: FormGroup;
   valid = false;
   invite$: Observable<IInvitationResult>;
   constructor(
     public router: Router,
-    private actionSvc: ProfileActionsService,
+    // private actionSvc: ProfileActionsService,
     private httpSvc: HttpService
   ) {}
 
@@ -127,7 +125,7 @@ export class EditProfileComponent implements OnInit {
     this.invite$ = this.httpSvc.get<IInvitationResult>('invitations');
   }
 
-  submit(fg: FormGroup) {
+  /*submit(fg: FormGroup) {
     const profile = fg.value;
     fg.valid
       ? (console.log('valid'), this.sendProfile(profile))
@@ -135,10 +133,10 @@ export class EditProfileComponent implements OnInit {
 
     // re-direct url of some kind
     this.router.navigate(['/profile']);
-  }
+  }*/
 
-  sendProfile(profile: IProfile) {
+  /*sendProfile(profile: IProfile) {
     console.log(profile);
     this.actionSvc.submitProfile(profile);
-  }
+  }*/
 }

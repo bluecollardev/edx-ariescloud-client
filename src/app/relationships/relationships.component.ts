@@ -20,7 +20,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Manage Relationships</ion-title
+          >My Network</ion-title
         >
       </ion-toolbar>
     </ion-header>
@@ -28,14 +28,42 @@ import { RelationshipsActionService } from './services/relationships-action.serv
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar></ion-searchbar>
+            <ion-list
+              *ngIf="stateSvc.activeRelationship$ | async as relationshipItems"
+            >
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">My Relationships</span>
+                  <ion-searchbar></ion-searchbar>  
+                </div>
+              </ion-list-header>
+              <ion-item-sliding *ngFor="let item of relationshipItems">
+                <ion-item (click)="this.viewDetail(item._id)">
+                  <ion-icon name="person" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h2>{{ item.name }}</h2>
+                    <small>DID: {{ item.did }}</small>
+                  </ion-label>
+                </ion-item>
+                <ion-item-options>
+                  <ion-item-option color="danger" type="button" icon-start>
+                    <ion-icon name="trash" class="icon-md"></ion-icon>
+                    Delete
+                  </ion-item-option>
+                  <ion-item-option color="light" type="button" icon-start>
+                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                    Disable
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
             <ion-list
               *ngIf="
                 stateSvc.pendingInvitations$ | async as pendingInvitationItems
               "
             >
               <ion-list-header>
-                Pending Invitations
+                Accept / Decline Invites
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of pendingInvitationItems">
                 <ion-item (click)="this.acceptInvitation(item._id)">
@@ -60,44 +88,30 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                 </ion-item-options>
               </ion-item-sliding>
             </ion-list>
-            <ion-list
-              *ngIf="stateSvc.activeRelationship$ | async as relationshipItems"
-            >
-              <ion-list-header>
-                My Relationships
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let item of relationshipItems">
-                <ion-item (click)="this.viewDetail(item._id)">
-                  <ion-icon name="person" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ item.name }}</h2>
-                    <small>DID: {{ item.did }}</small>
-                  </ion-label>
-                </ion-item>
-                <ion-item-options>
-                  <ion-item-option color="danger" type="button" icon-start>
-                    <ion-icon name="trash" class="icon-md"></ion-icon>
-                    Delete
-                  </ion-item-option>
-                  <ion-item-option color="light" type="button" icon-start>
-                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
-                    Disable
-                  </ion-item-option>
-                </ion-item-options>
-              </ion-item-sliding>
-            </ion-list>
             <div style="display: flex">
               <ion-button
                 style="flex: 1"
-                color="primary"
+                color="secondary"
                 clear
                 full
                 icon-start
                 margin
                 [routerLink]="['add']"
               >
-                <ion-icon name="person-add"></ion-icon>
-                Accept Invitation
+                <ion-icon name="checkmark"></ion-icon>
+                Enter Invite
+              </ion-button>
+              <ion-button
+                style="flex: 1"
+                color="primary"
+                outline
+                full
+                icon-start
+                margin
+                [routerLink]="['invite']"
+              >
+                <ion-icon name="add"></ion-icon>
+                Create Invite
               </ion-button>
             </div>
           </ion-col>

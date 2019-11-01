@@ -5,11 +5,16 @@ import { RelationshipsComponent } from './relationships.component';
 import { AddRelationshipComponent } from './components/add-relationship/add-relationship.component';
 import { ViewRelationshipComponent } from './components/view-relationship/view-relationship.component';
 import { ApproveRelationshipComponent } from './components/approve-relationship/approve-relationship.component';
+import { CreateInvitationComponent } from './components/create-invitation/create-invitation.component';
 
 const routes: Routes = [
   {
     path: 'relationships',
     component: RelationshipsComponent,
+  },
+  {
+    path: 'relationships/invite',
+    component: CreateInvitationComponent,
   },
   {
     path: 'relationships/add',

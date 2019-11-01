@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { HomeComponent } from './home.component';
-import { ProfileComponent } from './profile/profile.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
 import { CredentialsComponent } from './credentials/credentials.component';
@@ -12,24 +11,6 @@ import { ProofsComponent } from './proofs/proofs.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   {
-    path: 'profile',
-    pathMatch: 'full',
-    component: ProfileComponent
-  },
-  {
-    path: 'profile',
-    loadChildren: `./profile/profile.module#ProfileModule`
-  },
-  {
-    path: 'messages',
-    pathMatch: 'full',
-    component: MessagesComponent
-  },
-  {
-    path: 'messages',
-    loadChildren: `./messages/messages.module#MessagesModule`
-  },
-  {
     path: 'relationships',
     pathMatch: 'full',
     component: RelationshipsComponent
@@ -37,6 +18,15 @@ const routes: Routes = [
   {
     path: 'relationships',
     loadChildren: `./relationships/relationships.module#RelationshipsModule`
+  },
+  /*{
+    path: 'messages',
+    pathMatch: 'full',
+    component: MessagesComponent
+  },*/
+  {
+    path: 'messages',
+    loadChildren: `./messages/messages.module#MessagesModule`
   },
   {
     path: 'credentials-received',
