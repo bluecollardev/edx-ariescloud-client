@@ -137,12 +137,12 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      const profile = await this.httpSvc
+      /*const profile = await this.httpSvc
         .get<IProfileResult>('profile')
-        .toPromise();
-      this.mssgCount$ = of(profile.messageCount);
-      this.certCount$ = of(2);
-      this.credsCount$ = of(profile.credsCount);
+        .toPromise();*/
+      this.mssgCount$ = of(2); // of(profile.messageCount);*/
+      this.certCount$ = of(2); // of(2);
+      this.credsCount$ = of(0); // of(profile.credsCount);
     } catch (err) {
       console.log(err);
     }

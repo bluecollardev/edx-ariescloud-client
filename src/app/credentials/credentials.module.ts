@@ -6,6 +6,7 @@ import { CredentialsComponent } from './credentials.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
+import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -13,7 +14,8 @@ import { SharedModule } from '../shared/shared.module';
     CredentialsComponent,
     EditCredentialComponent,
     ViewCredentialComponent,
-    CreateCredentialComponent
+    CreateCredentialComponent,
+    IssueCredentialComponent
   ],
   imports: [CommonModule, CredentialsRoutingModule, SharedModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

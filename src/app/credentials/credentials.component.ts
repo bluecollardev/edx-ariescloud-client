@@ -69,7 +69,7 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
                 full
                 icon-start
                 margin
-                [routerLink]="['create']"
+                [routerLink]="['issue']"
               >
                 <ion-icon name="add"></ion-icon>
                 Issue Credential
