@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { HttpService } from './core/services/http.service';
-import { IProfileResult } from './profile/services/profile-actions.service';
 import { Observable, of } from 'rxjs';
 
 @Component({
@@ -101,21 +100,16 @@ export class AppComponent implements OnInit {
 
   pages = [
     {
-      title: 'My Profile',
-      url: '/profile/',
-      icon: 'person'
-    },
-    {
-      title: 'My Messages',
-      url: '/messages/',
-      icon: 'mail',
-      hasBadge: true
-    },
-    {
-      title: 'My Relationships',
+      title: 'Network',
       url: '/relationships/',
       icon: 'people'
     },
+    /*{
+      title: 'Messages',
+      url: '/messages/',
+      icon: 'mail',
+      hasBadge: true
+    },*/
     {
       title: 'Certificates of Proof',
       url: '/verify-credentials/',
@@ -123,13 +117,7 @@ export class AppComponent implements OnInit {
       hasBadge: true
     },
     {
-      title: 'Credentials Received',
-      url: '/credentials-received/',
-      hasBadge: true,
-      icon: 'archive'
-    },
-    {
-      title: 'My Credential Types',
+      title: 'Credentials',
       url: '/credentials/',
       icon: 'ribbon'
     },
@@ -138,11 +126,11 @@ export class AppComponent implements OnInit {
       url: '/credentials/create/',
       icon: 'bookmark'
     },*/
-    {
+    /*{
       title: 'Sign Out',
       url: '/',
       icon: 'log-out'
-    }
+    }*/
   ];
 
   constructor(private menu: MenuController, private httpSvc: HttpService) {}

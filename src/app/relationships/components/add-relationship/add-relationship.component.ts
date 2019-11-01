@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Accept Invitation</ion-title>
+        <ion-title class="ios title-ios hydrated">Enter Invitation Code</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -60,8 +60,8 @@ import { Router } from '@angular/router';
                   margin
                   (click)="submit(fg.controls['invite'].value)"
                 >
-                  <ion-icon name="send"></ion-icon>
-                  Accept Invitation
+                  <ion-icon name="checkmark"></ion-icon>
+                  OK
                 </ion-button>
               </div>
             </form>
