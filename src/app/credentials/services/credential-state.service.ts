@@ -163,10 +163,10 @@ export class CredentialStateService {
         return cs.filter(c => {
           console.log('------------');
           console.log(c);
-          console.log(c.id);
+          console.log(c._id);
           console.log(cid);
           console.log('------------');
-          return c.id === cid;
+          return c._id === cid;
         });
       })
     );

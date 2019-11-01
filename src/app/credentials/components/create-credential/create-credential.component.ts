@@ -155,7 +155,6 @@ export class CreateCredentialComponent implements OnInit {
     console.log(fg);
     if (!baseFc.value) return console.log('invalid');
     const fc = new FormControl(baseFc.value, Validators.required);
-    console.log('form control', fc);
     fg.controls.schema['controls'].unshift(fc);
     this.fg = fg;
     baseFc.clearValidators();
