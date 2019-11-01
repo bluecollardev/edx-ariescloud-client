@@ -35,6 +35,8 @@ export interface ICredential {
   status: string;
   version: string;
   schema: string;
+  did: string;
+  credentials: any[];
 }
 
 export interface ICertificateOfProof {
@@ -67,7 +69,7 @@ export class CredentialStateService {
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
     ICredentialDef[]
   >();
-  credentials$: Observable<ICredential[]>;
+  credentials$: Observable<ICredential>;
   activeCredential$: Observable<ICredential[]> = new Observable<
     ICredential[]
   >();
@@ -114,22 +116,22 @@ export class CredentialStateService {
   }
 
   setActiveCredential(cid: string) {
-    this.activeCredential$ = this.credentials$.pipe(
-      map(cs => {
-        return cs.filter(c => {
-          console.log('------------');
-          console.log(c);
-          console.log(c.id);
-          console.log(cid);
-          console.log('------------');
-          return c.id === cid;
-        });
-      })
-    );
+    // this.activeCredential$ = this.credentials$.pipe(
+    // map(cs => {
+    // return cs.filter(c => {
+    //   console.log('------------');
+    //   console.log(c);
+    //   console.log(c.id);
+    //   console.log(cid);
+    //   console.log('------------');
+    //   return c.id === cid;
+    // });
+    // })
+    // );
   }
 
   setCredentials(data: Observable<ICredential[]>) {
-    this.credentials$ = data;
+    // this.credentials$ = data;
   }
 
   setCredentialSchema(data: ICredential) {}

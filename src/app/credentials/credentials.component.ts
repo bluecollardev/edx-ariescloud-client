@@ -107,8 +107,6 @@ export class CredentialsComponent implements OnInit {
 
     this.credentialDefs = this.stateSvc.credentialDefs$;
 
-    // this.credentialDefs.subscribe(obs => console.log(obs));
-    // this.credentialDefs.subscribe(obs => console.log(obs));
   }
 
   getItems(ev: any) {

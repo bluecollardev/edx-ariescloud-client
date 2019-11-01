@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import {
   CredentialStateService,
   ICredentialDef
 } from '../../services/credential-state.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   template: `
@@ -134,7 +134,9 @@ export class EditCredentialComponent implements OnInit {
     private route: ActivatedRoute,
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    public loadingController: LoadingController,
+    private router: Router
   ) {
     const fg = new FormGroup({
       name: new FormControl('', [Validators.required]),
@@ -197,9 +199,23 @@ export class EditCredentialComponent implements OnInit {
     // re-direct url of some kind
   }
 
-  sendCredDef(credDef: ICredentialDef) {
-    console.log(credDef);
-    this.actionSvc.submitCredDef(credDef);
+  async sendCredDef(credDef: ICredentialDef) {
+    const loading = await this.loadingController.create({
+      message: 'Updating credential definition',
+      duration: 10000
+    });
+    await loading.present();
+    try {
+      const res = await this.actionSvc.submitCredDef(credDef);
+      if (res) {
+        this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
+        loading.dismiss();
+        this.router.navigate(['/credentials']);
+      }
+      loading.dismiss();
+    } catch {
+      loading.dismiss();
+    }
   }
 
   async newSchemaPopup() {

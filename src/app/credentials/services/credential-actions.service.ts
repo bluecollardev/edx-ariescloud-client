@@ -64,9 +64,9 @@ export class CredentialActionsService {
   }
 
   getCredentials(params?: ICredentialParams) {
-    let obs = this.httpSvc.get<ICredential[]>('credentials');
+    const obs = this.httpSvc.get<ICredential[]>('credentials');
 
-    obs.toPromise().then(itm => console.log(itm));
+    return obs;
   }
 
   createCredentialSchema() {

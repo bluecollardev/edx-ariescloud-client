@@ -59,7 +59,9 @@ const url = environment.apiUrl;
                     <h2>{{ issuer.name }}</h2>
                     <small>DID: {{ issuer.did }}</small>
                   </ion-label>
-                  <ion-badge color="primary" item-end>2</ion-badge>
+                  <ion-badge color="primary" item-end>{{
+                    issuer.credentials.length
+                  }}</ion-badge>
                 </ion-item>
               </ion-item-sliding>
             </ion-list>

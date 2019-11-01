@@ -191,13 +191,17 @@ export class CreateCredentialComponent implements OnInit {
       duration: 10000
     });
     await loading.present();
-    const res = await this.actionSvc.submitCredDef(credDef);
-    if (res) {
-      this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
+    try {
+      const res = await this.actionSvc.submitCredDef(credDef);
+      if (res) {
+        this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
+        loading.dismiss();
+        this.router.navigate(['/credentials']);
+      }
       loading.dismiss();
-      this.router.navigate(['/credentials']);
+    } catch {
+      loading.dismiss();
     }
-    loading.dismiss();
   }
 
   async newSchemaPopup() {

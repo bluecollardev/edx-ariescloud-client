@@ -1,17 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import {
-  first,
-  last,
-  map,
-  reduce,
-  find,
-  filter,
-  skipWhile,
-  single
-} from 'rxjs/operators';
+import { Observable, of, from } from 'rxjs';
+import { map, filter, tap } from 'rxjs/operators';
 
 import {
   CredentialStateService,
@@ -38,9 +29,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title *ngIf="issuer" class="ios title-ios hydrated"
-          >{{ issuer.name }} Credentials</ion-title
-        >
+        <ion-title class="ios title-ios hydrated"> Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -50,7 +39,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="stateSvc.credentials$ | async as creds">
+        <ion-row *ngIf="credentials$ | async as creds">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-grid style="width: 100%;">
               <!--<ion-row>
@@ -73,12 +62,12 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                     (click)="this.presentActionSheet(cred.id)"
                   >
                     <ion-card-header>
-                      {{ cred.issuedBy }}
+                      {{ cred.label }}
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
                       <small
-                        ><strong>{{ cred.name }}</strong></small
+                        ><strong>{{ cred.schema.name }}</strong></small
                       >
                       <br />
                       <small>{{ cred.program }}</small>
@@ -98,7 +87,8 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
 export class OrgCredentialsComponent implements OnInit {
   searchQuery: '';
   issuer: IIssuer;
-  credentials: Observable<ICredential[]>;
+  credentials$: Observable<any[]>;
+  issuer$: Observable<any[]>;
   relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
 
@@ -117,12 +107,20 @@ export class OrgCredentialsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // console.log('bool', bool);
-    this.credentials = this.stateSvc.credentials$;
-
+    const did = this.route.snapshot.paramMap.get('did');
+    // const creds = await this.actionSvc.getCredentials().toPromise();
+    // const filtered = creds.filter(itm => itm.did === did);
+    // this.credentials = of(filtered);
+    this.credentials$ = this.actionSvc.getCredentials().pipe(
+      map(obs => obs.filter(itm => itm.did === did)),
+      tap(obs => (this.issuer$ = of(obs))),
+      map(obs => obs.map(credgroup => credgroup.credentials[0]))
+    );
     this.relationships = this.relationshipStateSvc.relationships$;
 
     this.issuers = this.stateSvc.issuers$;
+
+    this.credentials$.subscribe(obs => console.log(obs));
   }
 
   async setOrgName() {
