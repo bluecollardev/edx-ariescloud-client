@@ -47,13 +47,13 @@ import { HttpService } from 'src/app/core/services/http.service';
                 <small><small>My DID: acbd-123-sdf-2345</small></small>
               </ion-card-content>
               <ion-list>
-                <ion-item class="flex ion-justify-content-around">
-                  <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
+                <!--<ion-item class="flex ion-justify-content-around">
+                  <ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>
                   <ion-label>Date Connected</ion-label>
                   <ion-badge color="medium" item-end>{{
                     relationship.received
                   }}</ion-badge>
-                </ion-item>
+                </ion-item>-->
 
                 <ion-item class="flex ion-justify-content-around" lines="none">
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
@@ -62,10 +62,33 @@ import { HttpService } from 'src/app/core/services/http.service';
                     relationship.state
                   }}</ion-badge>
                 </ion-item>
+                
+                <ion-item
+                  button
+                  class="flex ion-justify-content-around"
+                  (click)="this.router.navigate(['/credentials-received'])"
+                >
+                  <ion-label>
+                    <h2>Issued Credentials</h2>
+                  </ion-label>
+                  <ion-badge color="medium" item-end>4</ion-badge>
+                </ion-item>
+                <ion-item
+                  button
+                  class="flex ion-justify-content-around"
+                  (click)="this.router.navigate(['/verify-credentials'])"
+                >
+                  <ion-label>
+                    <h2>Certificates of Proof</h2>
+                  </ion-label>
+                  <ion-badge color="medium" item-end>2</ion-badge>
+                </ion-item>
 
                 <ion-item-group>
                   <ion-item-divider>
-                    <ion-label>Shortcuts</ion-label>
+                    <ion-label class="flex ion-align-items-center">
+                      <ion-icon class="icon-md" name="mail"></ion-icon>&nbsp;&nbsp;&nbsp;<span>Messages</span>
+                    </ion-label>
                   </ion-item-divider>
                   <ion-item
                     button
@@ -73,27 +96,17 @@ import { HttpService } from 'src/app/core/services/http.service';
                     (click)="this.router.navigate(['/messages/view'])"
                   >
                     <ion-label>
-                      <h2>Messages</h2>
+                      <h2>Accept Credentials</h2>
                     </ion-label>
-                    <ion-badge color="primary" item-end>2</ion-badge>
+                    <ion-badge color="primary" item-end>4</ion-badge>
                   </ion-item>
                   <ion-item
                     button
                     class="flex ion-justify-content-around"
-                    (click)="this.router.navigate(['/credentials-received'])"
+                    (click)="this.router.navigate(['/messages/view'])"
                   >
                     <ion-label>
-                      <h2>Credentials Received</h2>
-                    </ion-label>
-                    <ion-badge color="medium" item-end>4</ion-badge>
-                  </ion-item>
-                  <ion-item
-                    button
-                    class="flex ion-justify-content-around"
-                    (click)="this.router.navigate(['/verify-credentials'])"
-                  >
-                    <ion-label>
-                      <h2>Certificates of Proof</h2>
+                      <h2>Proof Requests</h2>
                     </ion-label>
                     <ion-badge color="medium" item-end>2</ion-badge>
                   </ion-item>
