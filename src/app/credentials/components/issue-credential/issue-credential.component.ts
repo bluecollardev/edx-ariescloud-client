@@ -72,12 +72,13 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
                   "
                 >
                   <ion-item>
+                    <ion-checkbox></ion-checkbox>
                     <ion-icon name="person" class="icon-lg"></ion-icon>
                     <ion-label>
                       <h2>{{ relationship.name }}</h2>
                       <small>DID: {{ relationship.did }}</small>
                     </ion-label>
-                    <ion-badge color="primary" item-end>2</ion-badge>
+                    <!--<ion-badge color="primary" item-end>2</ion-badge>-->
                   </ion-item>
                 </ion-item-sliding>
               </ion-list>
