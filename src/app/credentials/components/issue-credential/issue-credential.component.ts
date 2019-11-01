@@ -65,11 +65,6 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
                 </ion-list-header>
                 <ion-item-sliding
                   *ngFor="let relationship of relationships"
-                  (click)="
-                    this.router.navigate([
-                      '/verify-credentials/group/' + relationship.did
-                    ])
-                  "
                 >
                   <ion-item>
                     <ion-checkbox></ion-checkbox>
