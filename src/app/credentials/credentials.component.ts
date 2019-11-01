@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
 import {
@@ -23,7 +23,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Manage Credential Types</ion-title
+          >Your Credential Types</ion-title
         >
       </ion-toolbar>
     </ion-header>
@@ -61,6 +61,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
                       >
                       <br />
                       <small>{{ credDef.program }}</small>
+                      <small>VERSION: {{ credDef.version }}</small>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
@@ -78,7 +79,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
                 [routerLink]="['create']"
               >
                 <ion-icon name="add"></ion-icon>
-                Create New Credential Type
+                New Cred Type
               </ion-button>
             </div>
           </ion-col>
@@ -97,7 +98,8 @@ export class CredentialsComponent implements OnInit {
     private router: Router,
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
-    public actionSheetCtrl: ActionSheetController
+    public actionSheetCtrl: ActionSheetController,
+    public loadingController: LoadingController
   ) {
     // this.initializeItems();
   }
@@ -106,7 +108,6 @@ export class CredentialsComponent implements OnInit {
     this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
 
     this.credentialDefs = this.stateSvc.credentialDefs$;
-
   }
 
   getItems(ev: any) {
@@ -135,6 +136,12 @@ export class CredentialsComponent implements OnInit {
           }
         },
         {
+          text: 'Issue',
+          handler: () => {
+            this.router.navigate([`/credentials/issue/${this._id}`])
+          }
+        },
+        {
           text: 'Edit',
           handler: () => {
             this.router.navigate([`/credentials/edit/${this._id}`]);
@@ -143,8 +150,10 @@ export class CredentialsComponent implements OnInit {
         {
           text: 'Hide',
           role: 'destructive',
-          handler: () => {
-            console.log('Delete clicked');
+          handler: async () => {
+            await this.actionSvc.deleteCredDef(this._id);
+            this.actionSvc.setRelState();
+            this.credentialDefs = this.stateSvc.credentialDefs$;
           }
         },
         {

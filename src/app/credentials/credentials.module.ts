@@ -7,13 +7,15 @@ import { EditCredentialComponent } from './components/edit-credential/edit-crede
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 import { SharedModule } from '../shared/shared.module';
+import { IssueCredentialComponent } from './issue-credential/issue-credential.component';
 
 @NgModule({
   declarations: [
     CredentialsComponent,
     EditCredentialComponent,
     ViewCredentialComponent,
-    CreateCredentialComponent
+    CreateCredentialComponent,
+    IssueCredentialComponent
   ],
   imports: [CommonModule, CredentialsRoutingModule, SharedModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
