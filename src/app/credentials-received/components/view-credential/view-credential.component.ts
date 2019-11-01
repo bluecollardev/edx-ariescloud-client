@@ -9,6 +9,7 @@ import {
   ICredential
 } from '../../../credentials/services/credential-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
+import { HttpService } from 'src/app/core/services/http.service';
 
 // import { ICredentialResponse } from '../../models/i-credential';
 
@@ -28,7 +29,7 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
         <ion-title class="ios title-ios hydrated">My Credential</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content *ngIf="active$ | async as active">
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
@@ -44,7 +45,7 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
                   <div style="text-align: left; max-width: 60%; margin: 0 auto">
                     <small
                       ><small
-                        ><small>Issued by:</small> {{ active.issuedBy }}</small
+                        ><small>Issued by:</small> {{ active.label }}</small
                       ></small
                     >
                     <!--<br />
@@ -56,18 +57,18 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
                 <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Date Issued</ion-label>
                 <ion-badge color="medium" item-end>{{
-                  active.dateIssued.toDateString()
+                  active.updated
                 }}</ion-badge>
               </ion-item>
-
+              <ng-container *ngFor="let itm of active.values">
+                <ion-item class="flex ion-justify-content-around">
+                  <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
+                  <ion-label>{{ itm.key }}</ion-label>
+                  <ion-badge color="medium" item-end>{{ itm.value }}</ion-badge>
+                </ion-item>
+              </ng-container>
+              <!--
               <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
-                <ion-label>Degree</ion-label>
-                <ion-badge color="medium" item-end>{{ active.name }}</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Program</ion-label>
                 <ion-badge color="medium" item-end>{{
                   active.program
@@ -75,13 +76,11 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>GPA</ion-label>
                 <ion-badge color="medium" item-end>3.8 / 4.0</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Status</ion-label>
                 <ion-badge color="medium" item-end>{{
                   active.status
@@ -89,19 +88,17 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>SSN</ion-label>
                 <ion-badge color="medium" item-end>abcd-1234-xyz</ion-badge>
               </ion-item>
 
               <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>Document Version</ion-label>
                 <ion-badge color="medium" item-end>{{
                   active.version
                 }}</ion-badge>
               </ion-item>
-
+-->
               <div style="display: flex; flex-direction: column">
                 <ion-button
                   style="flex: 1"
@@ -125,21 +122,27 @@ import { CredentialActionsService } from '../../../credentials/services/credenti
   styleUrls: ['./view-credential.component.scss']
 })
 export class ViewCredentialComponent implements OnInit {
-  active: ICredential;
+  active$: Observable<ICredential>;
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private httpSvc: HttpService
   ) {
     // this.setActiveCred();
   }
 
   ngOnInit() {
-    this.actionSvc.getCredentials(); // Load all credentials first
-    this.actionSvc.getCredential(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log('the id', id);
+    this.active$ = this.httpSvc.getById(
+      'credentials',
+      this.route.snapshot.paramMap.get('id')
+    );
+    this.active$.subscribe(obs => console.log(obs));
   }
 
   async setActiveCred() {
@@ -150,6 +153,12 @@ export class ViewCredentialComponent implements OnInit {
     // ).subscribe((credential) => {
     //   this.active = credential;
     // });
+  }
+
+  async getKeys(attr: any) {
+    let val = Object.keys(attr)[0];
+    console.log('val');
+    return val;
   }
 
   async shareCredPopup() {

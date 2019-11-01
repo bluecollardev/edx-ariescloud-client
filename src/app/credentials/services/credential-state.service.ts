@@ -13,7 +13,7 @@ export interface ICredentialSchema {
 }
 
 export interface ICredentialDef {
-  id: string; // Use GUID
+  _id: string; // Use GUID
   issuedBy: string;
   issuerDid: string;
   name: string;
@@ -24,7 +24,7 @@ export interface ICredentialDef {
 }
 
 export interface ICredential {
-  id: string; // Use GUID
+  _id: string; // Use GUID
   issuedBy: string;
   issuerDid: string;
   issuedTo: string;
@@ -69,7 +69,7 @@ export class CredentialStateService {
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
     ICredentialDef[]
   >();
-  credentials$: Observable<ICredential>;
+  credentials$: Observable<ICredential[]>;
   activeCredential$: Observable<ICredential[]> = new Observable<
     ICredential[]
   >();

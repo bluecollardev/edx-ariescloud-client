@@ -59,7 +59,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                 >
                   <ion-card
                     text-center
-                    (click)="this.presentActionSheet(cred.id)"
+                    (click)="this.presentActionSheet(cred._id)"
                   >
                     <ion-card-header>
                       {{ cred.label }}
@@ -91,6 +91,7 @@ export class OrgCredentialsComponent implements OnInit {
   issuer$: Observable<any[]>;
   relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
+  _id: string;
 
   constructor(
     private router: Router,
@@ -162,12 +163,13 @@ export class OrgCredentialsComponent implements OnInit {
   }
 
   async presentActionSheet(credId: any) {
+    this._id = credId;
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
           text: 'View',
           handler: () =>
-            this.router.navigate([`/credentials-received/view/${credId}`])
+            this.router.navigate([`/credentials-received/view/${this._id}`])
         },
         {
           text: 'Share',
