@@ -7,13 +7,15 @@ import { ViewRelationshipComponent } from './components/view-relationship/view-r
 import { ApproveRelationshipComponent } from './components/approve-relationship/approve-relationship.component';
 import { AddRelationshipComponent } from './components/add-relationship/add-relationship.component';
 import { SharedModule } from '../shared/shared.module';
+import { CreateInvitationComponent } from './components/create-invitation/create-invitation.component';
 
 @NgModule({
   declarations: [
     RelationshipsComponent,
     ViewRelationshipComponent,
     AddRelationshipComponent,
-    ApproveRelationshipComponent
+    ApproveRelationshipComponent,
+    CreateInvitationComponent
   ],
   imports: [CommonModule, SharedModule, RelationshipsRoutingModule],
   exports: [AddRelationshipComponent],

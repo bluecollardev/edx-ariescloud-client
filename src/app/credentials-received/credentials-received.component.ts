@@ -20,6 +20,7 @@ import { CredentialActionsService } from '../credentials/services/credential-act
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { HttpService } from '../core/services/http.service';
+import { map } from 'rxjs/operators';
 
 const url = environment.apiUrl;
 
@@ -107,6 +108,7 @@ export class CredentialsReceivedComponent implements OnInit {
   credentials: Observable<ICredential[]>;
   pending$: Observable<IIssuer[]>;
   _url: string;
+  _id: string;
 
   actionMap = {
     offer_received: true,
@@ -115,7 +117,6 @@ export class CredentialsReceivedComponent implements OnInit {
     request_sent: false,
     credential_received: true
   };
-  _id: string;
 
   constructor(
     public router: Router,
@@ -134,17 +135,17 @@ export class CredentialsReceivedComponent implements OnInit {
 
   async ngOnInit() {
     this.loadData();
+    this.credentials = this.stateSvc.credentials$;
+    this.pending$ = this.stateSvc.pending$;
+    this.credentials.subscribe(obs => console.log(obs));
   }
 
   loadData() {
-    this.stateSvc.credentials$ = this.http.get<ICredential[]>(
-      `${this._url}credentials`
-    );
-    this.credentials = this.stateSvc.credentials$;
+    this.stateSvc.credentials$ = this.http
+      .get<ICredential[]>(`${this._url}credentials`)
+      .pipe(map(obs => Array.from(new Set(obs))));
 
     this.stateSvc.pending$ = this.actionSvc.getPendingIssues();
-
-    this.pending$ = this.stateSvc.pending$;
   }
 
   async getItems(issuers, ev: any) {
@@ -162,41 +163,6 @@ export class CredentialsReceivedComponent implements OnInit {
     }
 
     return filtered;
-  }
-
-  advance(id: string) {}
-
-  async presentActionSheet() {
-    const actionSheet = await this.actionSheetCtrl.create({
-      buttons: [
-        {
-          text: 'View',
-          handler: () => this.router.navigate(['/credentials-received/view'])
-        },
-        {
-          text: 'Share',
-          handler: () => {
-            this.shareCredPopup();
-          }
-        },
-        {
-          text: 'Delete',
-          role: 'destructive',
-          handler: () => {
-            console.log('Delete clicked');
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
-    });
-
-    await actionSheet.present();
   }
 
   async pendingActionSheet(id: string, state: string) {

@@ -123,7 +123,7 @@ export class AppComponent implements OnInit {
       hasBadge: true
     },
     {
-      title: 'Credentials Received',
+      title: 'Credentials',
       url: '/credentials-received/',
       hasBadge: true,
       icon: 'archive'

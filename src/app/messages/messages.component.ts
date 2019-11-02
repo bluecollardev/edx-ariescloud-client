@@ -43,7 +43,7 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
               <ion-list-header> Messages </ion-list-header>
               <ion-item-sliding
                 *ngFor="let relationship of relationships"
-                [routerLink]="['view']"
+                (click)="presentActionSheet(relationship._id)"
               >
                 <ion-item>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
@@ -78,6 +78,7 @@ export class MessagesComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
+  _id: string;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -109,32 +110,27 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  presentActionSheet() {
-    const actionSheet = this.actionSheetCtrl.create({
+  async presentActionSheet(id: string) {
+    // if (!this.actionMap[state]) return;
+    this._id = id;
+
+    const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Destructive',
-          role: 'destructive',
-          handler: () => {
-            console.log('Destructive clicked');
+          text: 'Accept',
+          handler: async () => {
+            return true;
           }
         },
         {
-          text: 'Archive',
-          handler: () => {
-            console.log('Archive clicked');
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
+          text: 'Decline',
+          handler: async () => {
+            return true;
           }
         }
       ]
     });
 
-    // actionSheet.present();
+    actionSheet.present();
   }
 }
