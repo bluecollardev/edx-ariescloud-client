@@ -19,9 +19,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-          >My VON Network</ion-title
-        >
+        <ion-title class="ios title-ios hydrated">Aries Client</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>

@@ -11,11 +11,15 @@ import {
   ICredentialSchema,
   ICredentialDef,
   ICredential,
-  ICertificateOfProof
+  ICertificateOfProof,
+  IIssuer
 } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
-import { version } from 'punycode';
+
+export interface ICredDefDeleteResponse {
+  ok: boolean;
+}
 
 const apiUrl = environment.apiUrl;
 
@@ -99,6 +103,16 @@ export class CredentialActionsService {
     return response;
   }
 
+  getPendingIssues() {
+    return this.httpSvc
+      .get<ICredential[]>('issues')
+      .pipe(
+        map(obs =>
+          obs.filter(itm => itm.state !== 'stored' && itm.state !== 'issued')
+        )
+      );
+  }
+
   getCredentialDefs(params?: ICredentialParams) {
     const response = this.httpSvc.get<ICredentialDef[]>(
       'credential-definitions'
@@ -165,5 +179,19 @@ export class CredentialActionsService {
     }
 
     return this.stateSvc.certificatesOfProof$;
+  }
+
+  async deleteCredDef(id: string) {
+    try {
+      return await this.httpSvc
+        .delete('credential-definitions', id)
+        .toPromise();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  setRelState() {
+    this.stateSvc.credentialDefs$ = this.getCredentialDefs();
   }
 }

@@ -10,7 +10,7 @@ import { CreateInvitationComponent } from './components/create-invitation/create
 const routes: Routes = [
   {
     path: 'relationships',
-    component: RelationshipsComponent,
+    component: RelationshipsComponent
   },
   {
     path: 'relationships/invite',
@@ -18,19 +18,23 @@ const routes: Routes = [
   },
   {
     path: 'relationships/add',
-    component: AddRelationshipComponent,
+    component: AddRelationshipComponent
   },
   {
     path: 'relationships/view',
-    component: ViewRelationshipComponent,
+    component: ViewRelationshipComponent
   },
   {
     path: 'relationships/view/:id',
-    component: ViewRelationshipComponent,
+    component: ViewRelationshipComponent
+  },
+  {
+    path: 'relationships/invite',
+    component: CreateInvitationComponent
   },
   {
     path: 'relationships/approve/:id',
-    component: ApproveRelationshipComponent,
+    component: ApproveRelationshipComponent
   }
 ];
 
@@ -38,4 +42,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class RelationshipsRoutingModule { }
+export class RelationshipsRoutingModule {}

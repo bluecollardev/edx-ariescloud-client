@@ -100,7 +100,7 @@ export class AppComponent implements OnInit {
 
   pages = [
     {
-      title: 'My VON Network',
+      title: 'Relationships & Invites',
       url: '/relationships/',
       icon: 'people'
     },
@@ -117,7 +117,18 @@ export class AppComponent implements OnInit {
       hasBadge: true
     },
     {
-      title: 'Credentials',
+      title: 'Credentials Received',
+      url: '/credentials-received/',
+      hasBadge: true,
+      icon: 'archive'
+    },
+    {
+      title: 'Issue Credentials',
+      url: '/credentials/',
+      icon: 'ribbon'
+    },
+    {
+      title: 'Credential Types',
       url: '/credentials/',
       icon: 'ribbon'
     },
@@ -137,6 +148,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     try {
+      // TODO: When re-implementing, look back at history - we deleted the profile module
       /*const profile = await this.httpSvc
         .get<IProfileResult>('profile')
         .toPromise();*/

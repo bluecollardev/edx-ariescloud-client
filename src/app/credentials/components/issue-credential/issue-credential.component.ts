@@ -1,24 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { Observable, of } from 'rxjs';
 import {
-  CredentialStateService,
-  ICredentialDef
+  ICredentialDef,
+  ICredential
 } from '../../services/credential-state.service';
 import { CredentialActionsService } from '../../services/credential-actions.service';
-import { RelationshipActionsService } from '../../services/relationship-actions.service';
-import { IRelationship } from '../../../relationships/services/relationships-state.service';
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
-
-// import { ICredentialResponse } from '../../models/i-credential';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { RelationshipsActionService } from 'src/app/relationships/services/relationships-action.service';
+import { IRelationship } from 'src/app/messages/services/messages-state.service';
+import { tap, map } from 'rxjs/operators';
+import { LoadingController } from '@ionic/angular';
+import { HttpService } from 'src/app/core/services/http.service';
 
 @Component({
-  selector: 'app-view-credential',
+  selector: 'app-issue-credential',
   template: `
-    <ion-header role="banner" class="ios header-ios hydrated">
+    <ion-header
+      role="banner"
+      class="ios header-ios hydrated"
+      *ngIf="credDef$ | async as credDef"
+    >
       <ion-toolbar class="ios hydrated">
         <ion-buttons
           slot="start"
@@ -29,7 +31,7 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Issue BSc Degree</ion-title
+          >Issue "{{ credDef.name }}"</ion-title
         >
       </ion-toolbar>
     </ion-header>
@@ -40,95 +42,45 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
             <ion-col>
               <ion-item>
                 <ion-label position="stacked"
-                  >Select Credential Type
+                  >Issue To:
                   <ion-text color="danger">*</ion-text>
                 </ion-label>
-                <ion-select required>
-                  <ion-select-option selected>BSc Degree</ion-select-option>
-                  <ion-select-option>BA Degree</ion-select-option>
-                  <ion-select-option>MBA Degree</ion-select-option>
+                <ion-select
+                  required
+                  formControlName="connectionId"
+                  *ngIf="relationship$ | async as relationships"
+                >
+                  <ion-select-option
+                    *ngFor="let relationship of relationships"
+                    [value]="relationship._id"
+                    >{{ relationship.name }}</ion-select-option
+                  >
                 </ion-select>
               </ion-item>
             </ion-col>
-            <ion-col size="4">
-              <ion-button margin-end [routerLink]="['/credentials/create']">
-                <ion-icon name="add"></ion-icon>
-                New
-              </ion-button>
-            </ion-col>
           </ion-row>
-          <ion-row *ngIf="relationships | async as relationships">
-            <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-              <ion-list>
-                <ion-list-header>
-                  Issue To
-                </ion-list-header>
-                <ion-item-sliding
-                  *ngFor="let relationship of relationships"
-                >
-                  <ion-item>
-                    <ion-checkbox></ion-checkbox>
-                    <ion-icon name="person" class="icon-lg"></ion-icon>
-                    <ion-label>
-                      <h2>{{ relationship.name }}</h2>
-                      <small>DID: {{ relationship.did }}</small>
-                    </ion-label>
-                    <!--<ion-badge color="primary" item-end>2</ion-badge>-->
-                  </ion-item>
-                </ion-item-sliding>
-              </ion-list>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-        <ion-grid>
-          <ion-row>
-            <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
-              <ion-card text-center *ngIf="active$ | async as active">
-                <img
-                  src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-                />
-  
-                <ion-card-content>
-                  <ion-card-title>
-                    {{ active.name }}
-                    <br />
-                    <div style="text-align: left; max-width: 60%; margin: 0 auto">
-                      <small
-                        ><small
-                          ><small>Issued by:</small> {{ active.issuedBy }}</small
-                        ></small
-                      >
-                      <!--<br />
-                      <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
-                    </div>
-                  </ion-card-title>
-                  <small><small>Tax ID: 123-45-6789</small></small>
-                  <br />
-                  <small
-                    ><small>DID: {{ active.did }}</small></small
-                  >
-                </ion-card-content>
-                <ion-card-content>
-                  <p>
-                    Alice is a verified graduate of the
-                    {{ active.program }} program at {{ active.issuedBy }}.
-                  </p>
-                </ion-card-content>
-  
-                <ion-item class="flex ion-justify-content-around">
-                  <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                  <ion-label>Date Issued</ion-label>
-                  <ion-badge color="medium" item-end></ion-badge>
-                </ion-item>
-  
+          <ng-container *ngIf="fa$ | async as fa">
+            <ion-row *ngFor="let vfg of fa.controls">
+              <ion-col>
                 <ion-item
-                  class="flex ion-justify-content-around"
-                  *ngFor="let attr of active.attributes"
-                >
-                  <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
-                  <ion-label>{{ attr }}</ion-label>
+                  ><ion-label position="stacked"
+                    >{{ vfg.value.name }}
+                    <ion-text color="danger">*</ion-text>
+                  </ion-label>
+                  <ion-input [formControl]="vfg.controls.value"></ion-input>
                 </ion-item>
-              </ion-card>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+          <ion-row>
+            <ion-col>
+              <ion-item
+                ><ion-label position="stacked"
+                  >Comment
+                  <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input formControlName="comment"></ion-input>
+              </ion-item>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -140,7 +92,7 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
             full
             icon-start
             margin
-            [routerLink]="['/credentials']"
+            (click)="submit()"
           >
             <ion-icon name="checkmark"></ion-icon>
             Issue Credential(s)
@@ -152,31 +104,72 @@ import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./issue-credential.component.scss']
 })
 export class IssueCredentialComponent implements OnInit {
-  active$: Observable<ICredentialDef>;
-  relationships: Observable<IRelationship[]>;
+  credDef$: Observable<ICredentialDef>;
+  credDefId: string;
   fg: FormGroup;
-
+  fa$: Observable<FormArray>;
+  relationship$: Observable<IRelationship[]>;
   constructor(
-    public route: ActivatedRoute,
-    public router: Router,
-    public relationShipActionService: RelationshipActionsService,
-    private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService
+    private actionSvc: CredentialActionsService,
+    private relationshipsActionSvc: RelationshipsActionService,
+    private Route: ActivatedRoute,
+    private router: Router,
+    private httpSvc: HttpService,
+    public loadingController: LoadingController
   ) {
-    this.active$ = this.actionSvc.getCredential(
-      this.route.snapshot.paramMap.get('id')
-    );
+    this.fg = new FormGroup({
+      connectionId: new FormControl(''),
+      comment: new FormControl('')
+    });
   }
 
   ngOnInit() {
-    this.relationships = this.relationShipActionService.getRelationshipByState(
-      'active'
+    const id = this.Route.snapshot.paramMap.get('id');
+    this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
+      tap(obs => (this.credDefId = obs._id)),
+      tap(obs => {
+        const fa = new FormArray([]);
+        obs.attributes.forEach(val =>
+          fa.push(
+            new FormGroup({
+              name: new FormControl(val),
+              value: new FormControl('')
+            })
+          )
+        );
+        this.fa$ = of(fa);
+      })
     );
+    this.relationship$ = this.relationshipsActionSvc
+      .getRelationships()
+      .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
+  }
 
-    const fg = new FormGroup({
-      name: new FormControl('', [Validators.required])
+  async submit() {
+    const loading = await this.loadingController.create({
+      message: 'Submitting the credential',
+      duration: 10000
     });
+    await loading.present();
+    const fa = await this.fa$.toPromise();
 
-    this.fg = fg;
+    const ret = {
+      connectionId: this.fg.value.connectionId,
+      credDefId: this.credDefId,
+      comment: this.fg.value.comment,
+      attrs: fa.value
+    };
+    console.log(ret);
+    try {
+      const res = await this.httpSvc.post('issues', ret).toPromise();
+      if (res) {
+        console.log('result', res);
+        loading.dismiss();
+        this.router.navigate(['/credentials']);
+      }
+    } catch (err) {
+      console.log('error', err);
+      loading.dismiss();
+    }
   }
 }

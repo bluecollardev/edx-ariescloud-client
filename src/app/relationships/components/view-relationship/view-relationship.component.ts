@@ -51,7 +51,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                   <ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>
                   <ion-label>Date Connected</ion-label>
                   <ion-badge color="medium" item-end>{{
-                    relationship.received
+                    relationship.created
                   }}</ion-badge>
                 </ion-item>-->
 

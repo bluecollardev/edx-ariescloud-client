@@ -32,7 +32,7 @@ export interface ICredential {
   name: string;
   type: string;
   program: string;
-  status: string;
+  state: string;
   version: string;
   schema: string;
   did: string;
@@ -79,6 +79,8 @@ export class CredentialStateService {
   activeCertificateOfProof$: Observable<ICertificateOfProof[]> = new Observable<
     ICertificateOfProof[]
   >();
+
+  pending$: Observable<ICredential[]>;
 
   constructor() {
     /*const governmentCredential = {
@@ -161,12 +163,12 @@ export class CredentialStateService {
     this.activeCredentialDef$ = this.credentialDefs$.pipe(
       map(cs => {
         return cs.filter(c => {
-          // console.log('------------');
-          // console.log(c.id);
-          // console.log(cid);
-          // console.log('------------');
-          // return c.id === cid;
-          return true;
+          console.log('------------');
+          console.log(c);
+          console.log(c._id);
+          console.log(cid);
+          console.log('------------');
+          return c._id === cid;
         });
       })
     );

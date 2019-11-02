@@ -34,14 +34,16 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="stateSvc.messages$ | async as relationships">
+        <ion-row
+          *ngIf="stateSvc.messages$ | async as relationships; else loading"
+        >
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header> Messages </ion-list-header>
               <ion-item-sliding
                 *ngFor="let relationship of relationships"
-                [routerLink]="['view']"
+                (click)="presentActionSheet(relationship._id)"
               >
                 <ion-item>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
@@ -64,6 +66,10 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
         </ion-row>
       </ion-grid>
     </ion-content>
+    <ng-template #loading
+      ><ion-spinner style="margin: auto auto;"></ion-spinner
+      ><ion-label>Loading</ion-label></ng-template
+    >
   `,
   styleUrls: ['./messages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -72,6 +78,7 @@ export class MessagesComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
   relationships: Observable<IRelationship[]>;
+  _id: string;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -103,32 +110,27 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  presentActionSheet() {
-    const actionSheet = this.actionSheetCtrl.create({
+  async presentActionSheet(id: string) {
+    // if (!this.actionMap[state]) return;
+    this._id = id;
+
+    const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Destructive',
-          role: 'destructive',
-          handler: () => {
-            console.log('Destructive clicked');
+          text: 'Accept',
+          handler: async () => {
+            return true;
           }
         },
         {
-          text: 'Archive',
-          handler: () => {
-            console.log('Archive clicked');
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
+          text: 'Decline',
+          handler: async () => {
+            return true;
           }
         }
       ]
     });
 
-    // actionSheet.present();
+    actionSheet.present();
   }
 }

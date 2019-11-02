@@ -13,31 +13,27 @@ const routes: Routes = [
   },
   {
     path: 'credentials/create',
-    component: CreateCredentialComponent,
+    component: CreateCredentialComponent
   },
   {
     path: 'credentials/view',
-    component: ViewCredentialComponent,
+    component: ViewCredentialComponent
   },
   {
     path: 'credentials/view/:id',
-    component: ViewCredentialComponent,
-  },
-  {
-    path: 'credentials/issue',
-    component: IssueCredentialComponent,
-  },
-  {
-    path: 'credentials/issue/:id',
-    component: IssueCredentialComponent,
+    component: ViewCredentialComponent
   },
   {
     path: 'credentials/edit',
-    component: EditCredentialComponent,
+    component: EditCredentialComponent
   },
   {
     path: 'credentials/edit/:id',
-    component: EditCredentialComponent,
+    component: EditCredentialComponent
+  },
+  {
+    path: 'credentials/issue/:id',
+    component: IssueCredentialComponent
   }
 ];
 
@@ -45,4 +41,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class CredentialsRoutingModule { }
+export class CredentialsRoutingModule {}

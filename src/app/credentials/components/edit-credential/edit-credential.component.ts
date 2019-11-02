@@ -69,9 +69,7 @@ import { ActivatedRoute, Router } from '@angular/router';
                   <ion-row>
                     <ion-col>
                       <ion-item>
-                        <ion-label position="stacked"
-                          >Create Data Field</ion-label
-                        >
+                        <ion-label position="stacked">Create Claim</ion-label>
                         <ion-input required type="text" [formControl]="baseFc">
                         </ion-input>
                       </ion-item>
