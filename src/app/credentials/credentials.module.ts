@@ -6,6 +6,7 @@ import { CredentialsComponent } from './credentials.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
+import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { SharedModule } from '../shared/shared.module';
 import { IssueCredentialComponent } from './issue-credential/issue-credential.component';
 

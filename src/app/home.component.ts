@@ -28,7 +28,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
                 <ion-input type="password" value=""></ion-input>
               </ion-item>
             </ion-list>
-            <ion-button color="primary" clear full margin [routerLink]="['/profile']">Sign In</ion-button>
+            <ion-button color="primary" clear full margin [routerLink]="['/relationships']">Sign In</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>

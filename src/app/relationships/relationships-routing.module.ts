@@ -13,6 +13,10 @@ const routes: Routes = [
     component: RelationshipsComponent
   },
   {
+    path: 'relationships/invite',
+    component: CreateInvitationComponent,
+  },
+  {
     path: 'relationships/add',
     component: AddRelationshipComponent
   },

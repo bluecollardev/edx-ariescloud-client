@@ -7,7 +7,10 @@ import {
   CredentialStateService,
   ICredentialDef
 } from './services/credential-state.service';
-import { CredentialActionsService } from './services/credential-actions.service';
+import {
+  CredentialActionsService,
+  ICredentialParams
+} from './services/credential-actions.service';
 
 @Component({
   selector: 'app-credentials',
@@ -22,51 +25,83 @@ import { CredentialActionsService } from './services/credential-actions.service'
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-          >Your Credential Types</ion-title
-        >
+        <ion-title class="ios title-ios hydrated">Manage Credentials</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+            <ion-list *ngIf="stateSvc.credentialDefs$ | async as credDefs">
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Credentials Issued</span>
+                  <!--<ion-searchbar></ion-searchbar>-->
+                </div>
+              </ion-list-header>
+              <ion-item-sliding *ngFor="let credDef of credDefs">
+                <ion-item (click)="presentActionSheet(credDef._id)">
+                  <ion-icon name="document" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h2>{{ credDef.name }}</h2>
+                    <small>{{ credDef.program }}</small>
+                  </ion-label>
+                </ion-item>
+                <ion-item-options>
+                  <ion-item-option color="danger" type="button" icon-start>
+                    <ion-icon name="trash" class="icon-md"></ion-icon>
+                    Delete
+                  </ion-item-option>
+                  <ion-item-option color="light" type="button" icon-start>
+                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                    Disable
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
 
-            <ion-grid style="width: 100%;">
-              <ion-row>
-                <ion-col>
-                  <ion-list-header>
-                    <ion-label>My Organization's Credential Types</ion-label>
-                  </ion-list-header>
-                </ion-col>
-              </ion-row>
-              <ion-row *ngIf="stateSvc.credentialDefs$ | async as credDefs">
-                <ion-col
-                  *ngFor="let credDef of credDefs"
-                  sizeXs="6"
-                  sizeSm="4"
-                  sizeMd="3"
-                  sizeLg="2"
-                >
-                  <ion-card
-                    text-center
-                    (click)="presentActionSheet(credDef._id)"
-                  >
-                    <ion-card-header></ion-card-header>
-                    <ion-icon name="document" class="icon-lg"></ion-icon>
-                    <ion-card-content>
-                      <small
-                        ><strong>{{ credDef.name }}</strong></small
-                      >
-                      <br />
-                      <small>{{ credDef.program }}</small>
-                      <small>VERSION: {{ credDef.version }}</small>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
+            <div style="display: flex">
+              <ion-button
+                style="flex: 1"
+                color="primary"
+                clear
+                full
+                icon-start
+                margin
+                [routerLink]="['issue']"
+              >
+                <ion-icon name="add"></ion-icon>
+                Issue Credential
+              </ion-button>
+            </div>
+
+            <ion-list *ngIf="stateSvc.credentialDefs$ | async as credDefs">
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Credential Types</span>
+                  <!--<ion-searchbar></ion-searchbar>-->
+                </div>
+              </ion-list-header>
+              <ion-item-sliding *ngFor="let credDef of credDefs">
+                <ion-item (click)="presentActionSheet(credDef._id)">
+                  <ion-icon name="document" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h2>{{ credDef.name }}</h2>
+                    <small>{{ credDef.program }}</small>
+                  </ion-label>
+                </ion-item>
+                <ion-item-options>
+                  <ion-item-option color="danger" type="button" icon-start>
+                    <ion-icon name="trash" class="icon-md"></ion-icon>
+                    Delete
+                  </ion-item-option>
+                  <ion-item-option color="light" type="button" icon-start>
+                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                    Disable
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
 
             <div style="display: flex">
               <ion-button
@@ -92,6 +127,7 @@ import { CredentialActionsService } from './services/credential-actions.service'
 export class CredentialsComponent implements OnInit {
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
+  credentials: Observable<ICredentialParams[]>;
   _id: string;
 
   constructor(
@@ -106,8 +142,10 @@ export class CredentialsComponent implements OnInit {
 
   ngOnInit() {
     this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
+    this.stateSvc.credentials$ = this.actionSvc.getCredentials();
 
     this.credentialDefs = this.stateSvc.credentialDefs$;
+    this.credentials = this.stateSvc.credentials$;
   }
 
   getItems(ev: any) {
@@ -138,7 +176,7 @@ export class CredentialsComponent implements OnInit {
         {
           text: 'Issue',
           handler: () => {
-            this.router.navigate([`/credentials/issue/${this._id}`])
+            this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {
