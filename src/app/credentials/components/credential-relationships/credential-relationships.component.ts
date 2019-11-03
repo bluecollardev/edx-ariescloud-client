@@ -10,9 +10,9 @@ import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
 import { RelationshipsActionService } from 'src/app/relationships/services/relationships-action.service';
 import { IRelationship } from 'src/app/messages/services/messages-state.service';
 import { tap, map } from 'rxjs/operators';
-import { LoadingController } from '@ionic/angular';
+import {ActionSheetController, LoadingController} from '@ionic/angular';
 import { HttpService } from 'src/app/core/services/http.service';
-import {RelationshipActionsService} from "../../services/relationship-actions.service";
+import { RelationshipActionsService } from '../../services/relationship-actions.service';
 
 @Component({
   selector: 'app-credential-relationships',
@@ -30,7 +30,7 @@ import {RelationshipActionsService} from "../../services/relationship-actions.se
             <ion-item-sliding
               *ngFor="let relationship of relationships"
             >
-              <ion-item>
+              <ion-item (click)="presentActionSheet()">
                 <ion-icon name="person" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ relationship.name }}</h2>
@@ -54,6 +54,7 @@ export class CredentialRelationshipsComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    public actionSheetCtrl: ActionSheetController,
     public relationShipActionService: RelationshipActionsService,
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService
@@ -73,5 +74,47 @@ export class CredentialRelationshipsComponent implements OnInit {
     });
 
     this.fg = fg;
+  }
+
+  async presentActionSheet(relationshipId: any) {
+    // this._id = credDefId;
+    const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'View Relationship',
+          handler: () => {
+            this.router.navigate([`/relationships`]);
+          }
+        },
+        {
+          text: 'View Credentials',
+          handler: () => {
+            this.router.navigate([`/credentials`]);
+          }
+        },
+        {
+          text: 'Issue Credentials',
+          handler: () => {
+            // this.router.navigate([`/credentials/issue/${this._id}`]);
+          }
+        },
+        {
+          text: 'Revoke Credentials',
+          role: 'destructive',
+          handler: () => {
+            // this.router.navigate([`/credentials/revoke/${this._id}`]);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+
+    await actionSheet.present();
   }
 }
