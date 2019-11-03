@@ -24,7 +24,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
           <ion-col>
             <ion-item>
               <ion-label position="stacked"
-                >Select Credential Type
+                >Select / Change Type
                 <ion-text color="danger">*</ion-text>
               </ion-label>
               <ion-select required>
@@ -51,7 +51,6 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
                 *ngFor="let relationship of relationships"
               >
                 <ion-item>
-                  <ion-checkbox></ion-checkbox>
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ relationship.name }}</h2>
@@ -116,20 +115,6 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
           </ion-col>
         </ion-row>
       </ion-grid>
-      <div style="display: flex">
-        <ion-button
-          style="flex: 1"
-          color="primary"
-          clear
-          full
-          icon-start
-          margin
-          [routerLink]="['/credentials']"
-        >
-          <ion-icon name="checkmark"></ion-icon>
-          Issue Credential(s)
-        </ion-button>
-      </div>
     </form>
   `,
   styleUrls: ['./issue-credential-relationships.component.scss']
