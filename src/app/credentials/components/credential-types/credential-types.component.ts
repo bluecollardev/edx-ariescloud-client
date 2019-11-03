@@ -125,7 +125,7 @@ export class CredentialTypesComponent implements OnInit {
           }
         },
         {
-          text: 'Edit Credential Definition',
+          text: 'Edit Credential Type',
           handler: () => {
             this.router.navigate([`/credentials/edit/${this._id}`]);
           }
