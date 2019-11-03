@@ -120,7 +120,7 @@ export class CredentialsIssuedComponent implements OnInit {
           }
         },
         {
-          text: 'Issue This Credential',
+          text: 'Issue Credential To...',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
           }

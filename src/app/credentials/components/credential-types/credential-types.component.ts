@@ -113,7 +113,7 @@ export class CredentialTypesComponent implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'Issue Credential',
+          text: 'Issue Credential To...',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
           }
