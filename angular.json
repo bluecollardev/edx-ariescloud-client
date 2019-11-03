@@ -61,6 +61,13 @@
                   "maximumError": "10kb"
                 }
               ]
+            }, "faber": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.faber.ts"
+                }
+              ]
             }
           }
         },
@@ -72,6 +79,9 @@
           "configurations": {
             "production": {
               "browserTarget": "edx-ariescloud-client:build:production"
+            },
+             "faber": {
+              "browserTarget": "edx-ariescloud-client:build:faber"
             }
           }
         },

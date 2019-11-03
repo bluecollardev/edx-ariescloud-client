@@ -12,6 +12,14 @@ const routes: Routes = [
     component: CredentialsComponent
   },
   {
+    path: 'credentials/issued',
+    component: CredentialsComponent
+  },
+  {
+    path: 'credentials/types',
+    component: CredentialsComponent
+  },
+  {
     path: 'credentials/create',
     component: CreateCredentialComponent
   },

@@ -6,54 +6,67 @@ import { Observable } from 'rxjs';
 import {
   CredentialStateService,
   ICredentialDef
-} from './services/credential-state.service';
-import { CredentialActionsService, ICredentialParams } from './services/credential-actions.service';
+} from '../../services/credential-state.service';
+import { CredentialActionsService, ICredentialParams } from '../../services/credential-actions.service';
 
 @Component({
-  selector: 'app-credentials',
+  selector: 'app-credentials-issued',
   template: `
-    <ion-header role="banner" class="ios header-ios hydrated">
-      <ion-toolbar class="ios hydrated">
-        <ion-buttons
-          slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Your Credential Types</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <div class="ion-padding">
-        <ion-segment color="primary">
-          <ion-segment-button value="issued" [checked]="this.activeTab === 'issued'" (ionSelect)="this.segmentButtonClicked($event, 'issued')">
-            <ion-label>Issued</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="types" [checked]="this.activeTab === 'types'" (ionSelect)="this.segmentButtonClicked($event, 'types')">
-            <ion-label>Types</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-      </div>
-      <app-credentials-issued *ngIf="this.activeTab === 'issued'">
-      </app-credentials-issued>
-      <app-credential-types *ngIf="this.activeTab === 'types'">
-      </app-credential-types>
-      <!--<ion-tabs>
-        <ion-tab label="Issued" icon="" href="/credentials/(issued:issued)">
-          <ion-router-outlet name="issued"></ion-router-outlet>
-        </ion-tab>
-        <ion-tab label="Types" icon="" href="/credentials/(types:types)">
-          <ion-router-outlet name="types"></ion-router-outlet>
-        </ion-tab>
-      </ion-tabs>-->
-    </ion-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-list
+            *ngIf="stateSvc.credentialDefs$ | async as credDefs"
+          >
+            <ion-list-header class="ion-no-margin ion-no-padding">
+              <div style="display: flex; width: 100%; flex-direction: column">
+                <span class="ion-padding">Issued Credentials By Type</span>
+                <!--<ion-searchbar></ion-searchbar>-->
+              </div>
+            </ion-list-header>
+            <ion-item-sliding *ngFor="let credDef of credDefs">
+              <ion-item [routerLink]="['credentials/issue']">
+                <ion-icon name="document" class="icon-lg"></ion-icon>
+                <ion-label>
+                  <h2>{{ credDef.name }}</h2>
+                  <small>{{ credDef.program }}</small>
+                </ion-label>
+              </ion-item>
+              <ion-item-options>
+                <ion-item-option color="danger" type="button" icon-start>
+                  <ion-icon name="trash" class="icon-md"></ion-icon>
+                  Delete
+                </ion-item-option>
+                <ion-item-option color="light" type="button" icon-start>
+                  <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                  Disable
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ion-list>
+          
+          <div style="display: flex">
+            <ion-button
+              style="flex: 1"
+              color="primary"
+              clear
+              full
+              icon-start
+              margin
+              [routerLink]="['issue']"
+            >
+              <ion-icon name="add"></ion-icon>
+              Issue Credential
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   `,
-  styleUrls: ['./credentials.component.scss']
+  styleUrls: ['./credentials-issued.component.css']
 })
-export class CredentialsComponent implements OnInit {
-  activeTab: string;
+export class CredentialsIssuedComponent implements OnInit {
+
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
   credentials: Observable<ICredentialParams[]>;
@@ -70,8 +83,6 @@ export class CredentialsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeTab = 'issued';
-
     this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
     this.stateSvc.credentials$ = this.actionSvc.getCredentials();
 
@@ -139,11 +150,4 @@ export class CredentialsComponent implements OnInit {
     await actionSheet.present();
   }
 
-  segmentButtonClicked(ev: any, tab: string) {
-    console.log('segment selected');
-    console.log(tab);
-    console.log(ev);
-
-    this.activeTab = tab;
-  }
 }
