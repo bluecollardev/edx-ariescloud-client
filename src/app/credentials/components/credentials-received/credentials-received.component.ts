@@ -34,65 +34,82 @@ const url = environment.apiUrl;
 @Component({
   selector: 'app-credentials-received',
   template: `
-    <div>
-      <ion-grid>
-        <ion-row>
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-          </ion-col>
-        </ion-row>
-        <ion-row><h5>Issued to Me</h5></ion-row>
-        <ion-row *ngIf="credentials | async as issuerGroups">
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-list>
-              <ion-item-sliding
-                *ngFor="let issuer of issuerGroups"
+    <ion-grid>
+      <ion-row>
+        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-list
+            *ngIf="credentials | async as issuerGroups"
+          >
+            <ion-list-header class="ion-no-margin ion-no-padding">
+              <div style="display: flex; width: 100%; flex-direction: column">
+                <span class="ion-padding">Accepted Credentials</span>
+                <ion-searchbar></ion-searchbar>
+              </div>
+            </ion-list-header>
+            <ion-item-sliding *ngFor="let issuer of issuerGroups">
+              <ion-item
                 (click)="
                   this.router.navigate([
                     '/credentials-received/group/' + issuer.did
                   ])
                 "
               >
-                <ion-item>
-                  <ion-icon name="business" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ issuer.name }}</h2>
-                    <small>DID: {{ issuer.did }}</small>
-                  </ion-label>
-                  <ion-badge color="primary" item-end>{{
-                    issuer.credentials.length
-                  }}</ion-badge>
-                </ion-item>
-              </ion-item-sliding>
-            </ion-list>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <ion-grid>
-        <ng-container *ngIf="pending$ | async as pendingCreds">
-          <ion-row><h5>Pending</h5></ion-row>
-          <ion-row>
-            <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-              <ion-list>
-                <ion-item-sliding
-                  *ngFor="let cred of pendingCreds"
-                  (click)="pendingActionSheet(cred._id, cred.state)"
-                  [disabled]="!actionMap[cred.state]"
-                >
-                  <ion-item>
-                    <ion-icon name="business" class="icon-lg"></ion-icon>
-                    <ion-label>
-                      <h2>{{ cred.name }}</h2>
-                      <small>STATE: {{ cred.state }}</small>
-                    </ion-label>
-                  </ion-item>
-                </ion-item-sliding>
-              </ion-list>
-            </ion-col>
-          </ion-row>
-        </ng-container>
-      </ion-grid>
-    </div>
+                <ion-icon name="person" class="icon-lg"></ion-icon>
+                <ion-label>
+                  <h2>{{ issuer.name }}</h2>
+                  <small>DID: {{ issuer.did }}</small>
+                </ion-label>
+                <ion-badge color="primary" item-end>{{
+                  issuer.credentials.length
+                }}</ion-badge>
+              </ion-item>
+              <!--<ion-item-options>
+                <ion-item-option color="danger" type="button" icon-start>
+                  <ion-icon name="trash" class="icon-md"></ion-icon>
+                  Delete
+                </ion-item-option>
+                <ion-item-option color="light" type="button" icon-start>
+                  <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                  Disable
+                </ion-item-option>
+              </ion-item-options>-->
+            </ion-item-sliding>
+          </ion-list>
+          <ion-list
+            *ngIf="pending$ | async as pendingCreds"
+          >
+            <ion-list-header>
+              Accept New Credentials
+            </ion-list-header>
+            <ion-item-sliding *ngFor="let cred of pendingCreds">
+              <ion-item
+                (click)="pendingActionSheet(cred._id, cred.state)"
+                [disabled]="!actionMap[cred.state]"
+              >
+                <ion-icon name="document" class="icon-lg"></ion-icon>
+                <ion-label>
+                  <h2>{{ cred.name }}</h2>
+                  <!--<small>DID: {{ item.did }}</small>-->
+                  <ion-row>
+                    <small>State: {{ cred.state }}</small>
+                  </ion-row>
+                </ion-label>
+              </ion-item>
+              <!--<ion-item-options>
+                <ion-item-option color="danger" type="button" icon-start>
+                  <ion-icon name="ios-close" class="icon-md"></ion-icon>
+                  Decline
+                </ion-item-option>
+                <ion-item-option color="success" type="button" icon-start>
+                  <ion-icon name="ios-checkmark" class="icon-md"></ion-icon>
+                  Accept
+                </ion-item-option>
+              </ion-item-options>-->
+            </ion-item-sliding>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   `,
   styleUrls: ['./credentials-received.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
