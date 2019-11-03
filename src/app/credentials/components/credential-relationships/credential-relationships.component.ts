@@ -30,7 +30,7 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
             <ion-item-sliding
               *ngFor="let relationship of relationships"
             >
-              <ion-item (click)="presentActionSheet()">
+              <ion-item (click)="presentActionSheet(relationship._id)">
                 <ion-icon name="person" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ relationship.name }}</h2>
@@ -77,13 +77,14 @@ export class CredentialRelationshipsComponent implements OnInit {
   }
 
   async presentActionSheet(relationshipId: any) {
-    // this._id = credDefId;
+    const credentialId = this.route.snapshot.paramMap.get('id');
+
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
           text: 'View Relationship',
           handler: () => {
-            this.router.navigate([`/relationships`]);
+            this.router.navigate([`/relationships/view/${relationshipId}`]);
           }
         },
         {
@@ -93,9 +94,9 @@ export class CredentialRelationshipsComponent implements OnInit {
           }
         },
         {
-          text: 'Issue Credentials',
+          text: 'Issue Credential',
           handler: () => {
-            // this.router.navigate([`/credentials/issue/${this._id}`]);
+            this.router.navigate([`/credentials/issue/${credentialId}/to`]);
           }
         },
         {
