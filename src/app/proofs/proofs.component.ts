@@ -39,11 +39,13 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
       <ion-grid>
         <ion-row *ngIf="relationships | async as relationships">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
-              <ion-list-header>
-                By Relationship
-              </ion-list-header>
+              <ion-list-header class="ion-no-margin ion-no-padding">
+              <div style="display: flex; width: 100%; flex-direction: column">
+                <span class="ion-padding">By Relationship</span>
+                <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+              </div>
+            </ion-list-header>
               <ion-item-sliding
                 *ngFor="let relationship of relationships"
                 (click)="

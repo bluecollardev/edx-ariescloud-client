@@ -22,7 +22,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
                 <span class="ion-padding">Credential Types</span>
-                <!--<ion-searchbar></ion-searchbar>-->
+                <ion-searchbar></ion-searchbar>
               </div>
             </ion-list-header>
             <ion-item-sliding *ngFor="let credDef of credDefs">

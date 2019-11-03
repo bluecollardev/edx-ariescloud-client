@@ -44,8 +44,11 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
         <ion-row *ngIf="relationships | async as relationships">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
-              <ion-list-header>
-                Issue To
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Issue To</span>
+                  <ion-searchbar></ion-searchbar>
+                </div>
               </ion-list-header>
               <ion-item-sliding
                 *ngFor="let relationship of relationships"

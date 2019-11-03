@@ -22,11 +22,11 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
                   <span class="ion-padding">Issued Credentials By Type</span>
-                  <!--<ion-searchbar></ion-searchbar>-->
+                  <ion-searchbar></ion-searchbar>
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let credDef of credDefs">
-                <ion-item [routerLink]="['/credentials/issue']">
+                <ion-item (click)="this.router.navigate(['/credentials/issue/' + credDef._id])">
                   <ion-icon name="document" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ credDef.name }}</h2>
@@ -47,7 +47,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
               </ion-item-sliding>
             </ion-list>
   
-            <div style="display: flex">
+            <!--<div style="display: flex">
               <ion-button
                 style="flex: 1"
                 color="primary"
@@ -55,12 +55,12 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                 full
                 icon-start
                 margin
-                [routerLink]="['issue']"
+                (click)="this.router.navigate(['/credentials/issue/' + credDef._id])"
               >
                 <ion-icon name="add"></ion-icon>
                 Issue Credential
               </ion-button>
-            </div>
+            </div>-->
           </ion-col>
         </ion-row>
       </ion-grid>
