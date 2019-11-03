@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router, UrlSegment, Event as NavigationEvent, NavigationStart } from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import {
   CredentialStateService,
@@ -39,11 +41,11 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
           </ion-segment-button>
         </ion-segment>
       </div>
-      
+
       <!-- This is a hidden "tab" -->
       <app-credential-relationships *ngIf="this.activeTab === 'recipients'">
       </app-credential-relationships>
-      
+
       <app-credentials-received *ngIf="this.activeTab === 'received'">
       </app-credentials-received>
       <app-credentials-issued *ngIf="this.activeTab === 'issued'">
@@ -66,6 +68,7 @@ export class CredentialsComponent implements OnInit {
   constructor(
     private router: Router,
     public route: ActivatedRoute,
+    private location: Location,
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController,
@@ -76,23 +79,51 @@ export class CredentialsComponent implements OnInit {
 
   ngOnInit() {
     this.route.url.subscribe(segments => {
-      console.log(segments);
-      if (segments instanceof Array && segments.length > 1) {
-        // Is the route filtered by ID?
-        if (this.validTabs.indexOf(segments[1].path) > -1) {
-          this.activeTab = segments[1].path;
-        } else {
-          // TODO: Fix this assume it's an ID for now
-          if (segments.length > 2) {
-            if (this.validTabs.indexOf(segments[2].path) > -1) {
-              this.activeTab = segments[2].path;
-            }
-          }
-        }
-      } else {
-        this.activeTab = 'issued';
-      }
+      this.setActiveTab(segments);
     });
+
+    this.router.events
+      .pipe(
+        // The "events" stream contains all the navigation events. For this demo,
+        // though, we only care about the NavigationStart event as it contains
+        // information about what initiated the navigation sequence.
+        filter((event: NavigationEvent ) => {
+          return(event instanceof NavigationStart);
+        })
+      )
+      .subscribe(( event: NavigationStart ) => {
+        console.group( 'NavigationStart Event' );
+        // Every navigation sequence is given a unique ID. Even "popstate"
+        // navigations are really just "roll forward" navigations that get
+        // a new, unique ID.
+        console.log( 'navigation id:', event.id );
+        console.log( 'route:', event.url );
+        // The "navigationTrigger" will be one of:
+        // --
+        // - imperative (ie, user clicked a link).
+        // - popstate (ie, browser controlled change such as Back button).
+        // - hashchange
+        // --
+        // NOTE: I am not sure what triggers the "hashchange" type.
+        console.log( 'trigger:', event.navigationTrigger );
+
+        // This "restoredState" property is defined when the navigation
+        // event is triggered by a "popstate" event (ex, back / forward
+        // buttons). It will contain the ID of the earlier navigation event
+        // to which the browser is returning.
+        // --
+        // CAUTION: This ID may not be part of the current page rendering.
+        // This value is pulled out of the browser; and, may exist across
+        // page refreshes.
+        if (event.restoredState) {
+          console.warn(
+            'restoring navigation id:',
+            event.restoredState.navigationId
+          );
+        }
+
+        console.groupEnd();
+      });
 
     this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
     this.stateSvc.credentials$ = this.actionSvc.getCredentials();
@@ -100,6 +131,25 @@ export class CredentialsComponent implements OnInit {
     this.credentialDefs = this.stateSvc.credentialDefs$;
     this.credentials = this.stateSvc.credentials$;
 
+  }
+
+  setActiveTab(segments) {
+    console.log(segments);
+    if (segments instanceof Array && segments.length > 1) {
+      // Is the route filtered by ID?
+      if (this.validTabs.indexOf(segments[1].path) > -1) {
+        this.activeTab = segments[1].path;
+      } else {
+        // TODO: Fix this assume it's an ID for now
+        if (segments.length > 2) {
+          if (this.validTabs.indexOf(segments[2].path) > -1) {
+            this.activeTab = segments[2].path;
+          }
+        }
+      }
+    } else {
+      this.activeTab = 'issued';
+    }
   }
 
   getTitle() {
@@ -185,6 +235,15 @@ export class CredentialsComponent implements OnInit {
     console.log(tab);
     console.log(ev);
 
+    console.log('navigate to: ' + 'credentials/' + tab);
+
     this.activeTab = tab;
+
+    const url = this
+      .router
+      .createUrlTree(['/credentials', tab])
+      .toString();
+
+    this.location.go(url);
   }
 }
