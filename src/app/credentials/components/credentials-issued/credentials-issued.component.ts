@@ -25,7 +25,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
               </div>
             </ion-list-header>
             <ion-item-sliding *ngFor="let credDef of credDefs">
-              <ion-item [routerLink]="['credentials/issue']">
+              <ion-item [routerLink]="['/credentials/issue']">
                 <ion-icon name="document" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ credDef.name }}</h2>

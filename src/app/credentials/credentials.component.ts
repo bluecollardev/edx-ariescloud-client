@@ -22,7 +22,7 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Your Credential Types</ion-title>
+        <ion-title class="ios title-ios hydrated">{{ (this.activeTab === 'types') ? 'Your Credential Types' : 'Issued Credentials' }}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -108,7 +108,7 @@ export class CredentialsComponent implements OnInit {
         {
           text: 'Issue',
           handler: () => {
-            this.router.navigate([`/credentials/issue/${this._id}`])
+            this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {
