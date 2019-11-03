@@ -46,7 +46,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
               </ion-item-options>
             </ion-item-sliding>
           </ion-list>
-          
+
           <div style="display: flex">
             <ion-button
               style="flex: 1"
@@ -121,7 +121,7 @@ export class CredentialTypesComponent implements OnInit {
         {
           text: 'Issue',
           handler: () => {
-            this.router.navigate([`/credentials/issue/${this._id}`])
+            this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {

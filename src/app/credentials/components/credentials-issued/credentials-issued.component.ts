@@ -12,57 +12,61 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
 @Component({
   selector: 'app-credentials-issued',
   template: `
-    <ion-grid>
-      <ion-row>
-        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-          <ion-list
-            *ngIf="stateSvc.credentialDefs$ | async as credDefs"
-          >
-            <ion-list-header class="ion-no-margin ion-no-padding">
-              <div style="display: flex; width: 100%; flex-direction: column">
-                <span class="ion-padding">Issued Credentials By Type</span>
-                <!--<ion-searchbar></ion-searchbar>-->
-              </div>
-            </ion-list-header>
-            <ion-item-sliding *ngFor="let credDef of credDefs">
-              <ion-item [routerLink]="['/credentials/issue']">
-                <ion-icon name="document" class="icon-lg"></ion-icon>
-                <ion-label>
-                  <h2>{{ credDef.name }}</h2>
-                  <small>{{ credDef.program }}</small>
-                  <small>VERSION: {{ credDef.version }}</small>
-                </ion-label>
-              </ion-item>
-              <ion-item-options>
-                <ion-item-option color="danger" type="button" icon-start>
-                  <ion-icon name="trash" class="icon-md"></ion-icon>
-                  Delete
-                </ion-item-option>
-                <ion-item-option color="light" type="button" icon-start>
-                  <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
-                  Disable
-                </ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
-          </ion-list>
-          
-          <div style="display: flex">
-            <ion-button
-              style="flex: 1"
-              color="primary"
-              clear
-              full
-              icon-start
-              margin
-              [routerLink]="['issue']"
+    <ng-container>
+      <ion-grid>
+        <ion-row>
+          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+            <ion-list
+              *ngIf="stateSvc.credentialDefs$ | async as credDefs"
             >
-              <ion-icon name="add"></ion-icon>
-              Issue Credential
-            </ion-button>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Issued Credentials By Type</span>
+                  <!--<ion-searchbar></ion-searchbar>-->
+                </div>
+              </ion-list-header>
+              <ion-item-sliding *ngFor="let credDef of credDefs">
+                <ion-item [routerLink]="['/credentials/issue']">
+                  <ion-icon name="document" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h2>{{ credDef.name }}</h2>
+                    <small>{{ credDef.program }}</small>
+                    <small>VERSION: {{ credDef.version }}</small>
+                  </ion-label>
+                </ion-item>
+                <ion-item-options>
+                  <ion-item-option color="danger" type="button" icon-start>
+                    <ion-icon name="trash" class="icon-md"></ion-icon>
+                    Delete
+                  </ion-item-option>
+                  <ion-item-option color="light" type="button" icon-start>
+                    <ion-icon name="ios-eye-off" class="icon-md"></ion-icon>
+                    Disable
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
+  
+            <div style="display: flex">
+              <ion-button
+                style="flex: 1"
+                color="primary"
+                clear
+                full
+                icon-start
+                margin
+                [routerLink]="['issue']"
+              >
+                <ion-icon name="add"></ion-icon>
+                Issue Credential
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <app-issue-credential-relationships>
+      </app-issue-credential-relationships>
+    </ng-container>
   `,
   styleUrls: ['./credentials-issued.component.css']
 })
@@ -120,7 +124,7 @@ export class CredentialsIssuedComponent implements OnInit {
         {
           text: 'Issue',
           handler: () => {
-            this.router.navigate([`/credentials/issue/${this._id}`])
+            this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {

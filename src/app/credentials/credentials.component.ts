@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
@@ -39,20 +39,13 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
           </ion-segment-button>
         </ion-segment>
       </div>
+      
       <app-credentials-received *ngIf="this.activeTab === 'received'">
       </app-credentials-received>
       <app-credentials-issued *ngIf="this.activeTab === 'issued'">
       </app-credentials-issued>
       <app-credential-types *ngIf="this.activeTab === 'types'">
       </app-credential-types>
-      <!--<ion-tabs>
-        <ion-tab label="Issued" icon="" href="/credentials/(issued:issued)">
-          <ion-router-outlet name="issued"></ion-router-outlet>
-        </ion-tab>
-        <ion-tab label="Types" icon="" href="/credentials/(types:types)">
-          <ion-router-outlet name="types"></ion-router-outlet>
-        </ion-tab>
-      </ion-tabs>-->
     </ion-content>
   `,
   styleUrls: ['./credentials.component.scss']

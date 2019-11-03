@@ -86,6 +86,7 @@ const url = environment.apiUrl;
                 (click)="pendingActionSheet(cred._id, cred.state)"
                 [disabled]="!actionMap[cred.state]"
               >
+                <ion-checkbox></ion-checkbox>
                 <ion-icon name="document" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ cred.name }}</h2>
