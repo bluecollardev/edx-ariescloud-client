@@ -30,6 +30,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                 <ion-label>
                   <h2>{{ credDef.name }}</h2>
                   <small>{{ credDef.program }}</small>
+                  <small>VERSION: {{ credDef.version }}</small>
                 </ion-label>
               </ion-item>
               <ion-item-options>

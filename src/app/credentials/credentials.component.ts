@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
@@ -61,6 +61,7 @@ export class CredentialsComponent implements OnInit {
 
   constructor(
     private router: Router,
+    public route: ActivatedRoute,
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController,
@@ -70,7 +71,14 @@ export class CredentialsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activeTab = 'issued';
+    this.route.url.subscribe(segments => {
+      console.log(segments);
+      if (segments instanceof Array && segments.length > 1) {
+        this.activeTab = segments[1].path;
+      } else {
+        this.activeTab = 'issued';
+      }
+    });
 
     this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
     this.stateSvc.credentials$ = this.actionSvc.getCredentials();

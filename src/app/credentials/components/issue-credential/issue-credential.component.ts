@@ -112,7 +112,7 @@ export class IssueCredentialComponent implements OnInit {
   constructor(
     private actionSvc: CredentialActionsService,
     private relationshipsActionSvc: RelationshipsActionService,
-    private Route: ActivatedRoute,
+    private route: ActivatedRoute,
     private router: Router,
     private httpSvc: HttpService,
     public loadingController: LoadingController
@@ -124,7 +124,7 @@ export class IssueCredentialComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.Route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
     this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
       tap(obs => (this.credDefId = obs._id)),
       tap(obs => {
