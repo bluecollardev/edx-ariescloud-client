@@ -6,11 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home.component';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { RouteReuseStrategy } from '@angular/router';
+// import { RouteReuseStrategy } from '@angular/router';
 import { MessagesModule } from './messages/messages.module';
 import { RelationshipsModule } from './relationships/relationships.module';
 import { CredentialsModule } from './credentials/credentials.module';
-import { CredentialsReceivedModule } from './credentials-received/credentials-received.module';
 import { ProofsModule } from './proofs/proofs.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
@@ -26,8 +25,7 @@ import { SharedModule } from './shared/shared.module';
     MessagesModule,
     RelationshipsModule,
     ProofsModule,
-    CredentialsModule,
-    CredentialsReceivedModule
+    CredentialsModule
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -22,12 +22,15 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">{{ (this.activeTab === 'types') ? 'Your Credential Types' : 'Issued Credentials' }}</ion-title>
+        <ion-title class="ios title-ios hydrated">{{ this.getTitle() }}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <div class="ion-padding">
         <ion-segment color="primary">
+          <ion-segment-button value="received" [checked]="this.activeTab === 'received'" (ionSelect)="this.segmentButtonClicked($event, 'received')">
+            <ion-label>Received</ion-label>
+          </ion-segment-button>
           <ion-segment-button value="issued" [checked]="this.activeTab === 'issued'" (ionSelect)="this.segmentButtonClicked($event, 'issued')">
             <ion-label>Issued</ion-label>
           </ion-segment-button>
@@ -36,6 +39,8 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
           </ion-segment-button>
         </ion-segment>
       </div>
+      <app-credentials-received *ngIf="this.activeTab === 'received'">
+      </app-credentials-received>
       <app-credentials-issued *ngIf="this.activeTab === 'issued'">
       </app-credentials-issued>
       <app-credential-types *ngIf="this.activeTab === 'types'">
@@ -86,6 +91,22 @@ export class CredentialsComponent implements OnInit {
     this.credentialDefs = this.stateSvc.credentialDefs$;
     this.credentials = this.stateSvc.credentials$;
 
+  }
+
+  getTitle() {
+    let title = 'Credentials';
+    switch (this.activeTab) {
+      case 'types':
+        title = 'Your Credential Types';
+        break;
+      case 'issued':
+        title = 'Issued Credentials';
+        break;
+      case 'received':
+        title = 'Your Credentials';
+    }
+
+    return title;
   }
 
   getItems(ev: any) {

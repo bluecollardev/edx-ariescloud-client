@@ -1,25 +1,32 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+import { Router } from '@angular/router';
+
 import {
   ActionSheetController,
   AlertController,
   LoadingController
 } from '@ionic/angular';
-import { Router } from '@angular/router';
+
 import { Observable } from 'rxjs';
+
+import { HttpService } from '../../../core/services/http.service';
 
 import {
   CredentialStateService,
   ICredential,
   IIssuer
-} from '../credentials/services/credential-state.service';
+} from '../../services/credential-state.service';
+
 import {
   RelationshipsStateService,
   IRelationship
-} from '../relationships/services/relationships-state.service';
-import { CredentialActionsService } from '../credentials/services/credential-actions.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { HttpService } from '../core/services/http.service';
+} from '../../../relationships/services/relationships-state.service';
+
+import { CredentialActionsService } from '../../services/credential-actions.service';
+
 import { map } from 'rxjs/operators';
 
 const url = environment.apiUrl;
@@ -27,20 +34,7 @@ const url = environment.apiUrl;
 @Component({
   selector: 'app-credentials-received',
   template: `
-    <ion-header role="banner" class="ios header-ios hydrated">
-      <ion-toolbar class="ios hydrated">
-        <ion-buttons
-          slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-title class="ios title-ios hydrated">My Credentials</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
+    <div>
       <ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
@@ -98,7 +92,7 @@ const url = environment.apiUrl;
           </ion-row>
         </ng-container>
       </ion-grid>
-    </ion-content>
+    </div>
   `,
   styleUrls: ['./credentials-received.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

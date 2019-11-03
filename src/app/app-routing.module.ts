@@ -4,7 +4,6 @@ import { HomeComponent } from './home.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
 import { CredentialsComponent } from './credentials/credentials.component';
-import { CredentialsReceivedComponent } from './credentials-received/credentials-received.component';
 import { ProofsComponent } from './proofs/proofs.component';
 
 // tslint:disable-next-line: max-line-length
@@ -27,15 +26,6 @@ const routes: Routes = [
   {
     path: 'messages',
     loadChildren: `./messages/messages.module#MessagesModule`
-  },
-  {
-    path: 'credentials-received',
-    pathMatch: 'full',
-    component: CredentialsReceivedComponent
-  },
-  {
-    path: 'credentials-received',
-    loadChildren: `./credentials-received/credentials-received.module#CredentialsReceivedModule`
   },
   {
     path: 'credentials',

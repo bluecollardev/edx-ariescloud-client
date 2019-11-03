@@ -55,7 +55,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
               full
               icon-start
               margin
-              [routerLink]="['create']"
+              [routerLink]="['/credentials/create']"
             >
               <ion-icon name="add"></ion-icon>
               New Credential Type

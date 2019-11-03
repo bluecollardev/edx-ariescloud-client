@@ -169,7 +169,7 @@ export class OrgCredentialsComponent implements OnInit {
         {
           text: 'View',
           handler: () =>
-            this.router.navigate([`/credentials-received/view/${this._id}`])
+            this.router.navigate([`/credentials/received/view/${this._id}`])
         },
         {
           text: 'Share',

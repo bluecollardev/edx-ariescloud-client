@@ -113,7 +113,7 @@ import { Router } from '@angular/router';
                   class="ion-no-margin"
                 >
                   <ion-icon name="add"></ion-icon>
-                  Create Credential
+                  Create Credential Type
                 </ion-button>
               </div>
             </form>

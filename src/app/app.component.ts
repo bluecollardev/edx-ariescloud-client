@@ -118,18 +118,18 @@ export class AppComponent implements OnInit {
     },
     {
       title: 'Credentials Received',
-      url: '/credentials-received/',
+      url: '/credentials/received/',
       hasBadge: true,
       icon: 'archive'
     },
     {
-      title: 'Issue Credentials',
-      url: '/credentials/',
+      title: 'Issued Credentials',
+      url: '/credentials/issued/',
       icon: 'ribbon'
     },
     {
       title: 'Credential Types',
-      url: '/credentials/',
+      url: '/credentials/types/',
       icon: 'ribbon'
     },
     /*{

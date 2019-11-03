@@ -66,7 +66,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                 <ion-item
                   button
                   class="flex ion-justify-content-around"
-                  (click)="this.router.navigate(['/credentials-received'])"
+                  (click)="this.router.navigate(['/credentials/received'])"
                 >
                   <ion-label>
                     <h2>Issued Credentials</h2>

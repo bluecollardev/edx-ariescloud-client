@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CredentialsComponent } from './credentials.component';
+import { CredentialsReceivedComponent } from './components/credentials-received/credentials-received.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
+import { OrgCredentialsComponent } from './components/org-credentials/org-credentials.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,22 @@ const routes: Routes = [
   {
     path: 'credentials/issued',
     component: CredentialsComponent
+  },
+  {
+    path: 'credentials/received',
+    component: CredentialsComponent
+  },
+  {
+    path: 'credentials/received/view',
+    component: ViewCredentialComponent,
+  },
+  {
+    path: 'credentials/received/view/:id',
+    component: ViewCredentialComponent,
+  },
+  {
+    path: 'credentials/received/group/:did',
+    component: OrgCredentialsComponent,
   },
   {
     path: 'credentials/types',
