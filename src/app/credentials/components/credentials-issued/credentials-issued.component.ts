@@ -116,7 +116,7 @@ export class CredentialsIssuedComponent implements OnInit {
         {
           text: 'Manage Recipients',
           handler: () => {
-            this.router.navigate([`/credentials/issue/${this._id}`]);
+            this.router.navigate([`/credentials/${this._id}/recipients`]);
           }
         },
         {

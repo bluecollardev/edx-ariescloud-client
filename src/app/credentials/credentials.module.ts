@@ -12,12 +12,14 @@ import { ViewCredentialComponent } from './components/view-credential/view-crede
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { IssueCredentialRelationshipsComponent } from './components/issue-credential-relationships/issue-credential-relationships.component';
+import { CredentialRelationshipsComponent } from './components/credential-relationships/credential-relationships.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
     CredentialsComponent,
     CredentialTypesComponent,
+    CredentialRelationshipsComponent,
     CredentialsIssuedComponent,
     CredentialsReceivedComponent,
     OrgCredentialsComponent,

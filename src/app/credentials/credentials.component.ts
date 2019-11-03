@@ -26,7 +26,7 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <div class="ion-padding">
+      <div class="ion-padding" *ngIf="this.activeTab !== 'recipients'">
         <ion-segment color="primary">
           <ion-segment-button value="received" [checked]="this.activeTab === 'received'" (ionSelect)="this.segmentButtonClicked($event, 'received')">
             <ion-label>Received</ion-label>
@@ -39,6 +39,10 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
           </ion-segment-button>
         </ion-segment>
       </div>
+      
+      <!-- This is a hidden "tab" -->
+      <app-credential-relationships *ngIf="this.activeTab === 'recipients'">
+      </app-credential-relationships>
       
       <app-credentials-received *ngIf="this.activeTab === 'received'">
       </app-credentials-received>
@@ -57,6 +61,8 @@ export class CredentialsComponent implements OnInit {
   credentials: Observable<ICredentialParams[]>;
   _id: string;
 
+  validTabs = ['issued', 'recipients', 'types', 'received'];
+
   constructor(
     private router: Router,
     public route: ActivatedRoute,
@@ -72,7 +78,17 @@ export class CredentialsComponent implements OnInit {
     this.route.url.subscribe(segments => {
       console.log(segments);
       if (segments instanceof Array && segments.length > 1) {
-        this.activeTab = segments[1].path;
+        // Is the route filtered by ID?
+        if (this.validTabs.indexOf(segments[1].path) > -1) {
+          this.activeTab = segments[1].path;
+        } else {
+          // TODO: Fix this assume it's an ID for now
+          if (segments.length > 2) {
+            if (this.validTabs.indexOf(segments[2].path) > -1) {
+              this.activeTab = segments[2].path;
+            }
+          }
+        }
       } else {
         this.activeTab = 'issued';
       }
@@ -91,6 +107,9 @@ export class CredentialsComponent implements OnInit {
     switch (this.activeTab) {
       case 'types':
         title = 'Your Credential Types';
+        break;
+      case 'recipients':
+        title = 'Manage Recipients';
         break;
       case 'issued':
         title = 'Issued Credentials';

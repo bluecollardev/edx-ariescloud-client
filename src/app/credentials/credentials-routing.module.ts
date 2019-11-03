@@ -18,6 +18,10 @@ const routes: Routes = [
     component: CredentialsComponent
   },
   {
+    path: 'credentials/:id/recipients',
+    component: CredentialsComponent
+  },
+  {
     path: 'credentials/received',
     component: CredentialsComponent
   },
