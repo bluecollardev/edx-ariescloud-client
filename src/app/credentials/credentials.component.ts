@@ -109,7 +109,7 @@ export class CredentialsComponent implements OnInit {
         title = 'Your Credential Types';
         break;
       case 'recipients':
-        title = 'Manage Recipients';
+        title = 'Credential Recipients';
         break;
       case 'issued':
         title = 'Issued Credentials';
