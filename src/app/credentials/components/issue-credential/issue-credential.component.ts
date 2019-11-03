@@ -36,9 +36,9 @@ import { HttpService } from 'src/app/core/services/http.service';
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <app-issue-credential-relationships>
+      <app-issue-credential-relationships *ngIf="this.activeTab === 'select-recipient'">
       </app-issue-credential-relationships>
-      <form [formGroup]="fg">
+      <form [formGroup]="fg" *ngIf="this.activeTab === 'issue-credential'">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -106,11 +106,15 @@ import { HttpService } from 'src/app/core/services/http.service';
   styleUrls: ['./issue-credential.component.scss']
 })
 export class IssueCredentialComponent implements OnInit {
+  activeTab: string;
   credDef$: Observable<ICredentialDef>;
   credDefId: string;
   fg: FormGroup;
   fa$: Observable<FormArray>;
   relationship$: Observable<IRelationship[]>;
+
+  validStates = ['to'];
+
   constructor(
     private actionSvc: CredentialActionsService,
     private relationshipsActionSvc: RelationshipsActionService,
@@ -142,9 +146,25 @@ export class IssueCredentialComponent implements OnInit {
         this.fa$ = of(fa);
       })
     );
+
     this.relationship$ = this.relationshipsActionSvc
       .getRelationships()
       .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
+
+    this.route.url.subscribe(segments => {
+      this.setActiveTab(segments);
+    });
+  }
+
+  setActiveTab(segments) {
+    console.log(segments);
+    this.activeTab = 'select-recipient';
+
+    if (segments instanceof Array && segments.length > 3) {
+      if (this.validStates.indexOf(segments[3].path) > -1) {
+        this.activeTab = 'issue-credential';
+      }
+    }
   }
 
   async submit() {

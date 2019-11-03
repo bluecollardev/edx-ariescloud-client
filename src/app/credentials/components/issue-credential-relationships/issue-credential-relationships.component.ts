@@ -54,7 +54,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
               <ion-item-sliding
                 *ngFor="let relationship of relationships"
               >
-                <ion-item>
+                <ion-item (click)="this.router.navigate(['to'], { relativeTo: this.route })">
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ relationship.name }}</h2>

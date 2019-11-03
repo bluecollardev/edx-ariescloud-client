@@ -64,6 +64,10 @@ const routes: Routes = [
   {
     path: 'credentials/issue/:id',
     component: IssueCredentialComponent
+  },
+  {
+    path: 'credentials/issue/:id/to',
+    component: IssueCredentialComponent
   }
 ];
 
