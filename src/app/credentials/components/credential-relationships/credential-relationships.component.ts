@@ -23,7 +23,7 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
           <ion-list>
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
-                <span class="ion-padding">Filter Relationships</span>
+                <span class="ion-padding" *ngIf="active$ | async as cred">Relationships with {{ cred.name }}</span>
                 <ion-searchbar></ion-searchbar>
               </div>
             </ion-list-header>

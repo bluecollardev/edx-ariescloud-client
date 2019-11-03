@@ -31,7 +31,7 @@ import { HttpService } from 'src/app/core/services/http.service';
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Issue "{{ credDef.name }}"</ion-title
+        >Issue <strong>{{ credDef.name }}</strong></ion-title
         >
       </ion-toolbar>
     </ion-header>
