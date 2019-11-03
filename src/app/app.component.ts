@@ -111,7 +111,7 @@ export class AppComponent implements OnInit {
       hasBadge: true
     },*/
     {
-      title: 'Certificates of Proof',
+      title: 'Proof Certificates',
       url: '/verify-credentials/',
       icon: 'finger-print',
       hasBadge: true

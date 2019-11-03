@@ -69,7 +69,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                   (click)="this.router.navigate(['/credentials/received'])"
                 >
                   <ion-label>
-                    <h2>Issued Credentials</h2>
+                    <h2>Credentials Shared</h2>
                   </ion-label>
                   <ion-badge color="medium" item-end>4</ion-badge>
                 </ion-item>
@@ -79,7 +79,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                   (click)="this.router.navigate(['/verify-credentials'])"
                 >
                   <ion-label>
-                    <h2>Certificates of Proof</h2>
+                    <h2>Proof Certificates</h2>
                   </ion-label>
                   <ion-badge color="medium" item-end>2</ion-badge>
                 </ion-item>
@@ -105,7 +105,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                     class="flex ion-justify-content-around"
                   >
                     <ion-label>
-                      <h2>Proof Requests</h2>
+                      <h2>Provide Proof</h2>
                     </ion-label>
                     <ion-badge color="medium" item-end>2</ion-badge>
                   </ion-item>

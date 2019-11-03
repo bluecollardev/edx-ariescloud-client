@@ -31,7 +31,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
           ></ion-menu-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
-          >Certificates of Proof</ion-title
+          >Proof Certificates</ion-title
         >
       </ion-toolbar>
     </ion-header>
