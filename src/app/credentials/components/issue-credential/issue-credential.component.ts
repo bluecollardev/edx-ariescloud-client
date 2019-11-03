@@ -36,6 +36,8 @@ import { HttpService } from 'src/app/core/services/http.service';
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <app-issue-credential-relationships>
+      </app-issue-credential-relationships>
       <form [formGroup]="fg">
         <ion-grid>
           <ion-row>

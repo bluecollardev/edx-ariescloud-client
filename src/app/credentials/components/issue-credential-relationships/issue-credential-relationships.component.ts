@@ -20,7 +20,8 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
   template: `
     <form [formGroup]="fg">
       <ion-grid>
-        <ion-row>
+        <!-- TODO: Conditionally display this -->
+        <!--<ion-row>
           <ion-col>
             <ion-item>
               <ion-label position="stacked"
@@ -40,7 +41,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
               New
             </ion-button>
           </ion-col>
-        </ion-row>
+        </ion-row>-->
         <ion-row *ngIf="relationships | async as relationships">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
@@ -66,7 +67,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
           </ion-col>
         </ion-row>
       </ion-grid>
-      <ion-grid>
+      <!--<ion-grid>
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <ion-card text-center *ngIf="active$ | async as active">
@@ -84,8 +85,6 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
                         ><small>Issued by:</small> {{ active.issuedBy }}</small
                       ></small
                     >
-                    <!--<br />
-                    <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
                   </div>
                 </ion-card-title>
                 <small><small>Tax ID: 123-45-6789</small></small>
@@ -102,7 +101,6 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
               </ion-card-content>
 
               <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                 <ion-label>Date Issued</ion-label>
                 <ion-badge color="medium" item-end></ion-badge>
               </ion-item>
@@ -111,13 +109,12 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
                 class="flex ion-justify-content-around"
                 *ngFor="let attr of active.attributes"
               >
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>{{ attr }}</ion-label>
               </ion-item>
             </ion-card>
           </ion-col>
         </ion-row>
-      </ion-grid>
+      </ion-grid>-->
     </form>
   `,
   styleUrls: ['./issue-credential-relationships.component.scss']

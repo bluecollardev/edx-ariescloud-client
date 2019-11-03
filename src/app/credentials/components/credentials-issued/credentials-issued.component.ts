@@ -26,7 +26,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let credDef of credDefs">
-                <ion-item (click)="this.router.navigate(['/credentials/issue/' + credDef._id])">
+                <ion-item (click)="presentActionSheet(credDef._id)">
                   <ion-icon name="document" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ credDef.name }}</h2>
@@ -64,8 +64,6 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
           </ion-col>
         </ion-row>
       </ion-grid>
-      <app-issue-credential-relationships>
-      </app-issue-credential-relationships>
     </ng-container>
   `,
   styleUrls: ['./credentials-issued.component.css']
@@ -116,30 +114,15 @@ export class CredentialsIssuedComponent implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'View',
-          handler: () => {
-            this.router.navigate([`/credentials/view/${this._id}`]);
-          }
-        },
-        {
-          text: 'Issue',
+          text: 'Manage Recipients',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {
-          text: 'Edit',
+          text: 'Issue This Credential',
           handler: () => {
-            this.router.navigate([`/credentials/edit/${this._id}`]);
-          }
-        },
-        {
-          text: 'Hide',
-          role: 'destructive',
-          handler: async () => {
-            await this.actionSvc.deleteCredDef(this._id);
-            this.actionSvc.setRelState();
-            this.credentialDefs = this.stateSvc.credentialDefs$;
+            this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {

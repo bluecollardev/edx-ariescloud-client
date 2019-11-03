@@ -113,25 +113,25 @@ export class CredentialTypesComponent implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'View',
-          handler: () => {
-            this.router.navigate([`/credentials/view/${this._id}`]);
-          }
-        },
-        {
-          text: 'Issue',
+          text: 'Issue Credential',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
           }
         },
         {
-          text: 'Edit',
+          text: 'Preview Credential Type',
+          handler: () => {
+            this.router.navigate([`/credentials/view/${this._id}`]);
+          }
+        },
+        {
+          text: 'Edit Credential Definition',
           handler: () => {
             this.router.navigate([`/credentials/edit/${this._id}`]);
           }
         },
         {
-          text: 'Hide',
+          text: 'Hide Credential Type',
           role: 'destructive',
           handler: async () => {
             await this.actionSvc.deleteCredDef(this._id);
