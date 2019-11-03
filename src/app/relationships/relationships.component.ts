@@ -32,7 +32,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
                   <span class="ion-padding">My Relationships</span>
-                  <ion-searchbar></ion-searchbar>  
+                  <ion-searchbar></ion-searchbar>
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of relationshipItems">
@@ -42,7 +42,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                     <h2>{{ item.name }}</h2>
                     <small>DID: {{ item.did }}</small>
                   </ion-label>
-                  <ion-badge color="primary" item-end><ion-icon name="mail" class="icon-md"></ion-icon><sup><strong> 2</strong></sup></ion-badge>
+                  <ion-badge color="medium" item-end><ion-icon name="notifications" class="icon-md"></ion-icon><sup><strong> 2</strong></sup></ion-badge>
                 </ion-item>
                 <ion-item-options>
                   <ion-item-option color="danger" type="button" icon-start>

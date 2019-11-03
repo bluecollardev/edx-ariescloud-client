@@ -87,13 +87,13 @@ import { HttpService } from 'src/app/core/services/http.service';
                 <ion-item-group>
                   <ion-item-divider>
                     <ion-label class="flex ion-align-items-center">
-                      <ion-icon class="icon-md" name="mail"></ion-icon>&nbsp;&nbsp;&nbsp;<span>Messages</span>
+                      <ion-icon class="icon-md" name="notifications"></ion-icon>&nbsp;&nbsp;&nbsp;<span>Action Required</span>
                     </ion-label>
                   </ion-item-divider>
                   <ion-item
                     button
                     class="flex ion-justify-content-around"
-                    (click)="this.router.navigate(['/messages/view'])"
+                    (click)="this.router.navigate(['/credentials/received'])"
                   >
                     <ion-label>
                       <h2>Accept Credentials</h2>
@@ -103,7 +103,6 @@ import { HttpService } from 'src/app/core/services/http.service';
                   <ion-item
                     button
                     class="flex ion-justify-content-around"
-                    (click)="this.router.navigate(['/messages/view'])"
                   >
                     <ion-label>
                       <h2>Proof Requests</h2>
