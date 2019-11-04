@@ -31,6 +31,14 @@ import { map } from 'rxjs/operators';
 
 const url = environment.apiUrl;
 
+// TODO: Is there something that already exists for these states
+const credentialStates = {
+  request_sent: 'Request Sent',
+  request_received: 'Request Received',
+  offer_sent: 'Offer Sent',
+  offer_received: 'Offer Received'
+};
+
 @Component({
   selector: 'app-credentials-received',
   template: `
@@ -93,7 +101,7 @@ const url = environment.apiUrl;
                   <h2>{{ cred.name || 'Unnamed Credential' }}</h2>
                   <!--<small>DID: {{ item.did }}</small>-->
                   <ion-row>
-                    <small>State: {{ cred.state }}</small>
+                    <small>State: {{ credentialStates[cred.state] }}</small>
                   </ion-row>
                   <ion-row>
                     <small>Created: {{ cred.created.toLocaleString().split(' ').shift() }}</small>
@@ -119,13 +127,16 @@ const url = environment.apiUrl;
   styleUrls: ['./credentials-received.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
   pending$: Observable<IIssuer[]>;
+  credentialStates: [];
   _url: string;
   _id: string;
 
+  // TODO: Document these
   actionMap = {
     offer_received: true,
     offer_sent: false,
@@ -147,6 +158,7 @@ export class CredentialsReceivedComponent implements OnInit {
   ) {
     this._url = url;
     // this.initializeItems();
+    this.credentialStates = credentialStates;
   }
 
   async ngOnInit() {
