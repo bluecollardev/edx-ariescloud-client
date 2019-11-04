@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
   selector: 'app-root',
   template: `
     <ion-app>
-      <ion-menu contentId="content">
+      <ion-menu contentId="content" side="end">
         <ion-header>
           <ion-toolbar color="primary">
             <ion-title

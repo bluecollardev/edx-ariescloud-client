@@ -24,17 +24,21 @@ import { filter } from 'rxjs/operators';
       *ngIf="credDef$ | async as credDef"
     >
       <ion-toolbar class="ios hydrated">
+        <ion-title class="ios title-ios hydrated">Issue <strong>{{ credDef.name }}</strong></ion-title>
         <ion-buttons
-          slot="start"
+          slot="end"
           class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
         >
           <ion-menu-button
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-        >Issue <strong>{{ credDef.name }}</strong></ion-title
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
         >
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content>

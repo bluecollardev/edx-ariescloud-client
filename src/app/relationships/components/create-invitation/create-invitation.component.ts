@@ -21,7 +21,7 @@ export interface IProfile {
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
         <ion-buttons
-          slot="start"
+          slot="end"
           class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
         >
           <ion-menu-button
