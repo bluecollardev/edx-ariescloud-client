@@ -84,7 +84,7 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./view-credential.component.scss']
+  styleUrls: ['./view-credential-type.component.scss']
 })
 export class ViewCredentialTypeComponent implements OnInit {
   active$: Observable<ICredentialDef>;

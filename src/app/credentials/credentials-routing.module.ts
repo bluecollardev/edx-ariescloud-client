@@ -4,6 +4,7 @@ import { CredentialsComponent } from './credentials.component';
 import { CredentialsReceivedComponent } from './components/credentials-received/credentials-received.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
+import { ViewCredentialTypeComponent } from './components/view-credential-type/view-credential-type.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { OrgCredentialsComponent } from './components/org-credentials/org-credentials.component';
@@ -40,6 +41,10 @@ const routes: Routes = [
   {
     path: 'credentials/types',
     component: CredentialsComponent
+  },
+  {
+    path: 'credentials/type/:id/preview',
+    component: ViewCredentialTypeComponent
   },
   {
     path: 'credentials/create',

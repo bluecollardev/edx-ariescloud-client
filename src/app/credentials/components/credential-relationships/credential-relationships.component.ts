@@ -36,9 +36,8 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
                 <ion-label>
                   <h2>{{ relationship.name }}</h2>
                   <small>DID: {{ relationship.did }}</small>
-
                 </ion-label>
-                <!--<ion-badge color="primary" item-end>2</ion-badge>-->
+                <ion-badge color="success" item-end><ion-icon name="checkmark" class="icon-md"></ion-icon></ion-badge>
               </ion-item>
             </ion-item-sliding>
           </ion-list>
@@ -90,24 +89,24 @@ export class CredentialRelationshipsComponent implements OnInit {
           }
         },
         {
-          text: 'View Credentials',
+          text: 'View Credential Details',
           handler: () => {
-            this.router.navigate([`/credentials`]);
+            this.router.navigate([`/credentials/view/${credentialId}`], { queryParams: { rId: relationshipId } });
           }
         },
         {
-          text: 'Issue Credential',
-          handler: () => {
-            this.router.navigate([`/credentials/issue/${credentialId}/to`], { queryParams: { rId: relationshipId } });
-          }
-        },
-        {
-          text: 'Revoke Credentials',
+          text: 'Disable Credential',
           role: 'destructive',
           handler: () => {
             // this.router.navigate([`/credentials/revoke/${this._id}`]);
           }
         },
+        /*{
+          text: 'View All Credentials',
+          handler: () => {
+            this.router.navigate([`/credentials`]);
+          }
+        },*/
         {
           text: 'Cancel',
           role: 'cancel',

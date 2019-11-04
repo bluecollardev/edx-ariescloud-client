@@ -121,7 +121,7 @@ export class CredentialTypesComponent implements OnInit {
         {
           text: 'Preview Credential Type',
           handler: () => {
-            this.router.navigate([`/credentials/view/${this._id}`]);
+            this.router.navigate([`/credentials/type/${this._id}/preview`]);
           }
         },
         {

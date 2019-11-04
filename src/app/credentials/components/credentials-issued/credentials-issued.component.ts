@@ -33,6 +33,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                     <small>{{ credDef.program }}</small>
                     <small>VERSION: {{ credDef.version }}</small>
                   </ion-label>
+                  <ion-badge color="medium" item-end>1</ion-badge>
                 </ion-item>
                 <ion-item-options>
                   <ion-item-option color="danger" type="button" icon-start>

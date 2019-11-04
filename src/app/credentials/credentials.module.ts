@@ -9,6 +9,7 @@ import { CredentialsReceivedComponent } from './components/credentials-received/
 import { OrgCredentialsComponent } from './components/org-credentials/org-credentials.component';
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { ViewCredentialComponent } from './components/view-credential/view-credential.component';
+import { ViewCredentialTypeComponent } from './components/view-credential-type/view-credential-type.component';
 import { CreateCredentialComponent } from './components/create-credential/create-credential.component';
 import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { IssueCredentialRelationshipsComponent } from './components/issue-credential-relationships/issue-credential-relationships.component';
@@ -25,6 +26,7 @@ import { SharedModule } from '../shared/shared.module';
     OrgCredentialsComponent,
     EditCredentialComponent,
     ViewCredentialComponent,
+    ViewCredentialTypeComponent,
     CreateCredentialComponent,
     IssueCredentialComponent,
     IssueCredentialRelationshipsComponent
