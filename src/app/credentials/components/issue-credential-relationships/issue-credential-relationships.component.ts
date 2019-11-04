@@ -93,12 +93,6 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
                   ><small>DID: {{ active.did }}</small></small
                 >
               </ion-card-content>
-              <ion-card-content>
-                <p>
-                  Alice is a verified graduate of the
-                  {{ active.program }} program at {{ active.issuedBy }}.
-                </p>
-              </ion-card-content>
 
               <ion-item class="flex ion-justify-content-around">
                 <ion-label>Date Issued</ion-label>

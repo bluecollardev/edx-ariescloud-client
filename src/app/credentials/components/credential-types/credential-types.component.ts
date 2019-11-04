@@ -31,7 +31,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                 <ion-label>
                   <h2>{{ credDef.name }}</h2>
                   <small>{{ credDef.program }}</small>
-                  <small>VERSION: {{ credDef.version }}</small>
+                  <small>Version: {{ credDef.version }}</small>
                 </ion-label>
                 <ion-badge color="success" item-end><ion-icon name="checkmark" class="icon-md"></ion-icon></ion-badge>
               </ion-item>

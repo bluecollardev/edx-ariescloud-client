@@ -86,13 +86,17 @@ const url = environment.apiUrl;
                 (click)="pendingActionSheet(cred._id, cred.state)"
                 [disabled]="!actionMap[cred.state]"
               >
-                <ion-checkbox></ion-checkbox>
+                <!-- TODO: Implement multi-accept -->
+                <!--<ion-checkbox (click)="handleSelect"></ion-checkbox>-->
                 <ion-icon name="document" class="icon-lg"></ion-icon>
                 <ion-label>
-                  <h2>{{ cred.name }}</h2>
+                  <h2>{{ cred.name || 'Unnamed Credential' }}</h2>
                   <!--<small>DID: {{ item.did }}</small>-->
                   <ion-row>
                     <small>State: {{ cred.state }}</small>
+                  </ion-row>
+                  <ion-row>
+                    <small>Created: {{ cred.created.toLocaleString().split(' ').shift() }}</small>
                   </ion-row>
                 </ion-label>
               </ion-item>
@@ -319,5 +323,11 @@ export class CredentialsReceivedComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  handleSelect(e) {
+    alert();
+    e.preventDefault();
+    e.stopPropagation();
   }
 }

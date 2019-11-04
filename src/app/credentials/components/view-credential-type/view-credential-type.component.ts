@@ -51,7 +51,7 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
                   <div style="text-align: left; max-width: 60%; margin: 0 auto">
                     <small
                       ><small
-                        ><small>Issued by:</small> {{ active.issuedBy }}</small
+                        ><small>Issued by:</small> Ipsum Lorem</small
                       ></small
                     >
                     <!--<br />
@@ -61,14 +61,8 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
                 <small><small>Tax ID: 123-45-6789</small></small>
                 <br />
                 <small
-                  ><small>DID: {{ active.did }}</small></small
+                  ><small>DID: abcd-1234-efgh-5678-ijkl</small></small
                 >
-              </ion-card-content>
-              <ion-card-content>
-                <p>
-                  Alice is a verified graduate of the
-                  {{ active.program }} program at {{ active.issuedBy }}.
-                </p>
               </ion-card-content>
 
               <ion-item class="flex ion-justify-content-around">
@@ -80,6 +74,7 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
               <ion-item
                 class="flex ion-justify-content-around"
                 *ngFor="let attr of active.attributes"
+                lines="none"
               >
                 <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>{{ attr }}</ion-label>
