@@ -58,7 +58,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                 <ion-item class="flex ion-justify-content-around" lines="none">
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
                   <ion-label>Status</ion-label>
-                  <ion-badge color="medium" item-end>{{
+                  <ion-badge color="success" item-end>{{
                     relationship.state
                   }}</ion-badge>
                 </ion-item>
