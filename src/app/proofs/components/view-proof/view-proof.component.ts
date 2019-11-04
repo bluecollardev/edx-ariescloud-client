@@ -24,12 +24,12 @@ import { CredentialActionsService, ICertificateParams } from '../../../credentia
               <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
 
               <ion-card-content>
-                <ion-card-title>
+                <ion-card-title *ngIf="active">
                   {{ active.name }}
                 </ion-card-title>
               </ion-card-content>
               <ion-card-content>
-                <p>
+                <p *ngIf="active">
                   <strong>Alice Cooper</strong> {{ active.name.toLowerCase() }}.
                 </p>
               </ion-card-content>
