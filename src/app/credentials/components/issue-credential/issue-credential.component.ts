@@ -46,7 +46,7 @@ import { filter } from 'rxjs/operators';
             <ion-col>
               <ion-item>
                 <ion-label position="stacked"
-                  >Issue To:
+                  >Issue To
                   <ion-text color="danger">*</ion-text>
                 </ion-label>
                 <ion-select
