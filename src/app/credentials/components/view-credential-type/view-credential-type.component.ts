@@ -65,18 +65,10 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
                 >
               </ion-card-content>
 
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>Date Issued</ion-label>
-                <ion-badge color="medium" item-end></ion-badge>
-              </ion-item>
-
               <ion-item
                 class="flex ion-justify-content-around"
                 *ngFor="let attr of active.attributes"
-                lines="none"
               >
-                <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
                 <ion-label>{{ attr }}</ion-label>
               </ion-item>
             </ion-card>
@@ -96,7 +88,7 @@ export class ViewCredentialTypeComponent implements OnInit {
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService
   ) {
-    this.active$ = this.actionSvc.getCredential(
+    this.active$ = this.actionSvc.getCredentialDef(
       this.route.snapshot.paramMap.get('id')
     );
   }
