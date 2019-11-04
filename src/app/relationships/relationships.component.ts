@@ -36,7 +36,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let item of relationshipItems">
-                <ion-item (click)="this.viewDetail(item._id)">
+                <ion-item button (click)="this.viewDetail(item._id)">
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ item.name }}</h2>
