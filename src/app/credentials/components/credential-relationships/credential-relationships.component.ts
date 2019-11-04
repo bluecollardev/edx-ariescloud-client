@@ -36,6 +36,7 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
                 <ion-label>
                   <h2>{{ relationship.name }}</h2>
                   <small>DID: {{ relationship.did }}</small>
+
                 </ion-label>
                 <!--<ion-badge color="primary" item-end>2</ion-badge>-->
               </ion-item>
@@ -97,7 +98,7 @@ export class CredentialRelationshipsComponent implements OnInit {
         {
           text: 'Issue Credential',
           handler: () => {
-            this.router.navigate([`/credentials/issue/${credentialId}/to`]);
+            this.router.navigate([`/credentials/issue/${credentialId}/to`], { queryParams: { rId: relationshipId } });
           }
         },
         {

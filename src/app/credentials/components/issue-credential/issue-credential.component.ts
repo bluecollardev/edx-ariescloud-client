@@ -13,6 +13,8 @@ import { tap, map } from 'rxjs/operators';
 import { LoadingController } from '@ionic/angular';
 import { HttpService } from 'src/app/core/services/http.service';
 
+import { filter } from 'rxjs/operators';
+
 @Component({
   selector: 'app-issue-credential',
   template: `
@@ -50,13 +52,36 @@ import { HttpService } from 'src/app/core/services/http.service';
                 <ion-select
                   required
                   formControlName="connectionId"
-                  *ngIf="relationship$ | async as relationships"
+                  *ngIf="relationships$ | async as relationships"
                 >
+                  <!-- TODO: Upgrade ionic to > 4.9 https://github.com/ionic-team/ionic/issues/16453 -->
+                  <!-- We can't do... -->
+                  <!--
                   <ion-select-option
-                    *ngFor="let relationship of relationships"
-                    [value]="relationship._id"
-                    >{{ relationship.name }}</ion-select-option
-                  >
+                      *ngIf="!isSelectedRelationship(relationship._id)"
+                      [value]="relationship._id"
+                      [selected]="isSelectedRelationship(relationship._id)"
+                    >
+                      {{ relationship.name }}
+                    </ion-select-option>
+                  -->
+
+                  <ng-container *ngFor="let relationship of relationships">
+                    <ion-select-option
+                      *ngIf="isSelectedRelationship(relationship._id)"
+                      [value]="relationship._id"
+                      selected
+                    >
+                      {{ relationship.name }}
+                    </ion-select-option>
+
+                    <ion-select-option
+                      *ngIf="!isSelectedRelationship(relationship._id)"
+                      [value]="relationship._id"
+                    >
+                      {{ relationship.name }}
+                    </ion-select-option>
+                  </ng-container>
                 </ion-select>
               </ion-item>
             </ion-col>
@@ -111,7 +136,8 @@ export class IssueCredentialComponent implements OnInit {
   credDefId: string;
   fg: FormGroup;
   fa$: Observable<FormArray>;
-  relationship$: Observable<IRelationship[]>;
+  relationships$: Observable<IRelationship[]>;
+  relationshipId: string;
 
   validStates = ['to'];
 
@@ -147,9 +173,24 @@ export class IssueCredentialComponent implements OnInit {
       })
     );
 
-    this.relationship$ = this.relationshipsActionSvc
-      .getRelationships()
-      .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
+    this.relationships$ = this.relationshipsActionSvc
+      .getRelationships() // TODO: Fix this hack!
+      .pipe(map(obs => obs.filter(itm => {
+        console.log('active relationship');
+        console.log(itm);
+        return itm.state === 'active';
+      })));
+      // .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
+
+    this.route.queryParams
+      .subscribe(params => {
+        console.log(params);
+
+        this.relationshipId = params.rId;
+        console.log('relationship id to match');
+        console.log(this.relationshipId);
+        this.fg.get('connectionId').setValue(this.relationshipId);
+      });
 
     this.route.url.subscribe(segments => {
       this.setActiveTab(segments);
@@ -165,6 +206,11 @@ export class IssueCredentialComponent implements OnInit {
         this.activeTab = 'issue-credential';
       }
     }
+  }
+
+  isSelectedRelationship(rId) {
+    // if (rId === this.relationshipId) debugger;
+    return rId === this.relationshipId;
   }
 
   async submit() {
