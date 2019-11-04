@@ -21,6 +21,12 @@ import { ActivatedRoute, Router } from '@angular/router';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
         <ion-title class="ios title-ios hydrated"
           >Edit Credential Type</ion-title
         >
