@@ -27,7 +27,7 @@ import {
 
 import { CredentialActionsService } from '../../services/credential-actions.service';
 
-import { map } from 'rxjs/operators';
+import { map, tap, reduce } from 'rxjs/operators';
 
 const url = environment.apiUrl;
 
@@ -36,7 +36,8 @@ const credentialStates = {
   request_sent: 'Request Sent',
   request_received: 'Request Received',
   offer_sent: 'Offer Sent',
-  offer_received: 'Offer Received'
+  offer_received: 'Offer Received',
+  credential_received: 'Credential Received'
 };
 
 @Component({
@@ -134,7 +135,7 @@ const credentialStates = {
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
-  pending$: Observable<IIssuer[]>;
+  pending$: Observable<any[]>;
   credentialStates;
   _url: string;
   _id: string;
@@ -176,7 +177,24 @@ export class CredentialsReceivedComponent implements OnInit {
       .get<ICredential[]>(`${this._url}credentials`)
       .pipe(map(obs => Array.from(new Set(obs))));
 
-    this.stateSvc.pending$ = this.actionSvc.getPendingIssues();
+    this.stateSvc.pending$ = this.actionSvc.getPendingIssues().pipe(
+      map(obs =>
+        obs.filter(itm => itm.state !== 'stored' && itm.state !== 'issued')
+      ),
+      map(obs =>
+        obs
+          .map(rel =>
+            rel.records.map(itm => {
+              return { ...itm };
+            })
+          )
+          .flatMap(itm => itm)
+      ),
+      map(obs =>
+        obs.filter(itm => itm.state !== 'stored' && itm.state !== 'issued')
+      ),
+      tap(obs => console.log(obs))
+    );
   }
 
   async getItems(issuers, ev: any) {

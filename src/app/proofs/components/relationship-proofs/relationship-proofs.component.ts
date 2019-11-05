@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import {
   CredentialStateService,
@@ -16,6 +16,7 @@ import {
 } from '../../../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
 import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
+import { ProofActionService } from '../../services/proof-action.service';
 
 @Component({
   selector: 'app-credentials',
@@ -30,22 +31,22 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-          >Proof Certificates</ion-title
+        <ion-title
+          class="ios title-ios hydrated"
+          *ngIf="proofs$ | async as proofs; else generic"
+          >{{ proofs.label }}'s Proof Certificates</ion-title
         >
       </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row *ngIf="stateSvc.certificatesOfProof$ | async as certificates">
+        <ion-row *ngIf="proofs$ | async as proofs">
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-grid style="width: 100%;">
-              <ion-row
-                *ngIf="stateSvc.certificatesOfProof$ | async as certificates"
-              >
+              <ion-row *ngIf="proofs.proofs.length > 0; else noProofs">
                 <ion-col
-                  *ngFor="let certificate of certificates"
+                  *ngFor="let certificate of proofs.proofs"
                   sizeXs="6"
                   sizeSm="4"
                   sizeMd="3"
@@ -53,25 +54,32 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                 >
                   <ion-card
                     text-center
-                    (click)="presentActionSheet(certificate.id)"
+                    (click)="presentActionSheet(certificate._id)"
                   >
                     <ion-card-header>
                       {{ certificate.issuedTo }}
                     </ion-card-header>
                     <ion-icon name="document" class="icon-lg"></ion-icon>
-                    <ion-card-content>
-                      <small
-                        ><strong>{{ certificate.name }}</strong></small
-                      >
+                    <ion-card-content
+                      *ngFor="let request of certificate.requested"
+                    >
+                      <p>
+                        <strong> {{ request.restrictions.schema_name }}</strong>
+                      </p>
                       <br />
-                      <small>{{ certificate.issuedBy }}</small>
+                      <p>{{ request.name }}</p>
+                      <p>{{ certificate.state }}</p>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
               </ion-row>
             </ion-grid>
             <div class="ion-padding">
-              <ion-button expand="block" class="ion-no-margin">
+              <ion-button
+                expand="block"
+                class="ion-no-margin"
+                (click)="requestProof()"
+              >
                 <ion-icon name="send"></ion-icon>
                 Request Certificate of Proof
               </ion-button>
@@ -80,6 +88,16 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
         </ion-row>
       </ion-grid>
     </ion-content>
+    <ng-template #generic>
+      <ion-title class="ios title-ios hydrated">Proof Certificates</ion-title>
+    </ng-template>
+    <ng-template #noProofs>
+      <ion-card>
+        <ion-card-content>
+          There are no proofs loaded. Why don't you request one?
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
   `,
   styleUrls: ['./relationship-proofs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -87,16 +105,17 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
 export class RelationshipProofsComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
-  relationships: Observable<IRelationship[]>;
+  relationship$: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
-  proofs: Observable<ICertificateOfProof[]>;
+  proofs$: Observable<ICertificateOfProof>;
+  relId: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     public stateSvc: CredentialStateService,
     public relationshipStateSvc: RelationshipsStateService,
-    private actionSvc: CredentialActionsService,
+    private actionSvc: ProofActionService,
     private relationshipActionSvc: RelationshipsActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController
@@ -104,25 +123,33 @@ export class RelationshipProofsComponent implements OnInit {
 
   ngOnInit() {
     // console.log('bool', bool);
+    this.relId = this.route.snapshot.paramMap.get('did');
     this.credentials = this.stateSvc.credentials$;
 
-    this.relationships = this.relationshipStateSvc.relationships$;
+    this.relationship$ = this.relationshipStateSvc.relationships$.pipe(
+      map(obs => obs.filter(rel => rel._id === this.relId))
+    );
 
     this.issuers = this.stateSvc.issuers$;
 
-    this.proofs = this.stateSvc.certificatesOfProof$;
+    this.proofs$ = this.actionSvc.getProofs().pipe(
+      map(obs =>
+        obs.filter(rel => rel.connectionId === this.relId).reduce(itm => itm)
+      ),
+      tap(obs => console.log(obs))
+    );
   }
 
   async initializeItems() {
-    await this.actionSvc.getCertificates({
-      did: this.route.snapshot.paramMap.get('did')
-    });
+    // await this.actionSvc.getCertificates({
+    //   did: this.route.snapshot.paramMap.get('did')
+    // });
   }
 
   async getItems(issuers, ev: any) {
     const filtered = [];
     // Reset items back to all of the items
-    await this.initializeItems();
+    // await this.initializeItems();
 
     // set val to the value of the searchbar
     const val = ev.target.value;
@@ -195,5 +222,9 @@ export class RelationshipProofsComponent implements OnInit {
     });
 
     await alert.present();
+  }
+  requestProof() {
+    console.log('clicked');
+    this.router.navigate([`/verify-credentials/issue/${this.relId}`]);
   }
 }

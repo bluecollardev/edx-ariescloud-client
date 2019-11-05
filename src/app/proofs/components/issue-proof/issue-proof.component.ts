@@ -1,0 +1,206 @@
+import { Component, OnInit } from '@angular/core';
+import { CredentialActionsService } from 'src/app/credentials/services/credential-actions.service';
+import { Observable } from 'rxjs';
+import { FormGroup, FormControl } from '@angular/forms';
+import { RelationshipActionsService } from 'src/app/credentials/services/relationship-actions.service';
+import { IRelationship } from 'src/app/messages/services/messages-state.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProofActionService } from '../../services/proof-action.service';
+
+@Component({
+  selector: 'app-issue-proof',
+  template: `
+    <ion-header
+      role="banner"
+      class="ios header-ios hydrated"
+      *ngIf="credDef$ | async as credDef"
+    >
+      <ion-toolbar class="ios hydrated">
+        <ion-title class="ios title-ios hydrated"
+          >Request Proof To<strong>{{ credDef.name }}</strong></ion-title
+        >
+        <ion-buttons
+          slot="end"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <form [formGroup]="fg">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label position="stacked"
+                  >Issue To
+                  <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-select
+                  required
+                  formControlName="connectionId"
+                  *ngIf="relationships$ | async as relationships"
+                >
+                  <!-- TODO: Upgrade ionic to > 4.9 https://github.com/ionic-team/ionic/issues/16453 -->
+                  <!-- We can't do... -->
+                  <!--
+              <ion-select-option
+                  *ngIf="!isSelectedRelationship(relationship._id)"
+                  [value]="relationship._id"
+                  [selected]="isSelectedRelationship(relationship._id)"
+                >
+                  {{ relationship.name }}
+                </ion-select-option>
+              -->
+                  <ng-container *ngFor="let relationship of relationships">
+                    <ion-select-option
+                      *ngIf="isSelectedRelationship(relationship._id)"
+                      [value]="relationship._id"
+                      selected
+                    >
+                      {{ relationship.name }}
+                    </ion-select-option>
+
+                    <ion-select-option
+                      *ngIf="!isSelectedRelationship(relationship._id)"
+                      [value]="relationship._id"
+                    >
+                      {{ relationship.name }}
+                    </ion-select-option>
+                  </ng-container>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item *ngIf="credDef$ | async as credDefs">
+                <ion-label position="stacked"
+                  >Credential Type
+                  <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-select required formControlName="credDef">
+                  <!-- TODO: Upgrade ionic to > 4.9 https://github.com/ionic-team/ionic/issues/16453 -->
+                  <!-- We can't do... -->
+                  <!--
+            <ion-select-option
+                *ngIf="!isSelectedRelationship(relationship._id)"
+                [value]="relationship._id"
+                [selected]="isSelectedRelationship(relationship._id)"
+              >
+                {{ relationship.name }}
+              </ion-select-option>
+            -->
+                  <ng-container *ngFor="let credDef of credDefs">
+                    <ion-select-option [value]="credDef" selected>
+                      {{ credDef.name }}
+                    </ion-select-option>
+                  </ng-container>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item
+                ><ion-label position="stacked"
+                  >Comment
+                  <ion-text color="danger">*</ion-text>
+                </ion-label>
+                <ion-input formControlName="comment"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div style="display: flex">
+          <ion-button
+            style="flex: 1"
+            color="primary"
+            clear
+            full
+            icon-start
+            margin
+            (click)="submit()"
+          >
+            <ion-icon name="checkmark"></ion-icon>
+            Request Proof
+          </ion-button>
+        </div>
+      </form>
+    </ion-content>
+  `,
+  styleUrls: ['./issue-proof.component.css']
+})
+export class IssueProofComponent implements OnInit {
+  credDef$: Observable<any[]>;
+  fg: FormGroup;
+  relationships$: Observable<IRelationship[]>;
+  relId: string;
+  constructor(
+    private credentialActionSvc: CredentialActionsService,
+    private relationshipsActionSvc: RelationshipActionsService,
+    private proofActionSvc: ProofActionService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.fg = new FormGroup({
+      connectionId: new FormControl(''),
+      credDef: new FormControl(''),
+      comment: new FormControl('')
+    });
+  }
+
+  ngOnInit() {
+    this.relId = this.route.snapshot.paramMap.get('id');
+    this.credDef$ = this.credentialActionSvc.getCredentialDefs();
+    this.relationships$ = this.relationshipsActionSvc.getRelationships();
+    this.fg.controls.connectionId.setValue(this.relId);
+    this.fg.updateValueAndValidity();
+  }
+
+  isSelectedRelationship(rId) {
+    // if (rId === this.relationshipId) debugger;
+    return rId === this.relId;
+  }
+  async submit() {
+    const proof = this.fg.value;
+    console.log(proof);
+    const mapped = {
+      schemaDef: {
+        schema_name: proof.credDef.name,
+        schema_version: proof.credDef.version,
+        attribtues: proof.credDef.attributes
+      },
+      connectionId: proof.connectionId,
+      comment: proof.comment,
+      names: proof.credDef.attributes
+    };
+    const res = await this.proofActionSvc.postProof(mapped).toPromise();
+    this.router.navigate(['/verify-credentials']);
+    /*
+    {
+      "schemaDef":
+      {
+        "schema_name": "schooldegreswe2r",
+        "schema_version": "1.0",
+        "attributes":
+        [
+          "name"
+        ]
+      },
+      "connectionId": "32798468-a6fd-41bf-a736-7ea13a7b0570",
+      "comment": "test comment",
+      "names": ["grade"]
+    }
+  */
+  }
+}

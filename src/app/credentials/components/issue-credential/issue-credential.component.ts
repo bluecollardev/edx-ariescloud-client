@@ -166,7 +166,7 @@ export class IssueCredentialComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
-      tap(obs => (console.log(obs), this.credDefId = obs._id)),
+      tap(obs => (console.log(obs), (this.credDefId = obs._id))),
       tap(obs => {
         const fa = new FormArray([]);
         console.log(obs);

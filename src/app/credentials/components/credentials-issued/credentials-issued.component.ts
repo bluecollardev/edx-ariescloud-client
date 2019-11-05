@@ -76,7 +76,7 @@ import { tap, map } from 'rxjs/operators';
 })
 export class CredentialsIssuedComponent implements OnInit {
   searchQuery: '';
-  credentialDefs: Observable<ICredentialDef[]>;
+  credentialDefs: Observable<any[]>;
   credentials: Observable<ICredentialParams[]>;
   _id: string;
 
@@ -90,15 +90,30 @@ export class CredentialsIssuedComponent implements OnInit {
     // this.initializeItems();
   }
 
-  ngOnInit() {
-    this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
-    this.actionSvc
+  async ngOnInit() {
+    const records = await this.actionSvc
       .getCredentials()
       .pipe(
-        map(obs => obs.map(itm => itm.credentials)),
-        map(obs => console.log(obs))
+        map(obs => obs.map((rel: any) => rel.credentials).flatMap(itm => itm)),
+        map(obs => obs.filter(itm => itm.state === 'issued')),
+        tap(obs => console.log(obs))
       )
-      .subscribe(itm => console.log(itm));
+      .toPromise();
+    console.log('records', records);
+    this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs().pipe(
+      // map(obs => {
+      //   obs.map((obj: any) => {
+      //     const mapped = {
+      //       ...obs,
+      //       creds: records.filter(
+      //         cred => cred.credential_definition_id === obj._id
+      //       )
+      //     };
+      //     return mapped;
+      //   });
+      // }),
+      tap(obs => console.log(obs))
+    );
 
     this.credentialDefs = this.stateSvc.credentialDefs$;
     this.credentials = this.stateSvc.credentials$;

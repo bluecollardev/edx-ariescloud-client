@@ -11,4 +11,8 @@ export class ProofActionService {
   getProofs() {
     return this.httpSvc.get<ICertificateOfProof[]>('proofs');
   }
+
+  postProof(params: any) {
+    return this.httpSvc.post('proofs', params);
+  }
 }

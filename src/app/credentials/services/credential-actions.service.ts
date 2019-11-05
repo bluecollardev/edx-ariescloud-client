@@ -104,13 +104,7 @@ export class CredentialActionsService {
   }
 
   getPendingIssues() {
-    return this.httpSvc
-      .get<ICredential[]>('issues')
-      .pipe(
-        map(obs =>
-          obs.filter(itm => itm.state !== 'stored' && itm.state !== 'issued')
-        )
-      );
+    return this.httpSvc.get<ICredential[]>('issues').pipe();
   }
 
   getCredentialDefs(params?: ICredentialParams) {

@@ -36,16 +36,17 @@ export interface ICredential {
   version: string;
   schema: string;
   did: string;
-  credentials: any[];
+  records: any[];
 }
 
 export interface ICertificateOfProof {
-  id: string; // Use GUID
+  connectionId: string; // Use GUID
   issuerDid: string;
   name: string;
   version: string;
   requested_attributes: object;
   requested_predicates: object;
+  proofs: any[];
 }
 
 export interface IIssuer {
@@ -65,7 +66,7 @@ export class CredentialStateService {
   activeCredentialSchema$: Observable<ICredentialSchema[]> = new Observable<
     ICredentialSchema[]
   >();
-  credentialDefs$: Observable<ICredentialDef[]>;
+  credentialDefs$: Observable<any[]>;
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
     ICredentialDef[]
   >();
@@ -80,7 +81,7 @@ export class CredentialStateService {
     ICertificateOfProof[]
   >();
 
-  pending$: Observable<ICredential[]>;
+  pending$: Observable<any[]>;
 
   constructor() {
     /*const governmentCredential = {
@@ -88,14 +89,7 @@ export class CredentialStateService {
       name: 'Alice',
       tax_id: '123-45-6789'
     };*/
-
     // TODO: Remove these!
-    // this.setActiveCredentialProofs(did, of(certificatesOfProof));
-    // this.setCredentials(of(credentials));
-    this.setIssuers(of(this.buildIssuers(CredentialMocks.issuedCredentials)));
-    // this.setCredentialSchemas(of(credentialSchemas));
-    // this.setCredentialDefs(of(CredentialMocks.credentialDefs));
-    this.setCertificates(of(CredentialMocks.certificatesOfProof));
   }
 
   setCertificates(data: Observable<ICertificateOfProof[]>) {

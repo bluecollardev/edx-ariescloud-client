@@ -30,9 +30,7 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-          >Proof Certificates</ion-title
-        >
+        <ion-title class="ios title-ios hydrated">Proof Certificates</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -41,16 +39,16 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list>
               <ion-list-header class="ion-no-margin ion-no-padding">
-              <div style="display: flex; width: 100%; flex-direction: column">
-                <span class="ion-padding">By Relationship</span>
-                <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-              </div>
-            </ion-list-header>
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">By Relationship</span>
+                  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+                </div>
+              </ion-list-header>
               <ion-item-sliding
                 *ngFor="let relationship of relationships"
                 (click)="
                   this.router.navigate([
-                    '/verify-credentials/group/' + relationship.did
+                    '/verify-credentials/group/' + relationship._id
                   ])
                 "
               >

@@ -29,7 +29,7 @@ import {
               <ion-item (click)="presentActionSheet(credDef._id)">
                 <ion-icon name="document" class="icon-lg"></ion-icon>
                 <ion-label>
-                  <h2>{{ credDef.schema_name }}</h2>
+                  <h2>{{ credDef.name }}</h2>
                   <small>{{ credDef.program }}</small>
                   <small>Version: {{ credDef.version }}</small>
                 </ion-label>

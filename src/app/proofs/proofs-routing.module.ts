@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProofsComponent } from './proofs.component';
 import { RelationshipProofsComponent } from './components/relationship-proofs/relationship-proofs.component';
 import { ViewProofComponent } from './components/view-proof/view-proof.component';
+import { IssueProofComponent } from './components/issue-proof/issue-proof.component';
 
 const routes: Routes = [
   {
@@ -11,20 +12,24 @@ const routes: Routes = [
   },
   {
     path: 'verify-credentials/view',
-    component: ViewProofComponent,
+    component: ViewProofComponent
+  },
+  {
+    path: 'verify-credentials/issue/:id',
+    component: IssueProofComponent
   },
   {
     path: 'verify-credentials/group/:did',
-    component: RelationshipProofsComponent,
+    component: RelationshipProofsComponent
   },
   {
     path: 'verify-credentials/view/:id',
-    component: ViewProofComponent,
-  },
+    component: ViewProofComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ProofsRoutingModule { }
+export class ProofsRoutingModule {}

@@ -20,6 +20,7 @@ export interface IRelationship {
   did: string;
   publicDid: string;
   state: string;
+  _id: string;
 }
 
 @Injectable({
