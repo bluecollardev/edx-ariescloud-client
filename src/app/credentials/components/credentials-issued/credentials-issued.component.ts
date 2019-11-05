@@ -7,7 +7,11 @@ import {
   CredentialStateService,
   ICredentialDef
 } from '../../services/credential-state.service';
-import { CredentialActionsService, ICredentialParams } from '../../services/credential-actions.service';
+import {
+  CredentialActionsService,
+  ICredentialParams
+} from '../../services/credential-actions.service';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-credentials-issued',
@@ -17,7 +21,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
         <ion-row>
           <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
             <ion-list
-              *ngIf="stateSvc.credentialDefs$ | async as credDefs"
+              *ngIf="stateSvc.credentialDefs$ | async as credDefs; else noCreds"
             >
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
@@ -47,7 +51,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                 </ion-item-options>
               </ion-item-sliding>
             </ion-list>
-  
+
             <!--<div style="display: flex">
               <ion-button
                 style="flex: 1"
@@ -66,11 +70,11 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
         </ion-row>
       </ion-grid>
     </ng-container>
+    <ng-template #noCreds></ng-template>
   `,
   styleUrls: ['./credentials-issued.component.css']
 })
 export class CredentialsIssuedComponent implements OnInit {
-
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
   credentials: Observable<ICredentialParams[]>;
@@ -88,11 +92,16 @@ export class CredentialsIssuedComponent implements OnInit {
 
   ngOnInit() {
     this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
-    this.stateSvc.credentials$ = this.actionSvc.getCredentials();
+    this.actionSvc
+      .getCredentials()
+      .pipe(
+        map(obs => obs.map(itm => itm.credentials)),
+        map(obs => console.log(obs))
+      )
+      .subscribe(itm => console.log(itm));
 
     this.credentialDefs = this.stateSvc.credentialDefs$;
     this.credentials = this.stateSvc.credentials$;
-
   }
 
   getItems(ev: any) {
@@ -138,5 +147,4 @@ export class CredentialsIssuedComponent implements OnInit {
 
     await actionSheet.present();
   }
-
 }

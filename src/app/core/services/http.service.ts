@@ -59,10 +59,11 @@ export class HttpService {
   }
 
   getById<T>(segment: APISegmentType, id: string, params = {}) {
+    console.log(`${this.url}${segment}/${id}`);
     return this.http.get<T>(`${this.url}${segment}/${id}`);
   }
 
   delete<T>(segment: APISegmentType, id: string) {
-    return this.http.delete<T>(`${this.url}${segment}/${id}`)
+    return this.http.delete<T>(`${this.url}${segment}/${id}`);
   }
 }

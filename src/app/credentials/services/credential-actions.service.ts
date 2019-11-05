@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from 'src/app/core/services/http.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
@@ -152,7 +152,7 @@ export class CredentialActionsService {
       { headers: this.headers }
     );
 
-    this.stateSvc.setActiveCertificate(id);
+    // this.stateSvc.setActiveCertificate(id);
 
     console.log('active certificate');
     console.log(this.stateSvc.activeCertificateOfProof$);

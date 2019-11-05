@@ -45,9 +45,7 @@ const credentialStates = {
     <ion-grid>
       <ion-row>
         <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
-          <ion-list
-            *ngIf="credentials | async as issuerGroups"
-          >
+          <ion-list *ngIf="credentials | async as issuerGroups">
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
                 <span class="ion-padding">Accepted Credentials</span>
@@ -83,9 +81,7 @@ const credentialStates = {
               </ion-item-options>-->
             </ion-item-sliding>
           </ion-list>
-          <ion-list
-            *ngIf="pending$ | async as pendingCreds"
-          >
+          <ion-list *ngIf="pending$ | async as pendingCreds">
             <ion-list-header>
               Accept New Credentials
             </ion-list-header>
@@ -104,7 +100,15 @@ const credentialStates = {
                     <small>State: {{ credentialStates[cred.state] }}</small>
                   </ion-row>
                   <ion-row>
-                    <small>Created: {{ cred.created.toLocaleString().split(' ').shift() }}</small>
+                    <small
+                      >Created:
+                      {{
+                        cred.created
+                          .toLocaleString()
+                          .split(' ')
+                          .shift()
+                      }}</small
+                    >
                   </ion-row>
                 </ion-label>
               </ion-item>
@@ -127,12 +131,11 @@ const credentialStates = {
   styleUrls: ['./credentials-received.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredential[]>;
   pending$: Observable<IIssuer[]>;
-  credentialStates: [];
+  credentialStates;
   _url: string;
   _id: string;
 

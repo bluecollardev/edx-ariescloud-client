@@ -98,21 +98,6 @@ export class CredentialStateService {
     this.setCertificates(of(CredentialMocks.certificatesOfProof));
   }
 
-  setActiveCertificate(cid: string) {
-    // this.activeCertificateOfProof$ = this.certificatesOfProof$.pipe(
-    //   map(cs => {
-    //     return cs.filter(c => {
-    //       console.log('------------');
-    //       console.log(c);
-    //       console.log(c.id);
-    //       console.log(cid);
-    //       console.log('------------');
-    //       return c.id === cid;
-    //     });
-    //   })
-    // );
-  }
-
   setCertificates(data: Observable<ICertificateOfProof[]>) {
     this.certificatesOfProof$ = data;
   }
