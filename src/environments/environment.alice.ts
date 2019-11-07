@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://node-controller:3000/'
+  apiUrl: 'http://localhost:3000/'
 };
