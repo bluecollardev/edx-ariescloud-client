@@ -15,4 +15,4 @@ ADD src ./src
 RUN npm install @angular/cli --global
 RUN npm install
 
-
+EXPOSE 4200
