@@ -11,7 +11,7 @@ import {
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import { RelationshipActionsService } from '../../services/relationship-actions.service';
 import { IRelationship } from '../../../relationships/services/relationships-state.service';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 // import { ICredentialResponse } from '../../models/i-credential';
 
@@ -51,10 +51,16 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
                   <ion-searchbar></ion-searchbar>
                 </div>
               </ion-list-header>
-              <ion-item-sliding
-                *ngFor="let relationship of relationships"
-              >
-                <ion-item button (click)="this.router.navigate(['to'], { relativeTo: this.route, queryParams: { rId: relationship._id } })">
+              <ion-item-sliding *ngFor="let relationship of relationships">
+                <ion-item
+                  button
+                  (click)="
+                    this.router.navigate(['to'], {
+                      relativeTo: this.route,
+                      queryParams: { rId: relationship._id }
+                    })
+                  "
+                >
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
                     <h2>{{ relationship.name }}</h2>
@@ -115,7 +121,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class IssueCredentialRelationshipsComponent implements OnInit {
   active$: Observable<ICredentialDef>;
-  relationships: Observable<IRelationship[]>;
+  relationships: Observable<any[]>;
   fg: FormGroup;
 
   constructor(

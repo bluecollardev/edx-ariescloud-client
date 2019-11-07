@@ -28,15 +28,15 @@ const routes: Routes = [
   },
   {
     path: 'credentials/received/view',
-    component: ViewCredentialComponent,
+    component: ViewCredentialComponent
   },
   {
     path: 'credentials/received/view/:id',
-    component: ViewCredentialComponent,
+    component: ViewCredentialComponent
   },
   {
     path: 'credentials/received/group/:did',
-    component: OrgCredentialsComponent,
+    component: OrgCredentialsComponent
   },
   {
     path: 'credentials/types',

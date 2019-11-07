@@ -68,7 +68,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                     relationship.state
                   }}</ion-badge>
                 </ion-item>
-                
+
                 <ion-item
                   button
                   class="flex ion-justify-content-around"
@@ -93,7 +93,8 @@ import { HttpService } from 'src/app/core/services/http.service';
                 <ion-item-group>
                   <ion-item-divider>
                     <ion-label class="flex ion-align-items-center">
-                      <ion-icon class="icon-md" name="notifications"></ion-icon>&nbsp;&nbsp;&nbsp;<span>Action Required</span>
+                      <ion-icon class="icon-md" name="notifications"></ion-icon
+                      >&nbsp;&nbsp;&nbsp;<span>Action Required</span>
                     </ion-label>
                   </ion-item-divider>
                   <ion-item
@@ -106,10 +107,7 @@ import { HttpService } from 'src/app/core/services/http.service';
                     </ion-label>
                     <ion-badge color="primary" item-end>4</ion-badge>
                   </ion-item>
-                  <ion-item
-                    button
-                    class="flex ion-justify-content-around"
-                  >
+                  <ion-item button class="flex ion-justify-content-around">
                     <ion-label>
                       <h2>Provide Proof</h2>
                     </ion-label>
@@ -130,18 +128,6 @@ import { HttpService } from 'src/app/core/services/http.service';
                 >
                   <ion-icon name="trash"></ion-icon>
                   Delete
-                </ion-button>
-                <ion-button
-                  style="flex: 1"
-                  color="light"
-                  outline
-                  full
-                  icon-start
-                  margin
-                  [routerLink]="['/relationships']"
-                >
-                  <ion-icon name="close-circle"></ion-icon>
-                  Disable
                 </ion-button>
               </div>
             </ion-card>

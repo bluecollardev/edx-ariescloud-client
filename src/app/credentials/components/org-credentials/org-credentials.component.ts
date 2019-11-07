@@ -67,10 +67,10 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
                     <ion-icon name="document" class="icon-lg"></ion-icon>
                     <ion-card-content>
                       <small
-                        ><strong>{{ cred.schema.name }}</strong></small
+                        ><strong>{{ cred.name }}</strong></small
                       >
                       <br />
-                      <small>{{ cred.program }}</small>
+                      <small>{{ cred.attrs }}</small>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
@@ -113,9 +113,13 @@ export class OrgCredentialsComponent implements OnInit {
     // const filtered = creds.filter(itm => itm.did === did);
     // this.credentials = of(filtered);
     this.credentials$ = this.actionSvc.getCredentials().pipe(
-      map(obs => obs.filter(itm => itm.did === did)),
+      map(obs => obs.filter(itm => itm._id === did)),
       tap(obs => (this.issuer$ = of(obs))),
-      map(obs => obs.map(credgroup => credgroup.credentials[0]))
+      tap(obs => console.log(obs)),
+      map((obs: any) => obs.map(itm => itm.credentials).flatMap(itm => itm)),
+      tap(obs => console.log(obs))
+
+      // map(obs => obs.map(credgroup => credgroup)
     );
     this.relationships = this.relationshipStateSvc.relationships$;
 

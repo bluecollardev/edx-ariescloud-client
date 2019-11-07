@@ -112,20 +112,6 @@ export class CredentialActionsService {
       'credential-definitions'
     );
     return response;
-
-    // this.stateSvc.setCredentialDefs(of(CredentialMocks.credentialDefs));
-
-    // if (params && params.did) {
-    //   return (this.stateSvc.credentialDefs$ = this.stateSvc.credentialDefs$.pipe(
-    //     map(cs => {
-    //       const filtered = cs.filter(c => c.issuerDid === params.did);
-    //       console.log(filtered);
-    //       return filtered;
-    //     })
-    //   ));
-    // }
-
-    // return this.stateSvc.credentials$;
   }
 
   createCredentialDef() {
@@ -148,20 +134,10 @@ export class CredentialActionsService {
 
     // this.stateSvc.setActiveCertificate(id);
 
-    console.log('active certificate');
-    console.log(this.stateSvc.activeCertificateOfProof$);
-
     return this.stateSvc.activeCertificateOfProof$;
   }
 
   getCertificates(params?: ICertificateParams) {
-    const response = this.http.get<ICertificateOfProof[]>(
-      `${this.url}credentials`,
-      { headers: this.headers }
-    );
-
-    this.stateSvc.setCertificates(of(CredentialMocks.certificatesOfProof));
-
     if (params && params.did) {
       return (this.stateSvc.certificatesOfProof$ = this.stateSvc.certificatesOfProof$.pipe(
         map(cs => {

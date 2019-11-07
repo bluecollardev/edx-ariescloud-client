@@ -2,16 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { CredentialStateService, ICertificateOfProof } from '../../../credentials/services/credential-state.service';
-import { CredentialActionsService, ICertificateParams } from '../../../credentials/services/credential-actions.service';
+import {
+  CredentialStateService,
+  ICertificateOfProof
+} from '../../../credentials/services/credential-state.service';
+import {
+  CredentialActionsService,
+  ICertificateParams
+} from '../../../credentials/services/credential-actions.service';
 
 @Component({
   selector: 'app-view-proof',
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
-        <ion-buttons slot="end" class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated">
-          <ion-menu-button class="hydrated ios button ion-activatable ion-focusable activated"></ion-menu-button>
+        <ion-buttons
+          slot="end"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
         </ion-buttons>
         <ion-buttons
           slot="start"
@@ -19,7 +30,9 @@ import { CredentialActionsService, ICertificateParams } from '../../../credentia
         >
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Certificate of Proof</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Certificate of Proof</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -27,7 +40,9 @@ import { CredentialActionsService, ICertificateParams } from '../../../credentia
         <ion-row>
           <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
             <ion-card text-center>
-              <img src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"/>
+              <img
+                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
+              />
 
               <ion-card-content>
                 <ion-card-title *ngIf="active">
@@ -83,23 +98,27 @@ export class ViewProofComponent implements OnInit {
     this.setActiveCertificate();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   async setActiveCertificate() {
-    this.stateSvc.activeCertificateOfProof$.pipe(
-      map(is => {
-        return is.filter((i) => i.id === this.route.snapshot.paramMap.get('id'))[0];
-      })
-    ).subscribe((certificate) => {
-      this.active = certificate;
-    });
+    this.stateSvc.activeCertificateOfProof$
+      .pipe(
+        map(is => {
+          return is.filter(
+            (i: any) => i._id === this.route.snapshot.paramMap.get('id')
+          )[0];
+        })
+      )
+      .subscribe(certificate => {
+        this.active = certificate;
+      });
   }
 
   async verifyCredPopup() {
     const alert = await this.alertController.create({
       header: 'Certificate Claims Verified',
-      message: '<strong>Success!</strong> All claims within this certificate are valid.',
+      message:
+        '<strong>Success!</strong> All claims within this certificate are valid.',
       buttons: [
         {
           text: 'Back',
@@ -109,7 +128,8 @@ export class ViewProofComponent implements OnInit {
             console.log('Confirm Cancel');
             this.router.navigate(['/verify-credentials']);
           }
-        }, {
+        },
+        {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');

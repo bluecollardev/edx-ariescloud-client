@@ -235,11 +235,12 @@ export class IssueCredentialComponent implements OnInit {
 
     const ret = {
       connectionId: this.fg.value.connectionId,
-      credDefId: this.credDefId,
+      credDefId: this.credDefId.slice(this.credDefId.indexOf('_') + 1),
       comment: this.fg.value.comment,
       attrs: fa.value
     };
     console.log(ret);
+    // "attrs": [{"name": "name", "value": "Science"}]
     try {
       const res = await this.httpSvc.post('issues', ret).toPromise();
       if (res) {

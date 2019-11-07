@@ -8,6 +8,7 @@ import {
 } from '../../services/relationships-state.service';
 import { RelationshipsActionService } from '../../services/relationships-action.service';
 import { HttpService } from 'src/app/core/services/http.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-approve-relationship',
@@ -103,7 +104,8 @@ export class ApproveRelationshipComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     private actionSvc: RelationshipsActionService,
-    private httpSvc: HttpService
+    private httpSvc: HttpService,
+    public loadingController: LoadingController
   ) {}
 
   ngOnInit() {
@@ -119,8 +121,20 @@ export class ApproveRelationshipComponent implements OnInit, OnDestroy {
   async accept(id: string) {
     const res = await this.httpSvc.postById('relationships', id).toPromise();
     if (res) {
-      await this.actionSvc.resetRelState();
-      this.router.navigate(['/relationships']);
+      const loading = await this.loadingController.create({
+        message: 'Accepting relationship',
+        duration: 10000
+      });
+      await loading.present();
+      setTimeout(
+        () =>
+          this.actionSvc.resetRelState().then(() => {
+            loading.dismiss().then(() => {
+              this.router.navigate(['/relationships']);
+            });
+          }),
+        3000
+      );
     }
   }
 
@@ -128,8 +142,20 @@ export class ApproveRelationshipComponent implements OnInit, OnDestroy {
     const res = await this.httpSvc.delete<any>('relationships', id).toPromise();
     console.log('res', res);
     if (res) {
-      await this.actionSvc.resetRelState();
-      this.router.navigate(['/relationships']);
+      const loading = await this.loadingController.create({
+        message: 'Declining relationship',
+        duration: 10000
+      });
+      await loading.present();
+      setTimeout(
+        () =>
+          this.actionSvc.resetRelState().then(() => {
+            loading.dismiss().then(() => {
+              this.router.navigate(['/relationships']);
+            });
+          }),
+        3000
+      );
     }
   }
 }

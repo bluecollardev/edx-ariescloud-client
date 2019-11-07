@@ -54,17 +54,11 @@ const credentialStates = {
               </div>
             </ion-list-header>
             <ion-item-sliding *ngFor="let issuer of issuerGroups">
-              <ion-item
-                (click)="
-                  this.router.navigate([
-                    '/credentials-received/group/' + issuer.did
-                  ])
-                "
-              >
+              <ion-item (click)="navigate(issuer)">
                 <ion-icon name="person" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ issuer.name }}</h2>
-                  <small>DID: {{ issuer.did }}</small>
+                  <small>DID: {{ issuer._id }}</small>
                 </ion-label>
                 <ion-badge color="primary" item-end>{{
                   issuer.credentials.length
@@ -233,9 +227,12 @@ export class CredentialsReceivedComponent implements OnInit {
                 .postById('issues', this._id)
                 .toPromise();
               if (post) {
-                setTimeout(() => this.loadData(), 200);
+                setTimeout(() => {
+                  this.loadData();
+                  loading.dismiss();
+                  this.router.navigate(['/credentials/received']);
+                }, 3000);
 
-                loading.dismiss();
                 return true;
               }
             } catch {
@@ -362,5 +359,10 @@ export class CredentialsReceivedComponent implements OnInit {
     alert();
     e.preventDefault();
     e.stopPropagation();
+  }
+
+  navigate(id: any) {
+    console.log(id);
+    this.router.navigate(['/credentials/received/group/' + id._id]);
   }
 }
