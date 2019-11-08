@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration=alice --port 4200 --host 0.0.0.0",
-    "start:faber": "ng serve --configuration=faber --port 4201 --host 0.0.0.0",
-    "start:acme": "ng serve --configuration=acme --port 4202 --host 0.0.0.0",
+    "faber": "ng serve --configuration=faber --port 4201 --host 0.0.0.0",
+    "acme": "ng serve --configuration=acme --port 4202 --host 0.0.0.0",
     "build": "ng build --configuration=alice",
     "test": "ng test",
     "lint": "ng lint",

@@ -146,7 +146,7 @@ export class CredentialActionsService {
           return filtered;
         })
       ));
-    }
+  }
 
     return this.stateSvc.certificatesOfProof$;
   }
