@@ -16,6 +16,7 @@ import {
 } from '../relationships/services/relationships-state.service';
 import { ProofActionService } from './services/proof-action.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
+import { ICredentialResponse } from '../credentials/components/credentials-received/credentials-received.component';
 
 @Component({
   selector: 'app-credentials',
@@ -72,7 +73,7 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
 })
 export class ProofsComponent implements OnInit {
   searchQuery: '';
-  credentials: Observable<ICredential[]>;
+  credentials: Observable<ICredentialResponse[]>;
   relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
   proofs: Observable<ICertificateOfProof[]>;

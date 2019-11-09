@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import * as CredentialMocks from './credential-mocks';
+import { ICredentialResponse } from '../components/credentials-received/credentials-received.component';
 
 export interface ICredentialSchema {
   id: string; // Use GUID
@@ -37,6 +38,8 @@ export interface ICredential {
   schema: string;
   did: string;
   records: any[];
+  connectionId: string;
+  credential_exchange_id: string;
 }
 
 export interface ICertificateOfProof {
@@ -70,7 +73,7 @@ export class CredentialStateService {
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
     ICredentialDef[]
   >();
-  credentials$: Observable<ICredential[]>;
+  credentials$: Observable<ICredentialResponse[]>;
   activeCredential$: Observable<ICredential[]> = new Observable<
     ICredential[]
   >();

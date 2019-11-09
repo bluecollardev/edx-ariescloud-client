@@ -187,8 +187,6 @@ export class IssueCredentialComponent implements OnInit {
       .pipe(
         map(obs =>
           obs.filter(itm => {
-            console.log('active relationship');
-            console.log(itm);
             return itm.state === 'active';
           })
         )
@@ -196,8 +194,6 @@ export class IssueCredentialComponent implements OnInit {
     // .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
 
     this.route.queryParams.subscribe(params => {
-      console.log(params);
-
       this.relationshipId = params.rId;
       console.log('relationship id to match');
       console.log(this.relationshipId);
@@ -235,7 +231,7 @@ export class IssueCredentialComponent implements OnInit {
 
     const ret = {
       connectionId: this.fg.value.connectionId,
-      credDefId: this.credDefId.slice(this.credDefId.indexOf('_') + 1),
+      credDefId: this.credDefId,
       comment: this.fg.value.comment,
       attrs: fa.value
     };

@@ -11,6 +11,8 @@ import {
   CredentialActionsService,
   ICredentialParams
 } from '../../services/credential-actions.service';
+import { ICredentialResponse } from '../credentials-received/credentials-received.component';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-credential-types',
@@ -34,8 +36,10 @@ import {
                   <small>Version: {{ credDef.version }}</small>
                 </ion-label>
                 <ion-badge color="success" item-end
-                  ><ion-icon name="checkmark" class="icon-md"></ion-icon
-                ></ion-badge>
+                  ><ion-icon name="checkmark" class="icon-md">{{
+                    credDef.count
+                  }}</ion-icon></ion-badge
+                >
               </ion-item>
               <ion-item-options>
                 <ion-item-option color="danger" type="button" icon-start>
@@ -73,7 +77,7 @@ import {
 export class CredentialTypesComponent implements OnInit {
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
-  credentials: Observable<ICredentialParams[]>;
+  credentials: Observable<ICredentialResponse[]>;
   _id: string;
 
   constructor(
@@ -86,14 +90,41 @@ export class CredentialTypesComponent implements OnInit {
     // this.initializeItems();
   }
 
-  ngOnInit() {
-    this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
-    this.stateSvc.credentials$ = this.actionSvc.getCredentials();
+  async ngOnInit() {
+    const credentials = await this.actionSvc
+      .getPendingIssues()
+      .pipe(
+        map(itms =>
+          itms.map(itm =>
+            itm.records
+              .map(record => ({
+                _id: itm.credential_exchange_id,
+                ...itm,
+                ...record
+              }))
+              .reduce(itm => itm)
+          )
+        ),
+        tap(obs => console.log(obs))
+      )
+      .toPromise();
+    // credentials.subscribe(obs => console.log(obs));
+    this.credentialDefs = this.actionSvc.getCredentialDefs().pipe(
+      map(obs =>
+        obs.map(credDef => ({
+          count: credentials.filter(
+            cred =>
+              cred.credential_definition_id ===
+              credDef._id.slice(credDef._id.indexOf('cdef_' + 1))
+          ).length,
+          ...credDef
+        }))
+      )
+    );
+    this.credentialDefs.subscribe(obs => console.log(obs));
+    // this.stateSvc.credentials$ = this.actionSvc.getCredentials();
 
     // this.stateSvc.credentialDefs$.subscribe(obs => console.log(obs));
-
-    this.credentialDefs = this.stateSvc.credentialDefs$;
-    this.credentials = this.stateSvc.credentials$;
   }
 
   getItems(ev: any) {

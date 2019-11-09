@@ -55,6 +55,7 @@ export class HttpService {
   }
 
   postById<T>(segment: APISegmentType, id: string, params = {}) {
+    console.log(`${this.url}${segment}/${id}`);
     return this.http.post<T>(`${this.url}${segment}/${id}`, params);
   }
 

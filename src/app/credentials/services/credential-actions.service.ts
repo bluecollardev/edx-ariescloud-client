@@ -16,6 +16,7 @@ import {
 } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
+import { ICredentialResponse } from '../components/credentials-received/credentials-received.component';
 
 export interface ICredDefDeleteResponse {
   ok: boolean;
@@ -68,7 +69,7 @@ export class CredentialActionsService {
   }
 
   getCredentials(params?: ICredentialParams) {
-    const obs = this.httpSvc.get<ICredential[]>('credentials');
+    const obs = this.httpSvc.get<ICredentialResponse[]>('credentials');
 
     return obs;
   }
@@ -104,7 +105,7 @@ export class CredentialActionsService {
   }
 
   getPendingIssues() {
-    return this.httpSvc.get<ICredential[]>('issues').pipe();
+    return this.httpSvc.get<ICredential[]>('issues');
   }
 
   getCredentialDefs(params?: ICredentialParams) {
@@ -146,7 +147,7 @@ export class CredentialActionsService {
           return filtered;
         })
       ));
-  }
+    }
 
     return this.stateSvc.certificatesOfProof$;
   }

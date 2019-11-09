@@ -38,9 +38,7 @@ export class RelationshipsStateService {
     IRelationship[]
   >();
   // TODO: I don't know how to just grab one, whatever... I'll just use a stupid array for now
-  activeRelationship$: Observable<IRelationship[]> = new Observable<
-    IRelationship[]
-  >();
+  activeRelationship$: Observable<IRelationship[]>;
   relationships$: Observable<IRelationship[]> = new Observable<
     IRelationship[]
   >();
