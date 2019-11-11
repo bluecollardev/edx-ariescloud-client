@@ -30,7 +30,7 @@ import { ICredentialResponse } from '../credentials-received/credentials-receive
         </ion-refresher>
         <ion-grid>
           <ion-row>
-            <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+            <ion-col>
               <ion-list
                 *ngIf="credentialDefs | async as credDefs; else noCreds"
               >

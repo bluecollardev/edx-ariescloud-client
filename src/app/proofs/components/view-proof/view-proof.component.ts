@@ -38,7 +38,7 @@ import {
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
+          <ion-col >
             <ion-card text-center>
               <img
                 src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"

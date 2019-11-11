@@ -8,7 +8,9 @@ import {
   CredentialStateService,
   ICertificateOfProof,
   ICredential,
-  IIssuer
+  IIssuer,
+  IProof,
+  IProofResponse
 } from '../../../credentials/services/credential-state.service';
 import {
   RelationshipsStateService,
@@ -108,7 +110,7 @@ export class RelationshipProofsComponent implements OnInit {
   credentials: Observable<ICredentialResponse[]>;
   relationship$: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
-  proofs$: Observable<ICertificateOfProof>;
+  proofs$: Observable<IProofResponse>;
   relId: string;
 
   constructor(

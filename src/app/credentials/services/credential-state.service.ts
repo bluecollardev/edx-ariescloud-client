@@ -49,7 +49,63 @@ export interface ICertificateOfProof {
   version: string;
   requested_attributes: object;
   requested_predicates: object;
-  proofs: any[];
+}
+
+export type ProofStateType =
+  | 'proposal_sent'
+  | 'proposal_received'
+  | 'request_sent'
+  | 'request_received'
+  | 'presentation_sent'
+  | 'presentation_received'
+  | 'verified';
+
+export interface IProofResponse {
+  label: string;
+  did: string;
+  connectionId: string;
+  proofs: IProof[];
+  proofCount: number;
+}
+
+export interface IRequested {
+  name: 'score';
+  restrictions: {
+    schema_name: 'testcred';
+    schema_version: '1.0';
+  };
+}
+
+export interface IProof {
+  _id: string;
+  updated: string;
+  created: string;
+  state: ProofStateType;
+  connectionId: string;
+  requested: IRequested[];
+  presentation_request: {
+    requested_attributes: any;
+    /* {
+        [key: string]: {
+            "name":
+            "restrictions": {
+                "schema_name":
+                "schema_version":
+            }
+        }
+    },
+    "requested_predicates": {},
+    "name":
+    "nonce":
+    */
+  };
+  auto_present: boolean;
+  initiator: 'self' | 'external';
+  updated_at: string;
+  presentation_exchange_id: string;
+  thread_id: string;
+  role: 'verifier' | 'prover';
+  created_at: string;
 }
 
 export interface IIssuer {

@@ -19,7 +19,7 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
   template: `
     <ion-grid>
       <ion-row *ngIf="relationships | async as relationships">
-        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+        <ion-col >
           <ion-list>
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">

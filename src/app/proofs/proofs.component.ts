@@ -1,21 +1,20 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import {
   CredentialStateService,
   ICertificateOfProof,
   ICredential,
-  IIssuer
+  IIssuer,
+  IProof,
+  IProofResponse
 } from '../credentials/services/credential-state.service';
-import {
-  RelationshipsStateService,
-  IRelationship
-} from '../relationships/services/relationships-state.service';
+import { IRelationship } from '../relationships/services/relationships-state.service';
 import { ProofActionService } from './services/proof-action.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
+import { map, tap } from 'rxjs/operators';
 import { ICredentialResponse } from '../credentials/components/credentials-received/credentials-received.component';
 
 @Component({
@@ -37,7 +36,7 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
     <ion-content>
       <ion-grid>
         <ion-row *ngIf="relationships | async as relationships">
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col>
             <ion-list>
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
@@ -59,7 +58,9 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
                     <h2>{{ relationship.name }}</h2>
                     <small>DID: {{ relationship.did }}</small>
                   </ion-label>
-                  <ion-badge color="primary" item-end>2</ion-badge>
+                  <ion-badge color="primary" item-end>{{
+                    relationship.proofCount
+                  }}</ion-badge>
                 </ion-item>
               </ion-item-sliding>
             </ion-list>
@@ -76,7 +77,19 @@ export class ProofsComponent implements OnInit {
   credentials: Observable<ICredentialResponse[]>;
   relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
-  proofs: Observable<ICertificateOfProof[]>;
+
+  activeProofs$: Observable<any[]>;
+
+  _id: string;
+
+  activeProofs(id: string) {
+    this._id = id;
+    this.activeProofs$ = this.actionSvc.getProofs().pipe(
+      map(obs => obs.filter(proof => proof.connectionId === id)),
+      map(obs => obs.reduce((a, b) => a)),
+      tap(obs => console.log(obs))
+    ) as any;
+  }
 
   constructor(
     public router: Router,
@@ -89,7 +102,7 @@ export class ProofsComponent implements OnInit {
     this.initializeItems();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // console.log('bool', bool);
     this.credentials = this.stateSvc.credentials$;
 
@@ -98,8 +111,8 @@ export class ProofsComponent implements OnInit {
     );
 
     this.issuers = this.stateSvc.issuers$;
-    this.stateSvc.certificatesOfProof$ = this.actionSvc.getProofs();
-    this.proofs = this.stateSvc.certificatesOfProof$;
+    // this.stateSvc.certificatesOfProof$ = this.actionSvc.getProofs();
+    // this.proofs = await this.stateSvc.certificatesOfProof$.toPromise();
   }
 
   async initializeItems() {

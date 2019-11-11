@@ -35,12 +35,12 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col >
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
           </ion-col>
         </ion-row>
         <ion-row *ngIf="credentials$ | async as creds">
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col >
             <ion-grid style="width: 100%;">
               <!--<ion-row>
                 <ion-col>

@@ -62,7 +62,7 @@ export interface ICredentialResponse {
       </ion-refresher>
       <ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col>
             <ion-list *ngIf="credentials | async as creds">
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
@@ -168,13 +168,16 @@ export class CredentialsReceivedComponent implements OnInit {
 
   loadData() {
     this.pending$ = this.actionSvc.getPendingIssues().pipe(
-      map(itms => {
-        const arr = []
+      map(
+        itms => {
+          const arr = [];
 
-        itms.forEach(val => {val.records.forEach(cred => arr.push(cred))})
-        console.log(arr)
-        return arr
-      }
+          itms.forEach(val => {
+            val.records.forEach(cred => arr.push(cred));
+          });
+          console.log(arr);
+          return arr;
+        }
         // itms.map(itm =>
         //   itm.records
         //     .map(record => ({
