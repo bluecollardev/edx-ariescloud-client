@@ -168,16 +168,22 @@ export class CredentialsReceivedComponent implements OnInit {
 
   loadData() {
     this.pending$ = this.actionSvc.getPendingIssues().pipe(
-      map(itms =>
-        itms.map(itm =>
-          itm.records
-            .map(record => ({
-              _id: itm.credential_exchange_id,
-              ...itm,
-              ...record
-            }))
-            .reduce(itm => itm)
-        )
+      map(itms => {
+        const arr = []
+
+        itms.forEach(val => {val.records.forEach(cred => arr.push(cred))})
+        console.log(arr)
+        return arr
+      }
+        // itms.map(itm =>
+        //   itm.records
+        //     .map(record => ({
+        //       _id: itm.credential_exchange_id,
+        //       ...itm,
+        //       ...record
+        //     }))
+        //     .reduce(itm => itm)
+        // )
       ),
       tap(obs => console.log(obs))
     );
