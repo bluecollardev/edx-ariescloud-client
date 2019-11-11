@@ -37,7 +37,7 @@ import { RelationshipsActionService } from '../relationships/services/relationsh
         <ion-row
           *ngIf="stateSvc.messages$ | async as relationships; else loading"
         >
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col >
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-list>
               <ion-list-header> Messages </ion-list-header>

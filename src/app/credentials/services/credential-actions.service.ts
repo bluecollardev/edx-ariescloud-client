@@ -118,20 +118,6 @@ export class CredentialActionsService {
       'credential-definitions'
     );
     return response;
-
-    // this.stateSvc.setCredentialDefs(of(CredentialMocks.credentialDefs));
-
-    // if (params && params.did) {
-    //   return (this.stateSvc.credentialDefs$ = this.stateSvc.credentialDefs$.pipe(
-    //     map(cs => {
-    //       const filtered = cs.filter(c => c.issuerDid === params.did);
-    //       console.log(filtered);
-    //       return filtered;
-    //     })
-    //   ));
-    // }
-
-    // return this.stateSvc.credentials$;
   }
 
   createCredentialDef() {

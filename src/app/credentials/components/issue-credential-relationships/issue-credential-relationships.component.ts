@@ -43,7 +43,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
           </ion-col>
         </ion-row>-->
         <ion-row *ngIf="relationships | async as relationships">
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col >
             <ion-list>
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
@@ -69,7 +69,7 @@ import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
       </ion-grid>
       <!--<ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
+          <ion-col >
             <ion-card text-center *ngIf="active$ | async as active">
               <img
                 src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"

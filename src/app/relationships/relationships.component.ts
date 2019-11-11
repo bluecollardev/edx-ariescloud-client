@@ -25,7 +25,7 @@ import { RelationshipsActionService } from './services/relationships-action.serv
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col>
             <ion-list
               *ngIf="stateSvc.activeRelationship$ | async as relationshipItems"
             >
@@ -42,7 +42,10 @@ import { RelationshipsActionService } from './services/relationships-action.serv
                     <h2>{{ item.name }}</h2>
                     <small>DID: {{ item.did }}</small>
                   </ion-label>
-                  <ion-badge color="medium" item-end><ion-icon name="notifications" class="icon-md"></ion-icon><sup><strong> 2</strong></sup></ion-badge>
+                  <ion-badge color="medium" item-end
+                    ><ion-icon name="notifications" class="icon-md"></ion-icon
+                    ><sup><strong> 2</strong></sup></ion-badge
+                  >
                 </ion-item>
                 <ion-item-options>
                   <ion-item-option color="danger" type="button" icon-start>

@@ -28,7 +28,7 @@ import { Router } from '@angular/router';
       <!--<ion-grid *ngIf="invitation$ | async as invite">-->
       <ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="8" pushMd="2" sizeXl="4" pushXl="4">
+          <ion-col >
             <form [formGroup]="fg">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>

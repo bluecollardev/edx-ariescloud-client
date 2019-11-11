@@ -15,7 +15,7 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
     <ng-container>
       <ion-grid>
         <ion-row>
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col >
             <ion-list
               *ngIf="stateSvc.credentialDefs$ | async as credDefs"
             >

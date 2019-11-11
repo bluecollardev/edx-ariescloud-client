@@ -38,7 +38,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
     <ion-content>
       <ion-grid>
         <ion-row *ngIf="stateSvc.certificatesOfProof$ | async as certificates">
-          <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-col >
             <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
             <ion-grid style="width: 100%;">
               <ion-row

@@ -44,7 +44,7 @@ const credentialStates = {
   template: `
     <ion-grid>
       <ion-row>
-        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+        <ion-col >
           <ion-list
             *ngIf="credentials | async as issuerGroups"
           >
