@@ -40,71 +40,16 @@ import { HttpService } from 'src/app/core/services/http.service';
         <ion-row>
           <ion-col >
             <ion-card text-center>
-              <img
-                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-              />
-
               <ion-card-content>
+                <ion-item>
+                  <ion-textarea>{{ active | json }}</ion-textarea>
+                </ion-item>
                 <ion-card-title>
                   {{ active.name }}
                   <br />
-                  <div style="text-align: left; max-width: 60%; margin: 0 auto">
-                    <small
-                      ><small
-                        ><small>Issued by:</small> {{ active.label }}</small
-                      ></small
-                    >
-                    <!--<br />
-                    <small><small><small>Issued to:</small> Alice Cooper</small></small>-->
-                  </div>
                 </ion-card-title>
               </ion-card-content>
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>Date Issued</ion-label>
-                <ion-badge color="medium" item-end>{{
-                  active.updated
-                }}</ion-badge>
-              </ion-item>
-              <ng-container *ngFor="let itm of active.values">
-                <ion-item class="flex ion-justify-content-around">
-                  <!--<ion-icon name='musical-notes' item-start style="color: #d03e84"></ion-icon>-->
-                  <ion-label>{{ itm.key }}</ion-label>
-                  <ion-badge color="medium" item-end>{{ itm.value }}</ion-badge>
-                </ion-item>
-              </ng-container>
-              <!--
-              <ion-item class="flex ion-justify-content-around">
-                <ion-label>Program</ion-label>
-                <ion-badge color="medium" item-end>{{
-                  active.program
-                }}</ion-badge>
-              </ion-item>
 
-              <ion-item class="flex ion-justify-content-around">
-                <ion-label>GPA</ion-label>
-                <ion-badge color="medium" item-end>3.8 / 4.0</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <ion-label>Status</ion-label>
-                <ion-badge color="medium" item-end>{{
-                  active.status
-                }}</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <ion-label>SSN</ion-label>
-                <ion-badge color="medium" item-end>abcd-1234-xyz</ion-badge>
-              </ion-item>
-
-              <ion-item class="flex ion-justify-content-around">
-                <ion-label>Document Version</ion-label>
-                <ion-badge color="medium" item-end>{{
-                  active.version
-                }}</ion-badge>
-              </ion-item>
--->
               <div style="display: flex; flex-direction: column">
                 <ion-button
                   style="flex: 1"
@@ -148,7 +93,6 @@ export class ViewCredentialComponent implements OnInit {
       'credentials',
       this.route.snapshot.paramMap.get('id')
     );
-    this.active$.subscribe(obs => console.log(obs));
   }
 
   async setActiveCred() {

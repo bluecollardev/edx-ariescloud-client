@@ -24,7 +24,9 @@ import { filter } from 'rxjs/operators';
       *ngIf="credDef$ | async as credDef"
     >
       <ion-toolbar class="ios hydrated">
-        <ion-title class="ios title-ios hydrated">Issue <strong>{{ credDef.name }}</strong></ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Issue <strong>{{ credDef.name }}</strong></ion-title
+        >
         <ion-buttons
           slot="end"
           class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
@@ -42,7 +44,9 @@ import { filter } from 'rxjs/operators';
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <app-issue-credential-relationships *ngIf="this.activeTab === 'select-recipient'">
+      <app-issue-credential-relationships
+        *ngIf="this.activeTab === 'select-recipient'"
+      >
       </app-issue-credential-relationships>
       <form [formGroup]="fg" *ngIf="this.activeTab === 'issue-credential'">
         <ion-grid>
@@ -162,9 +166,10 @@ export class IssueCredentialComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
-      tap(obs => (this.credDefId = obs._id)),
+      tap(obs => (console.log(obs), (this.credDefId = obs._id))),
       tap(obs => {
         const fa = new FormArray([]);
+        console.log(obs);
         obs.attributes.forEach(val =>
           fa.push(
             new FormGroup({
@@ -179,22 +184,21 @@ export class IssueCredentialComponent implements OnInit {
 
     this.relationships$ = this.relationshipsActionSvc
       .getRelationships() // TODO: Fix this hack!
-      .pipe(map(obs => obs.filter(itm => {
-        console.log('active relationship');
-        console.log(itm);
-        return itm.state === 'active';
-      })));
-      // .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
+      .pipe(
+        map(obs =>
+          obs.filter(itm => {
+            return itm.state === 'active';
+          })
+        )
+      );
+    // .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
 
-    this.route.queryParams
-      .subscribe(params => {
-        console.log(params);
-
-        this.relationshipId = params.rId;
-        console.log('relationship id to match');
-        console.log(this.relationshipId);
-        this.fg.get('connectionId').setValue(this.relationshipId);
-      });
+    this.route.queryParams.subscribe(params => {
+      this.relationshipId = params.rId;
+      console.log('relationship id to match');
+      console.log(this.relationshipId);
+      this.fg.get('connectionId').setValue(this.relationshipId);
+    });
 
     this.route.url.subscribe(segments => {
       this.setActiveTab(segments);
@@ -232,6 +236,7 @@ export class IssueCredentialComponent implements OnInit {
       attrs: fa.value
     };
     console.log(ret);
+    // "attrs": [{"name": "name", "value": "Science"}]
     try {
       const res = await this.httpSvc.post('issues', ret).toPromise();
       if (res) {

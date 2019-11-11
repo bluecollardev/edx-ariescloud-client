@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import * as CredentialMocks from './credential-mocks';
+import { ICredentialResponse } from '../components/credentials-received/credentials-received.component';
 
 export interface ICredentialSchema {
   id: string; // Use GUID
@@ -36,17 +37,18 @@ export interface ICredential {
   version: string;
   schema: string;
   did: string;
-  credentials: any[];
+  records: any[];
+  connectionId: string;
+  credential_exchange_id: string;
 }
 
 export interface ICertificateOfProof {
-  id: string; // Use GUID
+  connectionId: string; // Use GUID
   issuerDid: string;
   name: string;
   version: string;
   requested_attributes: object;
   requested_predicates: object;
-  connectionId: string;
 }
 
 export type ProofStateType =
@@ -123,11 +125,11 @@ export class CredentialStateService {
   activeCredentialSchema$: Observable<ICredentialSchema[]> = new Observable<
     ICredentialSchema[]
   >();
-  credentialDefs$: Observable<ICredentialDef[]>;
+  credentialDefs$: Observable<any[]>;
   activeCredentialDef$: Observable<ICredentialDef[]> = new Observable<
     ICredentialDef[]
   >();
-  credentials$: Observable<ICredential[]>;
+  credentials$: Observable<ICredentialResponse[]>;
   activeCredential$: Observable<ICredential[]> = new Observable<
     ICredential[]
   >();
@@ -138,7 +140,7 @@ export class CredentialStateService {
     ICertificateOfProof[]
   >();
 
-  pending$: Observable<ICredential[]>;
+  pending$: Observable<any[]>;
 
   constructor() {
     /*const governmentCredential = {
@@ -146,29 +148,7 @@ export class CredentialStateService {
       name: 'Alice',
       tax_id: '123-45-6789'
     };*/
-
     // TODO: Remove these!
-    // this.setActiveCredentialProofs(did, of(certificatesOfProof));
-    // this.setCredentials(of(credentials));
-    this.setIssuers(of(this.buildIssuers(CredentialMocks.issuedCredentials)));
-    // this.setCredentialSchemas(of(credentialSchemas));
-    // this.setCredentialDefs(of(CredentialMocks.credentialDefs));
-    this.setCertificates(of(CredentialMocks.certificatesOfProof));
-  }
-
-  setActiveCertificate(cid: string) {
-    // this.activeCertificateOfProof$ = this.certificatesOfProof$.pipe(
-    //   map(cs => {
-    //     return cs.filter(c => {
-    //       console.log('------------');
-    //       console.log(c);
-    //       console.log(c.id);
-    //       console.log(cid);
-    //       console.log('------------');
-    //       return c.id === cid;
-    //     });
-    //   })
-    // );
   }
 
   setCertificates(data: Observable<ICertificateOfProof[]>) {

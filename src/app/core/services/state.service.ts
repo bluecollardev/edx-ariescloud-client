@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
+import { HttpService } from './http.service';
 
 export interface IProfile {
-  name: string;
-  relationshipCount: number;
-  messages: string[];
   did: string;
+  label: string;
+  issuesCount: number;
+  credsCount: number;
+  proofsCount: number;
+  relCount: number;
 }
 
 @Injectable({
@@ -28,26 +31,13 @@ export class StateService {
     this.profile$.next(data);
   }
 
-  constructor() {
-    // const schema = {
-    //   average: 5,
-    //   degree: 'Computer Science',
-    //   name: 'Alice Cooper',
-    //   status: 'active',
-    //   year: new Date(),
-    //   img: ''
-    // };
-
+  constructor(private httpSvc: HttpService) {
     const schema = ['name', 'degree', 'status', 'year', 'average', 'ssn'];
 
-    const profile = {
-      name: 'Alice Cooper',
-      relationshipCount: 5,
-      messages: ['1', '2', '3'],
-      did: 'xyz-124fds-zxcv-rewr'
-    };
+    const profile = this.httpSvc.get<IProfile>('profile');
 
     this.setSchemas([schema]);
-    this.setProfile(profile);
+
+    profile.subscribe(this.profile$);
   }
 }

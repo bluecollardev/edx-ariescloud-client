@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { IInvitation } from '../../models/i-invitation';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-add-relationship',
@@ -19,7 +20,9 @@ import { Router } from '@angular/router';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Enter Invitation Code</ion-title>
+        <ion-title class="ios title-ios hydrated"
+          >Enter Invitation Code</ion-title
+        >
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -79,7 +82,8 @@ export class AddRelationshipComponent implements OnInit, OnDestroy {
   constructor(
     private stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService,
-    private router: Router
+    private router: Router,
+    public loadingController: LoadingController
   ) {}
 
   ngOnInit() {
@@ -92,12 +96,24 @@ export class AddRelationshipComponent implements OnInit, OnDestroy {
   }
 
   async submit(fc: any) {
+    const loading = await this.loadingController.create({
+      message: 'Accepting Invitation',
+      duration: 10000
+    });
+    await loading.present();
     try {
       const invite = JSON.parse(fc);
       const res = await this.actionSvc.acceptInvitation(invite);
-      if (!res) return await this.actionSvc.resetRelState();
+      if (!res) {
+        return await this.actionSvc.resetRelState();
+      }
       await this.actionSvc.resetRelState();
-      return this.router.navigate(['/relationships']);
+      setTimeout(() => {
+        this.actionSvc.resetRelState().then(() => {
+          loading.dismiss();
+          this.router.navigate(['/relationships']);
+        });
+      }, 4000);
     } catch (err) {}
   }
 }

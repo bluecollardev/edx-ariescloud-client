@@ -7,18 +7,20 @@ import {
   CredentialStateService,
   ICredentialDef
 } from '../../services/credential-state.service';
-import { CredentialActionsService, ICredentialParams } from '../../services/credential-actions.service';
-
+import {
+  CredentialActionsService,
+  ICredentialParams
+} from '../../services/credential-actions.service';
+import { ICredentialResponse } from '../credentials-received/credentials-received.component';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-credential-types',
   template: `
     <ion-grid>
       <ion-row>
-        <ion-col >
-          <ion-list
-            *ngIf="stateSvc.credentialDefs$ | async as credDefs"
-          >
+        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+          <ion-list *ngIf="stateSvc.credentialDefs$ | async as credDefs">
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
                 <span class="ion-padding">Credential Types</span>
@@ -33,7 +35,11 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
                   <small>{{ credDef.program }}</small>
                   <small>Version: {{ credDef.version }}</small>
                 </ion-label>
-                <ion-badge color="success" item-end><ion-icon name="checkmark" class="icon-md"></ion-icon></ion-badge>
+                <ion-badge color="success" item-end
+                  ><ion-icon name="checkmark" class="icon-md">{{
+                    credDef.count
+                  }}</ion-icon></ion-badge
+                >
               </ion-item>
               <ion-item-options>
                 <ion-item-option color="danger" type="button" icon-start>
@@ -69,10 +75,9 @@ import { CredentialActionsService, ICredentialParams } from '../../services/cred
   styleUrls: ['./credential-types.component.css']
 })
 export class CredentialTypesComponent implements OnInit {
-
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
-  credentials: Observable<ICredentialParams[]>;
+  credentials: Observable<ICredentialResponse[]>;
   _id: string;
 
   constructor(
@@ -85,13 +90,41 @@ export class CredentialTypesComponent implements OnInit {
     // this.initializeItems();
   }
 
-  ngOnInit() {
-    this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
-    this.stateSvc.credentials$ = this.actionSvc.getCredentials();
+  async ngOnInit() {
+    const credentials = await this.actionSvc
+      .getPendingIssues()
+      .pipe(
+        map(itms =>
+          itms.map(itm =>
+            itm.records
+              .map(record => ({
+                _id: itm.credential_exchange_id,
+                ...itm,
+                ...record
+              }))
+              .reduce(itm => itm)
+          )
+        ),
+        tap(obs => console.log(obs))
+      )
+      .toPromise();
+    // credentials.subscribe(obs => console.log(obs));
+    this.credentialDefs = this.actionSvc.getCredentialDefs().pipe(
+      map(obs =>
+        obs.map(credDef => ({
+          count: credentials.filter(
+            cred =>
+              cred.credential_definition_id ===
+              credDef._id.slice(credDef._id.indexOf('cdef_' + 1))
+          ).length,
+          ...credDef
+        }))
+      )
+    );
+    this.credentialDefs.subscribe(obs => console.log(obs));
+    // this.stateSvc.credentials$ = this.actionSvc.getCredentials();
 
-    this.credentialDefs = this.stateSvc.credentialDefs$;
-    this.credentials = this.stateSvc.credentials$;
-
+    // this.stateSvc.credentialDefs$.subscribe(obs => console.log(obs));
   }
 
   getItems(ev: any) {
@@ -152,5 +185,4 @@ export class CredentialTypesComponent implements OnInit {
 
     await actionSheet.present();
   }
-
 }

@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute, Router, UrlSegment, Event as NavigationEvent, NavigationStart } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  UrlSegment,
+  Event as NavigationEvent,
+  NavigationStart
+} from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -9,7 +15,11 @@ import {
   CredentialStateService,
   ICredentialDef
 } from './services/credential-state.service';
-import { CredentialActionsService, ICredentialParams } from './services/credential-actions.service';
+import {
+  CredentialActionsService,
+  ICredentialParams
+} from './services/credential-actions.service';
+import { ICredentialResponse } from './components/credentials-received/credentials-received.component';
 
 @Component({
   selector: 'app-credentials',
@@ -30,19 +40,33 @@ import { CredentialActionsService, ICredentialParams } from './services/credenti
         >
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">{{ this.getTitle() }}</ion-title>
+        <ion-title class="ios title-ios hydrated">{{
+          this.getTitle()
+        }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content slots="fixed">
       <div class="ion-padding" *ngIf="this.activeTab !== 'recipients'">
-        <ion-segment color="primary">
-          <ion-segment-button value="received" [checked]="this.activeTab === 'received'" (ionSelect)="this.segmentButtonClicked($event, 'received')">
+        <ion-segment color="primary" slot="fixed">
+          <ion-segment-button
+            value="received"
+            [checked]="this.activeTab === 'received'"
+            (ionSelect)="this.segmentButtonClicked($event, 'received')"
+          >
             <ion-label>Received</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="issued" [checked]="this.activeTab === 'issued'" (ionSelect)="this.segmentButtonClicked($event, 'issued')">
+          <ion-segment-button
+            value="issued"
+            [checked]="this.activeTab === 'issued'"
+            (ionSelect)="this.segmentButtonClicked($event, 'issued')"
+          >
             <ion-label>Issued</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="types" [checked]="this.activeTab === 'types'" (ionSelect)="this.segmentButtonClicked($event, 'types')">
+          <ion-segment-button
+            value="types"
+            [checked]="this.activeTab === 'types'"
+            (ionSelect)="this.segmentButtonClicked($event, 'types')"
+          >
             <ion-label>Types</ion-label>
           </ion-segment-button>
         </ion-segment>
@@ -66,7 +90,7 @@ export class CredentialsComponent implements OnInit {
   activeTab: string;
   searchQuery: '';
   credentialDefs: Observable<ICredentialDef[]>;
-  credentials: Observable<ICredentialParams[]>;
+  credentials: Observable<ICredentialResponse[]>;
   _id: string;
 
   validTabs = ['issued', 'recipients', 'types', 'received'];
@@ -93,17 +117,17 @@ export class CredentialsComponent implements OnInit {
         // The "events" stream contains all the navigation events. For this demo,
         // though, we only care about the NavigationStart event as it contains
         // information about what initiated the navigation sequence.
-        filter((event: NavigationEvent ) => {
-          return(event instanceof NavigationStart);
+        filter((event: NavigationEvent) => {
+          return event instanceof NavigationStart;
         })
       )
-      .subscribe(( event: NavigationStart ) => {
-        console.group( 'NavigationStart Event' );
+      .subscribe((event: NavigationStart) => {
+        console.group('NavigationStart Event');
         // Every navigation sequence is given a unique ID. Even "popstate"
         // navigations are really just "roll forward" navigations that get
         // a new, unique ID.
-        console.log( 'navigation id:', event.id );
-        console.log( 'route:', event.url );
+        console.log('navigation id:', event.id);
+        console.log('route:', event.url);
         // The "navigationTrigger" will be one of:
         // --
         // - imperative (ie, user clicked a link).
@@ -111,7 +135,7 @@ export class CredentialsComponent implements OnInit {
         // - hashchange
         // --
         // NOTE: I am not sure what triggers the "hashchange" type.
-        console.log( 'trigger:', event.navigationTrigger );
+        console.log('trigger:', event.navigationTrigger);
 
         // This "restoredState" property is defined when the navigation
         // event is triggered by a "popstate" event (ex, back / forward
@@ -136,7 +160,6 @@ export class CredentialsComponent implements OnInit {
 
     this.credentialDefs = this.stateSvc.credentialDefs$;
     this.credentials = this.stateSvc.credentials$;
-
   }
 
   setActiveTab(segments) {
@@ -245,10 +268,7 @@ export class CredentialsComponent implements OnInit {
 
     this.activeTab = tab;
 
-    const url = this
-      .router
-      .createUrlTree(['/credentials', tab])
-      .toString();
+    const url = this.router.createUrlTree(['/credentials', tab]).toString();
 
     this.location.go(url);
   }

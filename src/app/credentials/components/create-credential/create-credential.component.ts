@@ -47,23 +47,28 @@ import { Router } from '@angular/router';
                     <ion-col>
                       <ion-item>
                         <ion-label position="stacked"
-                          >Select Schema
+                          >Credential Version
                           <ion-text color="danger">*</ion-text>
                         </ion-label>
+                        <!--
                         <ion-select required formControlName="version">
                           <ion-select-option>v1.1</ion-select-option>
                           <ion-select-option>v1.2</ion-select-option>
                           <ion-select-option selected>v1.3</ion-select-option>
                           <ion-select-option>v2.0</ion-select-option>
                         </ion-select>
+                        -->
+                        1.0
                       </ion-item>
                     </ion-col>
+                    <!--
                     <ion-col size="3">
                       <ion-button margin-end (click)="this.newSchemaPopup()">
                         <ion-icon name="add"></ion-icon>
                         New
                       </ion-button>
                     </ion-col>
+                    -->
                   </ion-row>
 
                   <ion-row>
@@ -142,7 +147,7 @@ export class CreateCredentialComponent implements OnInit {
   ngOnInit() {
     const fg = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      version: new FormControl('', [Validators.required]),
+      version: new FormControl('1.0', [Validators.required]),
       schema: new FormArray([])
     });
 

@@ -8,7 +8,7 @@ import { ProofsComponent } from './proofs/proofs.component';
 
 // tslint:disable-next-line: max-line-length
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', redirectTo: 'relationships', pathMatch: 'full' },
   {
     path: 'relationships',
     pathMatch: 'full',

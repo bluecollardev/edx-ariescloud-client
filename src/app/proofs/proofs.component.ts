@@ -15,6 +15,7 @@ import { IRelationship } from '../relationships/services/relationships-state.ser
 import { ProofActionService } from './services/proof-action.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
 import { map, tap } from 'rxjs/operators';
+import { ICredentialResponse } from '../credentials/components/credentials-received/credentials-received.component';
 
 @Component({
   selector: 'app-credentials',
@@ -47,7 +48,7 @@ import { map, tap } from 'rxjs/operators';
                 *ngFor="let relationship of relationships"
                 (click)="
                   this.router.navigate([
-                    '/verify-credentials/group/' + relationship.did
+                    '/verify-credentials/group/' + relationship._id
                   ])
                 "
               >
@@ -73,8 +74,8 @@ import { map, tap } from 'rxjs/operators';
 })
 export class ProofsComponent implements OnInit {
   searchQuery: '';
-  credentials: Observable<ICredential[]>;
-  relationships: Observable<IProofResponse[]>;
+  credentials: Observable<ICredentialResponse[]>;
+  relationships: Observable<IRelationship[]>;
   issuers: Observable<IIssuer[]>;
 
   activeProofs$: Observable<any[]>;

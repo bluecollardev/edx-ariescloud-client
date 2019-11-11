@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpService } from 'src/app/core/services/http.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
@@ -16,6 +16,7 @@ import {
 } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
+import { ICredentialResponse } from '../components/credentials-received/credentials-received.component';
 
 export interface ICredDefDeleteResponse {
   ok: boolean;
@@ -68,7 +69,7 @@ export class CredentialActionsService {
   }
 
   getCredentials(params?: ICredentialParams) {
-    const obs = this.httpSvc.get<ICredential[]>('credentials');
+    const obs = this.httpSvc.get<ICredentialResponse[]>('credentials');
 
     return obs;
   }
@@ -104,13 +105,7 @@ export class CredentialActionsService {
   }
 
   getPendingIssues() {
-    return this.httpSvc
-      .get<ICredential[]>('issues')
-      .pipe(
-        map(obs =>
-          obs.filter(itm => itm.state !== 'stored' && itm.state !== 'issued')
-        )
-      );
+    return this.httpSvc.get<ICredential[]>('issues');
   }
 
   getCredentialDefs(params?: ICredentialParams) {
@@ -138,22 +133,12 @@ export class CredentialActionsService {
       { headers: this.headers }
     );
 
-    this.stateSvc.setActiveCertificate(id);
-
-    console.log('active certificate');
-    console.log(this.stateSvc.activeCertificateOfProof$);
+    // this.stateSvc.setActiveCertificate(id);
 
     return this.stateSvc.activeCertificateOfProof$;
   }
 
   getCertificates(params?: ICertificateParams) {
-    const response = this.http.get<ICertificateOfProof[]>(
-      `${this.url}credentials`,
-      { headers: this.headers }
-    );
-
-    this.stateSvc.setCertificates(of(CredentialMocks.certificatesOfProof));
-
     if (params && params.did) {
       return (this.stateSvc.certificatesOfProof$ = this.stateSvc.certificatesOfProof$.pipe(
         map(cs => {
