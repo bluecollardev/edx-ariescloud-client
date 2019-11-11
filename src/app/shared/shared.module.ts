@@ -8,6 +8,12 @@ import { ChipComponent } from './components/chip/chip.component';
 @NgModule({
   declarations: [ListItemComponent, ChipComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
-  exports: [ReactiveFormsModule, FormsModule, IonicModule, ChipComponent]
+  exports: [
+    ReactiveFormsModule,
+    FormsModule,
+    IonicModule,
+    ChipComponent,
+    ListItemComponent,
+  ],
 })
 export class SharedModule {}

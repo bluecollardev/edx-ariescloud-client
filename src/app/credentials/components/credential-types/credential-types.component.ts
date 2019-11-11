@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 
 import {
   CredentialStateService,
-  ICredentialDef
+  ICredentialDef,
 } from '../../services/credential-state.service';
 import {
   CredentialActionsService,
-  ICredentialParams
+  ICredentialParams,
 } from '../../services/credential-actions.service';
 import { ICredentialResponse } from '../credentials-received/credentials-received.component';
 import { map, tap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import { map, tap } from 'rxjs/operators';
   template: `
     <ion-grid>
       <ion-row>
-        <ion-col sizeXs="12" sizeMd="12" pushMd="12" sizeXl="8" pushXl="2">
+        <ion-col>
           <ion-list *ngIf="stateSvc.credentialDefs$ | async as credDefs">
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
@@ -72,7 +72,7 @@ import { map, tap } from 'rxjs/operators';
       </ion-row>
     </ion-grid>
   `,
-  styleUrls: ['./credential-types.component.css']
+  styleUrls: ['./credential-types.component.css'],
 })
 export class CredentialTypesComponent implements OnInit {
   searchQuery: '';
@@ -85,7 +85,7 @@ export class CredentialTypesComponent implements OnInit {
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
   ) {
     // this.initializeItems();
   }
@@ -100,12 +100,12 @@ export class CredentialTypesComponent implements OnInit {
               .map(record => ({
                 _id: itm.credential_exchange_id,
                 ...itm,
-                ...record
+                ...record,
               }))
-              .reduce(itm => itm)
-          )
+              .reduce(itm => itm),
+          ),
         ),
-        tap(obs => console.log(obs))
+        tap(obs => console.log(obs)),
       )
       .toPromise();
     // credentials.subscribe(obs => console.log(obs));
@@ -115,11 +115,11 @@ export class CredentialTypesComponent implements OnInit {
           count: credentials.filter(
             cred =>
               cred.credential_definition_id ===
-              credDef._id.slice(credDef._id.indexOf('cdef_' + 1))
+              credDef._id.slice(credDef._id.indexOf('cdef_' + 1)),
           ).length,
-          ...credDef
-        }))
-      )
+          ...credDef,
+        })),
+      ),
     );
     this.credentialDefs.subscribe(obs => console.log(obs));
     // this.stateSvc.credentials$ = this.actionSvc.getCredentials();
@@ -150,19 +150,19 @@ export class CredentialTypesComponent implements OnInit {
           text: 'Issue Credential To...',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
-          }
+          },
         },
         {
           text: 'Preview Credential Type',
           handler: () => {
             this.router.navigate([`/credentials/type/${this._id}/preview`]);
-          }
+          },
         },
         {
           text: 'Edit Credential Type',
           handler: () => {
             this.router.navigate([`/credentials/edit/${this._id}`]);
-          }
+          },
         },
         {
           text: 'Hide Credential Type',
@@ -171,16 +171,16 @@ export class CredentialTypesComponent implements OnInit {
             await this.actionSvc.deleteCredDef(this._id);
             this.actionSvc.setRelState();
             this.credentialDefs = this.stateSvc.credentialDefs$;
-          }
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();

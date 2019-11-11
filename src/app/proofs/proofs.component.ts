@@ -9,7 +9,7 @@ import {
   ICredential,
   IIssuer,
   IProof,
-  IProofResponse
+  IProofResponse,
 } from '../credentials/services/credential-state.service';
 import { IRelationship } from '../relationships/services/relationships-state.service';
 import { ProofActionService } from './services/proof-action.service';
@@ -71,7 +71,7 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
     <ng-template #noProofs> </ng-template>
   `,
   styleUrls: ['./proofs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProofsComponent implements OnInit {
   searchQuery: '';
@@ -102,11 +102,11 @@ export class ProofsComponent implements OnInit {
             .map(proof => proof.proofs)
             .reduce(proof => {
               return proof;
-            })
+            }),
         ),
 
         // map(obs => obs.reduce((a, b) => a)),
-        tap(obs => console.log(obs))
+        tap(obs => console.log(obs)),
       )
       .toPromise();
     // this.activeProofs$ = activeProofs;
@@ -118,7 +118,7 @@ export class ProofsComponent implements OnInit {
     public relationShipActionService: RelationshipsActionService,
     private actionSvc: ProofActionService,
     public actionSheetCtrl: ActionSheetController,
-    private alertController: AlertController
+    private alertController: AlertController,
   ) {
     this.initializeItems();
   }
@@ -165,15 +165,15 @@ export class ProofsComponent implements OnInit {
           role: 'destructive',
           handler: () => {
             this.router.navigate([
-              '/verify-credentials/group/' + this.connectionId
+              '/verify-credentials/group/' + this.connectionId,
             ]);
-          }
+          },
         },
         {
           text: 'Request a Proof',
           handler: () => {
             this.verifyCredPopup();
-          }
+          },
         },
         {
           text: 'Cancel',
@@ -181,9 +181,9 @@ export class ProofsComponent implements OnInit {
           handler: () => {
             this.actionSheetCtrl.dismiss();
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();
@@ -201,15 +201,15 @@ export class ProofsComponent implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

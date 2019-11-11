@@ -2,23 +2,21 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
 } from '@angular/core';
 
 @Component({
   selector: 'app-list-item',
   template: `
-    <ion-row>
-      <ion-col>
-        <ion-note color="primary">{{ label }}</ion-note>
-      </ion-col>
-      <ion-col>
-        <ion-note>{{ value }}</ion-note>
-      </ion-col>
-    </ion-row>
+    <ion-item>
+      <ion-label>
+        {{ label }}
+      </ion-label>
+      <ion-badge slot="end" color="tertiary">{{ value }}</ion-badge>
+    </ion-item>
   `,
   styleUrls: ['./list-item.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListItemComponent implements OnInit {
   @Input() label: string;

@@ -1,20 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, tap, flatMap, concat, merge, concatMap } from 'rxjs/operators';
+import {
+  map,
+  tap,
+  flatMap,
+  concat,
+  merge,
+  concatMap,
+  take,
+} from 'rxjs/operators';
 import {
   CredentialStateService,
   ICertificateOfProof,
   IRequestedAttributes,
-  IProof
+  IProof,
 } from '../../../credentials/services/credential-state.service';
 import {
   CredentialActionsService,
-  ICertificateParams
+  ICertificateParams,
 } from '../../../credentials/services/credential-actions.service';
 import { ProofActionService } from '../../services/proof-action.service';
 import { RelationshipActionsService } from 'src/app/credentials/services/relationship-actions.service';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
+import { IRelationship } from 'src/app/messages/services/messages-state.service';
 
 @Component({
   selector: 'app-view-proof',
@@ -37,40 +46,60 @@ import { of } from 'rxjs';
         <img
           src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
         />
-        <ion-list>
-          <ion-item>
-            <ion-card-title>
-              {{ proof.label }}
-            </ion-card-title>
-          </ion-item>
-          <p *ngIf="active">
-            <strong>Alice Cooper</strong>
-            {{ active.name.toLowerCase() }}.
-          </p>
 
+        <ion-list>
+          <ion-card-title>
+            <h2 *ngIf="relationship$ | async as rel">
+              {{ rel.name }}
+            </h2>
+          </ion-card-title>
           <ion-item>
-            <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
             <ion-label>Status</ion-label>
-            <ion-badge color="secondary" item-end>{{ proof.state }}</ion-badge>
+            <ion-badge color="secondary" item-end>{{
+              proof.state | titlecase
+            }}</ion-badge>
           </ion-item>
+          <ion-item>
+            <ion-label>Role</ion-label>
+            <ion-badge color="secondary" item-end>{{
+              getRole(proof.role) | titlecase
+            }}</ion-badge>
+          </ion-item>
+          <ng-container *ngFor="let request of proof.mappedAttributes">
+            <ion-list-header>
+              <ion-title>
+                {{ request.name }}
+              </ion-title>
+            </ion-list-header>
+            <ion-item-divider color="medium">
+              <ion-label>
+                Restrictions
+              </ion-label>
+            </ion-item-divider>
+            <app-list-item
+              *ngFor="let restrict of request.restrictions"
+              [label]="restrict.key"
+              [value]="restrict.value"
+            >
+            </app-list-item>
+          </ng-container>
         </ion-list>
-        <ion-item
-          (click)="verifyCredPopup()"
-          lines="none"
-          color="primary"
-          detail
-          detailIcon="finger-print"
-        >
-          <ion-label>Verify</ion-label>
+        <ion-item (click)="verifyCredPopup()" lines="none" color="primary">
+          <ion-badge slot="end">Verify</ion-badge>
         </ion-item>
       </ion-card>
     </ion-content>
   `,
-  styleUrls: ['./view-proof.component.scss']
+  styleUrls: ['./view-proof.component.scss'],
 })
 export class ViewProofComponent implements OnInit {
   active: ICertificateOfProof;
   proof$: any;
+  relationship$: Observable<IRelationship>;
+
+  getRole(role: string) {
+    return role === 'verifier' ? 'verifier' : 'issuer';
+  }
 
   constructor(
     public route: ActivatedRoute,
@@ -78,7 +107,7 @@ export class ViewProofComponent implements OnInit {
     private stateSvc: CredentialStateService,
     private actionSvc: ProofActionService,
     private alertController: AlertController,
-    private relActionSvc: RelationshipActionsService
+    private relActionSvc: RelationshipActionsService,
   ) {}
 
   ngOnInit() {
@@ -88,29 +117,35 @@ export class ViewProofComponent implements OnInit {
         map(proof => {
           const {
             presentation_request: { requested_attributes },
+            state,
             ...noRequestedAttributes
           } = proof;
           const reqKeys = (req: IRequestedAttributes) =>
             [...Object.keys(req)].map(key => ({ key, ...req[key] }));
-          const resKeys = (obj: { [key: string]: string }) =>
-            [...Object.keys(obj)].map(key => ({ key, value: obj[key] }));
 
           const attrs = reqKeys(requested_attributes).map(attr => ({
-            restrictions: resKeys(attr.restrictions),
-            ...attr
+            key: attr.key,
+            name: attr.name,
+            restrictions: [...Object.keys(attr.restrictions)].map(key => ({
+              key,
+              value: attr.restrictions[key],
+            })),
           }));
+          console.log(attrs);
 
           return {
             mappedAttributes: attrs,
-            ...noRequestedAttributes
+            state: state.replace(/_/g, ' '),
+            ...noRequestedAttributes,
           };
         }),
-        concatMap(
-          proof => this.relActionSvc.getRelationshipById(proof.connection_id),
-          proof => proof
-        ),
-        tap(obs => console.log(obs))
       );
+    this.proof$.pipe(take(1)).subscribe(proof => {
+      this.relationship$ = this.relActionSvc.getRelationshipById(
+        proof.connection_id,
+      );
+      console.log(proof);
+    });
   }
 
   async setActiveCertificate() {
@@ -118,9 +153,9 @@ export class ViewProofComponent implements OnInit {
       .pipe(
         map(is => {
           return is.filter(
-            (i: any) => i._id === this.route.snapshot.paramMap.get('id')
+            (i: any) => i._id === this.route.snapshot.paramMap.get('id'),
           )[0];
-        })
+        }),
       )
       .subscribe(certificate => {
         this.active = certificate;
@@ -140,15 +175,15 @@ export class ViewProofComponent implements OnInit {
           handler: () => {
             console.log('Confirm Cancel');
             this.router.navigate(['/verify-credentials']);
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

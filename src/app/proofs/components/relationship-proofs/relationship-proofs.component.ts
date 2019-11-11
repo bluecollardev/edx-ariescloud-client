@@ -11,11 +11,11 @@ import {
   IIssuer,
   IProof,
   IProofResponse,
-  ProofStateType
+  ProofStateType,
 } from '../../../credentials/services/credential-state.service';
 import {
   RelationshipsStateService,
-  IRelationship
+  IRelationship,
 } from '../../../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
 import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
@@ -209,7 +209,7 @@ import { ICredentialResponse } from 'src/app/credentials/components/credentials-
     </ng-template>
   `,
   styleUrls: ['./relationship-proofs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RelationshipProofsComponent implements OnInit {
   id: string;
@@ -239,7 +239,7 @@ export class RelationshipProofsComponent implements OnInit {
   restrictionsMap(res: { [key: string]: string }) {
     const mapped = Object.keys(res).map(key => ({
       type: key,
-      val: res[key]
+      val: res[key],
     }));
     return mapped;
   }
@@ -251,7 +251,7 @@ export class RelationshipProofsComponent implements OnInit {
     public relationshipStateSvc: RelationshipsStateService,
     private actionSvc: ProofActionService,
     public actionSheetCtrl: ActionSheetController,
-    private alertController: AlertController
+    private alertController: AlertController,
   ) {}
 
   ngOnInit() {
@@ -262,7 +262,7 @@ export class RelationshipProofsComponent implements OnInit {
 
     this.proofs$ = this.actionSvc.getProofs().pipe(
       map(obs =>
-        obs.filter(rel => rel.connectionId === this.relId).reduce(itm => itm)
+        obs.filter(rel => rel.connectionId === this.relId).reduce(itm => itm),
       ),
       map(obs => {
         const mappedProof = obs.proofs.map(proof => {
@@ -272,7 +272,7 @@ export class RelationshipProofsComponent implements OnInit {
 
           newProof.requested = proof.requested.map(req => ({
             mappedRestrictions: this.restrictionsMap(req.restrictions),
-            ...req
+            ...req,
           }));
           newProof.formattedState = formatted;
           return newProof;
@@ -280,10 +280,10 @@ export class RelationshipProofsComponent implements OnInit {
         const { proofs, ...noProofs } = obs;
         return {
           proofs: mappedProof,
-          ...noProofs
+          ...noProofs,
         };
       }),
-      tap(obs => console.log(obs))
+      tap(obs => console.log(obs)),
     );
   }
 
@@ -318,7 +318,7 @@ export class RelationshipProofsComponent implements OnInit {
         {
           text: 'View Certificate',
           handler: () =>
-            this.router.navigate(['/verify-credentials/view/' + this.id])
+            this.router.navigate(['/verify-credentials/view/' + this.id]),
         },
         // {
         //   text: 'Verify Certificate Claims',
@@ -331,16 +331,16 @@ export class RelationshipProofsComponent implements OnInit {
           role: 'destructive',
           handler: () => {
             console.log('Delete clicked');
-          }
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();
@@ -358,15 +358,15 @@ export class RelationshipProofsComponent implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
