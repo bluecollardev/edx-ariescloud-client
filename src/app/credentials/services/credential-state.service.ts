@@ -70,10 +70,8 @@ export interface IProofResponse {
 
 export interface IRequested {
   name: 'score';
-  restrictions: {
-    schema_name: 'testcred';
-    schema_version: '1.0';
-  };
+  restrictions?: { [key: string]: string };
+  mappedRestrictions?: { type: string; val: string }[];
 }
 
 export interface IProof {
@@ -82,7 +80,9 @@ export interface IProof {
   created: string;
   state: ProofStateType;
   connectionId: string;
+  formattedState: string;
   requested: IRequested[];
+
   presentation_request: {
     requested_attributes: any;
     /* {

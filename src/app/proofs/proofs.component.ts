@@ -30,7 +30,13 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Proof Certificates</ion-title>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title class="ios title-ios hydrated">Proofs</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -41,21 +47,15 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
                   <span class="ion-padding">By Relationship</span>
-                  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
                 </div>
               </ion-list-header>
-              <ion-item-sliding
-                *ngFor="let relationship of relationships"
-                (click)="
-                  this.router.navigate([
-                    '/verify-credentials/group/' + relationship._id
-                  ])
-                "
-              >
-                <ion-item>
+              <ion-item-sliding *ngFor="let relationship of relationships">
+                <ion-item
+                  (click)="presentActionSheet(relationship.connectionId)"
+                >
                   <ion-icon name="person" class="icon-lg"></ion-icon>
                   <ion-label>
-                    <h2>{{ relationship.name }}</h2>
+                    <h2>{{ relationship.label }}</h2>
                     <small>DID: {{ relationship.did }}</small>
                   </ion-label>
                   <ion-badge color="primary" item-end>{{
@@ -68,6 +68,7 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
         </ion-row>
       </ion-grid>
     </ion-content>
+    <ng-template #noProofs> </ng-template>
   `,
   styleUrls: ['./proofs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -75,20 +76,40 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
 export class ProofsComponent implements OnInit {
   searchQuery: '';
   credentials: Observable<ICredentialResponse[]>;
-  relationships: Observable<IRelationship[]>;
+  relationships: Observable<IProofResponse[]>;
   issuers: Observable<IIssuer[]>;
 
-  activeProofs$: Observable<any[]>;
+  activeProofs$: IProof[];
 
-  _id: string;
+  connectionId: string;
 
-  activeProofs(id: string) {
-    this._id = id;
-    this.activeProofs$ = this.actionSvc.getProofs().pipe(
-      map(obs => obs.filter(proof => proof.connectionId === id)),
-      map(obs => obs.reduce((a, b) => a)),
-      tap(obs => console.log(obs))
-    ) as any;
+  async restrictionsMap(res: { [key: string]: string }) {
+    return Object.keys(res).map(key => ({ type: key, value: res[key] }));
+  }
+
+  async activeProofs(id: string) {
+    if (id === this.connectionId) {
+      return (this.connectionId = undefined);
+    }
+
+    this.connectionId = id;
+    const activeProofs = await this.actionSvc
+      .getProofs()
+      .pipe(
+        map(obs =>
+          obs
+            .filter(proof => proof.connectionId === id)
+            .map(proof => proof.proofs)
+            .reduce(proof => {
+              return proof;
+            })
+        ),
+
+        // map(obs => obs.reduce((a, b) => a)),
+        tap(obs => console.log(obs))
+      )
+      .toPromise();
+    // this.activeProofs$ = activeProofs;
   }
 
   constructor(
@@ -106,9 +127,7 @@ export class ProofsComponent implements OnInit {
     // console.log('bool', bool);
     this.credentials = this.stateSvc.credentials$;
 
-    this.relationships = this.relationShipActionService.getRelationshipByState(
-      'active'
-    );
+    this.relationships = this.actionSvc.getProofs();
 
     this.issuers = this.stateSvc.issuers$;
     // this.stateSvc.certificatesOfProof$ = this.actionSvc.getProofs();
@@ -137,30 +156,30 @@ export class ProofsComponent implements OnInit {
     return filtered;
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(id: string) {
+    this.connectionId = id;
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
-          text: 'View Certificate',
-          handler: () => this.router.navigate(['/verify-credentials/view'])
-        },
-        {
-          text: 'Verify Certificate Claims',
+          text: 'View Certificates',
+          role: 'destructive',
           handler: () => {
-            this.verifyCredPopup();
+            this.router.navigate([
+              '/verify-credentials/group/' + this.connectionId
+            ]);
           }
         },
         {
-          text: 'Delete Certificate',
-          role: 'destructive',
+          text: 'Request a Proof',
           handler: () => {
-            console.log('Delete clicked');
+            this.verifyCredPopup();
           }
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
+            this.actionSheetCtrl.dismiss();
             console.log('Cancel clicked');
           }
         }
