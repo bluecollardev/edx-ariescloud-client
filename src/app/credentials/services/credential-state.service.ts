@@ -74,15 +74,20 @@ export interface IRequested {
   mappedRestrictions?: { type: string; val: string }[];
 }
 
+export interface IRequestedAttributes {
+  [key: string]: IRequested;
+}
+
 export interface IProof {
   _id: string;
   updated: string;
   created: string;
   state: ProofStateType;
   connectionId: string;
+  connection_id: string;
   formattedState: string;
   requested: IRequested[];
-
+  requested_attributes: IRequestedAttributes[];
   presentation_request: {
     requested_attributes: any;
     /* {

@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, tap, flatMap, concat, merge, concatMap } from 'rxjs/operators';
 import {
   CredentialStateService,
-  ICertificateOfProof
+  ICertificateOfProof,
+  IRequestedAttributes,
+  IProof
 } from '../../../credentials/services/credential-state.service';
 import {
   CredentialActionsService,
   ICertificateParams
 } from '../../../credentials/services/credential-actions.service';
+import { ProofActionService } from '../../services/proof-action.service';
+import { RelationshipActionsService } from 'src/app/credentials/services/relationship-actions.service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-view-proof',
@@ -17,88 +22,96 @@ import {
     <ion-header role="banner" class="ios header-ios hydrated">
       <ion-toolbar class="ios hydrated">
         <ion-buttons
-          slot="end"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons
           slot="start"
           class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
         >
-          <ion-back-button></ion-back-button>
+          <ion-back-button defaultHref="/verify-credentials"></ion-back-button>
         </ion-buttons>
         <ion-title class="ios title-ios hydrated"
           >Certificate of Proof</ion-title
         >
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col >
-            <ion-card text-center>
-              <img
-                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-              />
+    <ion-content fullscreen color="light">
+      <ion-card text-center *ngIf="proof$ | async as proof">
+        <img
+          src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
+        />
+        <ion-list>
+          <ion-item>
+            <ion-card-title>
+              {{ proof.label }}
+            </ion-card-title>
+          </ion-item>
+          <p *ngIf="active">
+            <strong>Alice Cooper</strong>
+            {{ active.name.toLowerCase() }}.
+          </p>
 
-              <ion-card-content>
-                <ion-card-title *ngIf="active">
-                  {{ active.name }}
-                </ion-card-title>
-              </ion-card-content>
-              <ion-card-content>
-                <p *ngIf="active">
-                  <strong>Alice Cooper</strong> {{ active.name.toLowerCase() }}.
-                </p>
-              </ion-card-content>
-
-              <ion-item class="flex ion-justify-content-around">
-                <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
-                <ion-label>Status</ion-label>
-                <ion-badge color="medium" item-end>Verified</ion-badge>
-              </ion-item>
-
-              <div style="display: flex; flex-direction: column">
-                <ion-button
-                  style="flex: 1"
-                  color="primary"
-                  clear
-                  full
-                  icon-start
-                  margin
-                  (click)="this.verifyCredPopup()"
-                >
-                  <ion-icon name="finger-print"></ion-icon>
-                  Verify Claims
-                </ion-button>
-              </div>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+          <ion-item>
+            <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
+            <ion-label>Status</ion-label>
+            <ion-badge color="secondary" item-end>{{ proof.state }}</ion-badge>
+          </ion-item>
+        </ion-list>
+        <ion-item
+          (click)="verifyCredPopup()"
+          lines="none"
+          color="primary"
+          detail
+          detailIcon="finger-print"
+        >
+          <ion-label>Verify</ion-label>
+        </ion-item>
+      </ion-card>
     </ion-content>
   `,
   styleUrls: ['./view-proof.component.scss']
 })
 export class ViewProofComponent implements OnInit {
   active: ICertificateOfProof;
+  proof$: any;
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService,
-    private alertController: AlertController
-  ) {
-    this.actionSvc.getCertificates(); // Load all credentials first
-    this.actionSvc.getCertificate(this.route.snapshot.paramMap.get('id'));
-    this.setActiveCertificate();
-  }
+    private actionSvc: ProofActionService,
+    private alertController: AlertController,
+    private relActionSvc: RelationshipActionsService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.proof$ = this.actionSvc
+      .getProof(this.route.snapshot.paramMap.get('id'))
+      .pipe(
+        map(proof => {
+          const {
+            presentation_request: { requested_attributes },
+            ...noRequestedAttributes
+          } = proof;
+          const reqKeys = (req: IRequestedAttributes) =>
+            [...Object.keys(req)].map(key => ({ key, ...req[key] }));
+          const resKeys = (obj: { [key: string]: string }) =>
+            [...Object.keys(obj)].map(key => ({ key, value: obj[key] }));
+
+          const attrs = reqKeys(requested_attributes).map(attr => ({
+            restrictions: resKeys(attr.restrictions),
+            ...attr
+          }));
+
+          return {
+            mappedAttributes: attrs,
+            ...noRequestedAttributes
+          };
+        }),
+        concatMap(
+          proof => this.relActionSvc.getRelationshipById(proof.connection_id),
+          proof => proof
+        ),
+        tap(obs => console.log(obs))
+      );
+  }
 
   async setActiveCertificate() {
     this.stateSvc.activeCertificateOfProof$

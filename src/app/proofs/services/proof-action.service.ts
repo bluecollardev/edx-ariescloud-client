@@ -19,4 +19,8 @@ export class ProofActionService {
   postProof(params: any) {
     return this.httpSvc.post('proofs', params);
   }
+
+  getProof(id: string) {
+    return this.httpSvc.getById<IProof>('proofs', id);
+  }
 }
