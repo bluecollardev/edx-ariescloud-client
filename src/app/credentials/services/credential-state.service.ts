@@ -80,6 +80,7 @@ export interface IRequestedAttributes {
 }
 
 export interface IProof {
+  label?: string;
   _id: string;
   updated: string;
   created: string;

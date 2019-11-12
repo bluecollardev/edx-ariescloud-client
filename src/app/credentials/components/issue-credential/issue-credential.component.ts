@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
   ICredentialDef,
-  ICredential
+  ICredential,
 } from '../../services/credential-state.service';
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,35 +14,17 @@ import { LoadingController } from '@ionic/angular';
 import { HttpService } from 'src/app/core/services/http.service';
 
 import { filter } from 'rxjs/operators';
+import { MessagesService } from 'src/app/core/services/messages.service';
 
 @Component({
   selector: 'app-issue-credential',
   template: `
-    <ion-header
-      role="banner"
-      class="ios header-ios hydrated"
+    <app-item-header
       *ngIf="credDef$ | async as credDef"
+      title="Issue {{ credDef.name }}"
+      default="/credentials"
     >
-      <ion-toolbar class="ios hydrated">
-        <ion-title class="ios title-ios hydrated"
-          >Issue <strong>{{ credDef.name }}</strong></ion-title
-        >
-        <ion-buttons
-          slot="end"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons
-          slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-back-button></ion-back-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+    </app-item-header>
     <ion-content>
       <app-issue-credential-relationships
         *ngIf="this.activeTab === 'select-recipient'"
@@ -62,18 +44,6 @@ import { filter } from 'rxjs/operators';
                   formControlName="connectionId"
                   *ngIf="relationships$ | async as relationships"
                 >
-                  <!-- TODO: Upgrade ionic to > 4.9 https://github.com/ionic-team/ionic/issues/16453 -->
-                  <!-- We can't do... -->
-                  <!--
-                  <ion-select-option
-                      *ngIf="!isSelectedRelationship(relationship._id)"
-                      [value]="relationship._id"
-                      [selected]="isSelectedRelationship(relationship._id)"
-                    >
-                      {{ relationship.name }}
-                    </ion-select-option>
-                  -->
-
                   <ng-container *ngFor="let relationship of relationships">
                     <ion-select-option
                       *ngIf="isSelectedRelationship(relationship._id)"
@@ -136,7 +106,7 @@ import { filter } from 'rxjs/operators';
       </form>
     </ion-content>
   `,
-  styleUrls: ['./issue-credential.component.scss']
+  styleUrls: ['./issue-credential.component.scss'],
 })
 export class IssueCredentialComponent implements OnInit {
   activeTab: string;
@@ -155,11 +125,12 @@ export class IssueCredentialComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private httpSvc: HttpService,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
+    private mssg: MessagesService,
   ) {
     this.fg = new FormGroup({
       connectionId: new FormControl(''),
-      comment: new FormControl('')
+      comment: new FormControl(''),
     });
   }
 
@@ -174,12 +145,12 @@ export class IssueCredentialComponent implements OnInit {
           fa.push(
             new FormGroup({
               name: new FormControl(val),
-              value: new FormControl('')
-            })
-          )
+              value: new FormControl(''),
+            }),
+          ),
         );
         this.fa$ = of(fa);
-      })
+      }),
     );
 
     this.relationships$ = this.relationshipsActionSvc
@@ -188,8 +159,8 @@ export class IssueCredentialComponent implements OnInit {
         map(obs =>
           obs.filter(itm => {
             return itm.state === 'active';
-          })
-        )
+          }),
+        ),
       );
     // .pipe(map(obs => obs.filter(itm => itm.state === 'active')));
 
@@ -224,7 +195,7 @@ export class IssueCredentialComponent implements OnInit {
   async submit() {
     const loading = await this.loadingController.create({
       message: 'Submitting the credential',
-      duration: 10000
+      duration: 10000,
     });
     await loading.present();
     const fa = await this.fa$.toPromise();
@@ -233,19 +204,19 @@ export class IssueCredentialComponent implements OnInit {
       connectionId: this.fg.value.connectionId,
       credDefId: this.credDefId,
       comment: this.fg.value.comment,
-      attrs: fa.value
+      attrs: fa.value,
     };
     console.log(ret);
     // "attrs": [{"name": "name", "value": "Science"}]
     try {
       const res = await this.httpSvc.post('issues', ret).toPromise();
       if (res) {
-        console.log('result', res);
         loading.dismiss();
         this.router.navigate(['/credentials']);
       }
     } catch (err) {
       console.log('error', err);
+      this.mssg.alert({message: 'Something went wrong. Try issuing a new credential definition', header: 'Error'})
       loading.dismiss();
     }
   }

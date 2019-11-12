@@ -7,6 +7,9 @@ import { ICredentialDef } from '../../services/credential-state.service';
 import { IRelationship } from 'src/app/messages/services/messages-state.service';
 import { RelationshipActionsService } from '../../services/relationship-actions.service';
 import { mergeMap, tap, toArray, take, reduce, map } from 'rxjs/operators';
+import { LoadingController } from '@ionic/angular';
+import { HttpService } from 'src/app/core/services/http.service';
+import { MessagesService } from 'src/app/core/services/messages.service';
 
 export interface IPendingCredView extends IIssueResponse {
   credDef: ICredentialDef;
@@ -25,6 +28,11 @@ export interface IPendingCreds {
       default="/credentials/received"
     ></app-item-header>
     <ion-content color="light" *ngIf="$data | async as data; else loading">
+      <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button [disabled]="disabled" (click)="action()">
+          <ion-icon name="build"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <ion-card>
         <img
           src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
@@ -91,9 +99,6 @@ export interface IPendingCreds {
             [value]="attr.value"
           ></app-list-item>
         </ion-list>
-        <ion-item (click)="action(data._id)" lines="none" color="primary">
-          <ion-badge slot="end" color="primary">Action</ion-badge>
-        </ion-item>
       </ion-card>
     </ion-content>
     <ng-template #loading>
@@ -106,23 +111,37 @@ export interface IPendingCreds {
   styleUrls: ['./view-pending-credential.component.css'],
 })
 export class ViewPendingCredentialComponent implements OnInit {
-  $data: Observable<IPendingCredView>;
+  actionMap = {
+    offer_received: true,
+    offer_sent: false,
+    request_received: true,
+    request_sent: false,
+    credential_received: true,
+    issued: false,
+  };
 
+  $data: Observable<IPendingCredView>;
+  id: string;
+  state: string;
+  get disabled() {
+    const map = ['offer_received', 'request_received', 'credential_received'];
+    return map.some(state => this.state === state);
+  }
   constructor(
     private actionSvc: CredentialActionsService,
     private relActionSvc: RelationshipActionsService,
     private route: ActivatedRoute,
     private router: Router,
+    private loadingController: LoadingController,
+    private mssg: MessagesService,
+    private httpSvc: HttpService,
   ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
-    function getKeys() {}
+    this.id = id;
 
-    function mapObjectToArray(data: { [key: string]: string }) {
-      return Object.keys(data).map((key, arr) => [key, arr[key]]);
-    }
     this.$data = this.actionSvc.getIssueById(id).pipe(
       mergeMap(
         val => this.relActionSvc.getRelationshipById(val.connectionId),
@@ -133,11 +152,33 @@ export class ViewPendingCredentialComponent implements OnInit {
           this.actionSvc.getCredentialDef('cdef_' + val.proposal.cred_def_id),
         (source, next) => ({ credDef: next, ...source }),
       ),
+      tap(val => (this.state = val.state)),
     );
     const example = this.$data.subscribe(obs => console.log(obs));
   }
 
-  action(id: string) {
-    console.log('action clicked');
+  async action() {
+    const loading = await this.loadingController.create({
+      message: 'Accepting credential stage',
+      duration: 10000,
+    });
+    await loading.present();
+    try {
+      const post = await this.httpSvc
+        .postById<{ _id: string }>('issues', this.id)
+        .toPromise();
+      if (post) {
+        setTimeout(() => {
+          loading.dismiss();
+          this.router.navigate(['/credentials/pending/' + this.id]);
+        }, 3000);
+
+        return true;
+      }
+    } catch {
+      loading.dismiss();
+      this.mssg.alert({});
+      return false;
+    }
   }
 }

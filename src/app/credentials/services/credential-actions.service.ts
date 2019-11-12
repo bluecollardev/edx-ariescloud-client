@@ -18,6 +18,7 @@ import {
 import * as CredentialMocks from './credential-mocks';
 import { ICredentialResponse } from '../components/credentials-received/credentials-received.component';
 import { IIssueResponse } from '../models/i-issue';
+import { IIssueFlat } from '../components/credentials-issued/credentials-issued.component';
 
 export interface ICredDefDeleteResponse {
   ok: boolean;
@@ -74,25 +75,16 @@ export class CredentialActionsService {
 
     return obs;
   }
+  getFlatCredentials(params?: any) {
+    const obs = this.httpSvc.get<IIssueFlat[]>('issues/flat');
+
+    return obs;
+  }
 
   createCredentialSchema() {
     this.http.post<ICredentialSchema[]>(`${this.url}credentials`, {
       headers: this.headers,
     });
-  }
-
-  getCredentialSchema(id: string) {
-    const credential = this.http.get<ICredentialSchema[]>(
-      `${this.url}credentials/${id}`,
-      { headers: this.headers },
-    );
-
-    this.stateSvc.setActiveCredentialSchema(id);
-
-    console.log('active credential');
-    console.log(this.stateSvc.activeCredential$);
-
-    return this.stateSvc.activeCredential$;
   }
 
   getCredentialDef(id: string) {
@@ -126,31 +118,6 @@ export class CredentialActionsService {
     this.http.put<ICredentialDef[]>(`${this.url}credentials`, {
       headers: this.headers,
     });
-  }
-
-  getCertificate(id: string) {
-    const response = this.http.get<ICertificateOfProof[]>(
-      `${this.url}credentials/${id}`,
-      { headers: this.headers },
-    );
-
-    // this.stateSvc.setActiveCertificate(id);
-
-    return this.stateSvc.activeCertificateOfProof$;
-  }
-
-  getCertificates(params?: ICertificateParams) {
-    if (params && params.did) {
-      return (this.stateSvc.certificatesOfProof$ = this.stateSvc.certificatesOfProof$.pipe(
-        map(cs => {
-          const filtered = cs.filter(c => c.issuerDid === params.did);
-          console.log(filtered);
-          return filtered;
-        }),
-      ));
-    }
-
-    return this.stateSvc.certificatesOfProof$;
   }
 
   async deleteCredDef(id: string) {

@@ -98,7 +98,6 @@ export class OrgCredentialsComponent implements OnInit {
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
   ) {
-    this.initializeItems();
     this.setOrgName();
   }
 
@@ -128,30 +127,6 @@ export class OrgCredentialsComponent implements OnInit {
       .subscribe(issuer => {
         this.issuer = issuer;
       });
-  }
-
-  async initializeItems() {
-    await this.actionSvc.getCredentials({
-      did: this.route.snapshot.paramMap.get('did'),
-    });
-  }
-
-  async getItems(issuers, ev: any) {
-    const filtered = [];
-    // Reset items back to all of the items
-    await this.initializeItems();
-
-    // set val to the value of the searchbar
-    const val = ev.target.value;
-
-    // if the value is an empty string don't filter the items
-    if (val && val.trim() !== '') {
-      /*this.issuers = this.issuers.filter(item => {
-        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-      });*/
-    }
-
-    return filtered;
   }
 
   async presentActionSheet(credId: any) {

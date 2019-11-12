@@ -8,7 +8,7 @@ import {
   find,
   filter,
   skipWhile,
-  single
+  single,
 } from 'rxjs/operators';
 import { IInvitation } from '../models/i-invitation';
 import { IRelationshipResponse } from '../models/i-relationship';
@@ -20,10 +20,11 @@ export interface IRelationship {
   did: string;
   publicDid: string;
   state: string;
+  _id: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RelationshipStateService {
   private _ready$ = new BehaviorSubject<boolean>(false);
@@ -52,8 +53,8 @@ export class RelationshipStateService {
         received: new Date(),
         did: 'xyzdf-213ras-eqadzx-123sd',
         publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
-        status: 'pending'
-      }
+        status: 'pending',
+      },
     ]);
 
     const relationships = of([
@@ -63,7 +64,7 @@ export class RelationshipStateService {
         received: new Date(),
         did: 'xyzdf-678ras-eqadzx-123qr',
         publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
-        status: 'active'
+        status: 'active',
       },
       {
         name: 'Wall Street Co.',
@@ -71,7 +72,7 @@ export class RelationshipStateService {
         received: new Date(),
         did: 'xyzdf-678ras-adsf324-fg456',
         publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
-        status: 'active'
+        status: 'active',
       },
       {
         name: 'Google Inc.',
@@ -79,8 +80,8 @@ export class RelationshipStateService {
         received: new Date(),
         did: 'xyzdf-678ras-eqadzx-784yx',
         publicDid: 'GqaFzVnQTXVYzqSVnDETwP',
-        status: 'active'
-      }
+        status: 'active',
+      },
     ]);
 
     // this.setPendingInvitations(pending);
@@ -109,7 +110,7 @@ export class RelationshipStateService {
           console.log('------------');
           return r.did === did;
         });
-      })
+      }),
     );
   }
 
@@ -124,7 +125,7 @@ export class RelationshipStateService {
           console.log('------------');
           return r.did === did;
         });
-      })
+      }),
     );
   }
 

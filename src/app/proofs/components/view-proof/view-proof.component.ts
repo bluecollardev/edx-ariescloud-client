@@ -1,15 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  map,
-  tap,
-  flatMap,
-  concat,
-  merge,
-  concatMap,
-  take,
-} from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import {
   CredentialStateService,
   ICertificateOfProof,

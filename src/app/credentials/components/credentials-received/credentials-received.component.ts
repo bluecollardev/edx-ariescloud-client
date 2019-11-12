@@ -99,7 +99,7 @@ export interface ICredentialResponse {
                     (click)="pendingActionSheet(cred._id, cred.state)"
                     [disabled]="!actionMap[cred.state]"
                   >
-                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-icon name="cog" size="medium" slot="start"></ion-icon>
                     <ion-list>
                       <ion-label>
                         <h2>{{ cred.name || 'Unnamed Credential' }}</h2>

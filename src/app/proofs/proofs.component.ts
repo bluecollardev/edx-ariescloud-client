@@ -10,6 +10,7 @@ import {
   IIssuer,
   IProof,
   IProofResponse,
+  ProofStateType,
 } from '../credentials/services/credential-state.service';
 import { IRelationship } from '../relationships/services/relationships-state.service';
 import { ProofActionService } from './services/proof-action.service';
@@ -46,7 +47,7 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
             <ion-list>
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
-                  <span class="ion-padding">By Relationship</span>
+                  <span class="ion-padding">Pending Proofs</span>
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let relationship of relationships">
@@ -67,6 +68,120 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
           </ion-col>
         </ion-row>
       </ion-grid>
+      <ion-grid>
+        <ion-row *ngIf="$proofs | async as proofs">
+          <ion-col>
+            <ion-list *ngIf="proofs.verified.length > 0">
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Verified Proofs</span>
+                </div>
+              </ion-list-header>
+              <ion-item-sliding *ngFor="let proof of proofs.verified">
+                <ion-item>
+                  <ion-icon name="thumb-print" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h3>{{ proof.presentation_request.name }}</h3>
+                    <p>{{ proof.label }}</p>
+                    <p>{{ proof.state }}</p>
+                  </ion-label>
+                  <ion-icon name="cloud-done" color="primary"></ion-icon>
+                </ion-item>
+              </ion-item-sliding>
+            </ion-list>
+            <ion-list *ngIf="proofs.presentation.length > 0">
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Presented Proofs</span>
+                </div>
+              </ion-list-header>
+              <ion-item-sliding
+                *ngFor="let proof of proofs.presentation"
+                (click)="presentProofActions(proof._id, proof.state)"
+              >
+                <ion-item>
+                  <ion-icon name="ribbon" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h3>{{ proof.presentation_request.name }}</h3>
+                    <p>{{ proof.label }}</p>
+                    <p>{{ proof.state }}</p>
+                  </ion-label>
+                  <ion-icon
+                    [name]="
+                      proof.state === 'presentation_received'
+                        ? 'alert'
+                        : 'hourglass'
+                    "
+                    [color]="
+                      proof.state === 'presentation_received'
+                        ? 'danger'
+                        : 'medium'
+                    "
+                  ></ion-icon>
+                </ion-item>
+              </ion-item-sliding>
+            </ion-list>
+            <ion-list *ngIf="proofs.proposal.length > 0">
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Proposed Proofs</span>
+                </div>
+              </ion-list-header>
+              <ion-item-sliding
+                *ngFor="let proof of proofs.proposal"
+                (click)="presentProofActions(proof._id, proof.state)"
+              >
+                <ion-item>
+                  <ion-icon name="pricetags" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h3>{{ proof.presentation_request.name }}</h3>
+                    <p>{{ proof.label }}</p>
+                    <p>{{ proof.state }}</p>
+                  </ion-label>
+                  <ion-icon
+                    [name]="
+                      proof.state === 'proposal_received'
+                        ? 'alert'
+                        : 'hourglass'
+                    "
+                    [color]="
+                      proof.state === 'proposal_received' ? 'danger' : 'medium'
+                    "
+                  ></ion-icon>
+                </ion-item>
+              </ion-item-sliding>
+            </ion-list>
+            <ion-list *ngIf="proofs.request.length > 0">
+              <ion-list-header class="ion-no-margin ion-no-padding">
+                <div style="display: flex; width: 100%; flex-direction: column">
+                  <span class="ion-padding">Requested Proofs</span>
+                </div>
+              </ion-list-header>
+              <ion-item-sliding
+                *ngFor="let proof of proofs.request"
+                (click)="presentProofActions(proof._id, proof.state)"
+              >
+                <ion-item>
+                  <ion-icon name="wallet" class="icon-lg"></ion-icon>
+                  <ion-label>
+                    <h3>{{ proof.presentation_request.name }}</h3>
+                    <p>{{ proof.label }}</p>
+                    <p>{{ proof.state }}</p>
+                  </ion-label>
+                  <ion-icon
+                    [name]="
+                      proof.state === 'request_received' ? 'alert' : 'hourglass'
+                    "
+                    [color]="
+                      proof.state === 'request_received' ? 'danger' : 'medium'
+                    "
+                  ></ion-icon>
+                </ion-item>
+              </ion-item-sliding>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
     <ng-template #noProofs> </ng-template>
   `,
@@ -78,6 +193,12 @@ export class ProofsComponent implements OnInit {
   credentials: Observable<ICredentialResponse[]>;
   relationships: Observable<IProofResponse[]>;
   issuers: Observable<IIssuer[]>;
+  $proofs: Observable<{
+    request: IProof[];
+    proposal: IProof[];
+    presentation: IProof[];
+    verified: IProof[];
+  }>;
 
   activeProofs$: IProof[];
 
@@ -93,22 +214,7 @@ export class ProofsComponent implements OnInit {
     }
 
     this.connectionId = id;
-    const activeProofs = await this.actionSvc
-      .getProofs()
-      .pipe(
-        map(obs =>
-          obs
-            .filter(proof => proof.connectionId === id)
-            .map(proof => proof.proofs)
-            .reduce(proof => {
-              return proof;
-            }),
-        ),
-
-        // map(obs => obs.reduce((a, b) => a)),
-        tap(obs => console.log(obs)),
-      )
-      .toPromise();
+    // this.
     // this.activeProofs$ = activeProofs;
   }
 
@@ -119,9 +225,7 @@ export class ProofsComponent implements OnInit {
     private actionSvc: ProofActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
-  ) {
-    this.initializeItems();
-  }
+  ) {}
 
   async ngOnInit() {
     // console.log('bool', bool);
@@ -130,30 +234,47 @@ export class ProofsComponent implements OnInit {
     this.relationships = this.actionSvc.getProofs();
 
     this.issuers = this.stateSvc.issuers$;
-    // this.stateSvc.certificatesOfProof$ = this.actionSvc.getProofs();
-    // this.proofs = await this.stateSvc.certificatesOfProof$.toPromise();
-  }
 
-  async initializeItems() {
-    // await this.actionSvc.getCertificates();
-  }
+    let $flat = this.actionSvc.getProofs().pipe(
+      map(obs => {
+        const flat = obs
+          .map(itm => {
+            let mapped = itm.proofs.map((proof, i, arr) => ({
+              label: itm.label,
+              ...proof,
+            }));
+            console.log(mapped);
+            // return [...mapped].reduce((curr, next) => [...curr, ...next])
+            return mapped;
+          })
+          .reduce((itm, next) => [...itm, ...next]);
+        const request = flat.filter(
+          proof =>
+            proof.state === 'request_received' ||
+            proof.state === 'request_sent',
+        );
+        const proposal = flat.filter(
+          proof =>
+            proof.state === 'proposal_received' ||
+            proof.state === 'proposal_sent',
+        );
+        const presentation = flat.filter(
+          proof =>
+            proof.state === 'presentation_received' ||
+            proof.state === 'presentation_sent',
+        );
+        const verified = flat.filter(proof => proof.state === 'verified');
 
-  async getItems(issuers, ev: any) {
-    const filtered = [];
-    // Reset items back to all of the items
-    // await this.initializeItems();
-
-    // set val to the value of the searchbar
-    const val = ev.target.value;
-
-    // if the value is an empty string don't filter the items
-    if (val && val.trim() !== '') {
-      /* this.issuers = this.issuers.filter(item => {
-         return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
-       });*/
-    }
-
-    return filtered;
+        return {
+          request,
+          proposal,
+          presentation,
+          verified,
+        };
+      }),
+      tap(obs => console.log(obs)),
+    );
+    this.$proofs = $flat;
   }
 
   async presentActionSheet(id: string) {
@@ -215,5 +336,9 @@ export class ProofsComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  presentProofActions(id: string, state: ProofStateType) {
+    this.router.navigate(['/verify-credentials/view/' + id]);
   }
 }

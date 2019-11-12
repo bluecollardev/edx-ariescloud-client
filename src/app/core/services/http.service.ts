@@ -28,7 +28,8 @@ export type APISegmentType =
   | 'credentials'
   | 'credential-definitions'
   | 'profile'
-  | 'proofs/creds';
+  | 'proofs/creds'
+  | 'issues/flat';
 
 export interface IInvitationResult {
   '@type': string;
