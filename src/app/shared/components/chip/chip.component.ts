@@ -2,7 +2,7 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  Input
+  Input,
 } from '@angular/core';
 
 @Component({
@@ -16,7 +16,7 @@ import {
     </ion-chip>
   `,
   styleUrls: ['./chip.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipComponent implements OnInit {
   @Input() icon = 'check';

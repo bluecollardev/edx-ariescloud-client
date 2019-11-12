@@ -24,12 +24,11 @@ import { map, tap } from 'rxjs/operators';
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
                 <span class="ion-padding">Credential Types</span>
-                <ion-searchbar></ion-searchbar>
               </div>
             </ion-list-header>
             <ion-item-sliding *ngFor="let credDef of credDefs">
               <ion-item (click)="presentActionSheet(credDef._id)">
-                <ion-icon name="document" class="icon-lg"></ion-icon>
+                <ion-icon name="list-box" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ credDef.name }}</h2>
                   <small>{{ credDef.program }}</small>

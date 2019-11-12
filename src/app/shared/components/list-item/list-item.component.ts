@@ -12,7 +12,7 @@ import {
       <ion-label>
         {{ label }}
       </ion-label>
-      <ion-badge slot="end" color="tertiary">{{ value }}</ion-badge>
+      <ion-badge slot="end" [color]="color">{{ value }}</ion-badge>
     </ion-item>
   `,
   styleUrls: ['./list-item.component.css'],
@@ -21,6 +21,7 @@ import {
 export class ListItemComponent implements OnInit {
   @Input() label: string;
   @Input() value: string;
+  @Input() color = 'tertiary';
   constructor() {}
 
   ngOnInit() {}

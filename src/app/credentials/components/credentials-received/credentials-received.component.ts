@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import {
   ActionSheetController,
   AlertController,
-  LoadingController
+  LoadingController,
 } from '@ionic/angular';
 
 import { Observable } from 'rxjs';
@@ -17,12 +17,12 @@ import { HttpService } from '../../../core/services/http.service';
 import {
   CredentialStateService,
   ICredential,
-  IIssuer
+  IIssuer,
 } from '../../services/credential-state.service';
 
 import {
   RelationshipsStateService,
-  IRelationship
+  IRelationship,
 } from '../../../relationships/services/relationships-state.service';
 
 import { CredentialActionsService } from '../../services/credential-actions.service';
@@ -37,7 +37,7 @@ const credentialStates = {
   request_received: 'Request Received',
   offer_sent: 'Offer Sent',
   offer_received: 'Offer Received',
-  credential_received: 'Credential Received'
+  credential_received: 'Credential Received',
 };
 
 export interface ICredentialResponse {
@@ -64,69 +64,72 @@ export interface ICredentialResponse {
         <ion-row>
           <ion-col>
             <ion-list *ngIf="credentials | async as creds">
-              <ion-list-header class="ion-no-margin ion-no-padding">
-                <div style="display: flex; width: 100%; flex-direction: column">
-                  <span class="ion-padding">Accepted Credentials</span>
-                </div>
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let cred of creds">
-                <ion-item (click)="navigate(cred._id)">
-                  <ion-icon
-                    name="ribbon"
-                    color="tertiary"
-                    class="icon-lg"
-                  ></ion-icon>
-                  <ion-list>
+              <ng-container *ngIf="creds.length > 0">
+                <ion-list-header class="ion-no-margin ion-no-padding">
+                  <div
+                    style="display: flex; width: 100%; flex-direction: column"
+                  >
+                    <span class="ion-padding">Accepted Credentials</span>
+                  </div>
+                </ion-list-header>
+                <ion-item-sliding *ngFor="let cred of creds">
+                  <ion-item (click)="navigate(cred._id)">
+                    <ion-icon
+                      name="ribbon"
+                      slot="start"
+                      size="large"
+                    ></ion-icon>
                     <ion-label
-                      ><h2>{{ cred.name }}</h2></ion-label
-                    >
-                    <small>ID: {{ cred._id }}</small>
-                    <ion-row>
-                      <ion-chip *ngFor="let attr of cred.attrs" color="success">
-                        <ion-icon
-                          name="checkmark-circle"
-                          color="primary"
-                        ></ion-icon>
-                        <ion-label>{{ attr.label }}|{{ attr.val }}</ion-label>
-                      </ion-chip>
-                    </ion-row>
-                  </ion-list>
-                </ion-item>
-              </ion-item-sliding>
+                      ><h2>{{ cred.name }}</h2>
+                      <ion-note *ngFor="let attr of cred.attrs"
+                        >{{ attr.label }}
+                      </ion-note>
+                    </ion-label>
+                  </ion-item>
+                </ion-item-sliding>
+              </ng-container>
             </ion-list>
             <ion-list *ngIf="pending$ | async as pendingCreds">
-              <ion-list-header>
-                Accept New Credentials
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let cred of pendingCreds">
-                <ion-item
-                  (click)="pendingActionSheet(cred._id, cred.state)"
-                  [disabled]="!actionMap[cred.state]"
-                >
-                  <ion-icon name="document" class="icon-lg"></ion-icon>
-                  <ion-list>
-                    <ion-label>
-                      <h2>{{ cred.name || 'Unnamed Credential' }}</h2>
-                      <ion-row>
-                        <small>State: {{ cred.state }}</small>
-                      </ion-row>
-                      <ion-row>
-                        <small
-                          >Created: {{ cred.created | date: 'short' }}</small
-                        >
-                      </ion-row>
-                    </ion-label>
-                  </ion-list>
-                </ion-item>
-              </ion-item-sliding>
+              <ng-container *ngIf="pendingCreds.length > 0; else noPending">
+                <ion-list-header>
+                  Accept New Credentials
+                </ion-list-header>
+                <ion-item-sliding *ngFor="let cred of pendingCreds">
+                  <ion-item
+                    (click)="pendingActionSheet(cred._id, cred.state)"
+                    [disabled]="!actionMap[cred.state]"
+                  >
+                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-list>
+                      <ion-label>
+                        <h2>{{ cred.name || 'Unnamed Credential' }}</h2>
+                        <ion-row>
+                          <small>State: {{ cred.state }}</small>
+                        </ion-row>
+                        <ion-row>
+                          <small
+                            >Created: {{ cred.created | date: 'short' }}</small
+                          >
+                        </ion-row>
+                      </ion-label>
+                    </ion-list>
+                  </ion-item>
+                </ion-item-sliding>
+              </ng-container>
             </ion-list>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
+    <ng-template #noPending>
+      <ion-button [routerLink]="['/credentials/types']">
+        <ion-icon name="add"></ion-icon>
+        Credential Types
+      </ion-button></ng-template
+    >
   `,
   styleUrls: ['./credentials-received.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CredentialsReceivedComponent implements OnInit {
   searchQuery: '';
@@ -143,7 +146,7 @@ export class CredentialsReceivedComponent implements OnInit {
     request_received: true,
     request_sent: false,
     credential_received: true,
-    issued: true
+    issued: true,
   };
 
   constructor(
@@ -155,10 +158,9 @@ export class CredentialsReceivedComponent implements OnInit {
     private alertController: AlertController,
     private httpSvc: HttpService,
     public loadingController: LoadingController,
-    private http: HttpClient
+    private http: HttpClient,
   ) {
     this._url = url;
-    // this.initializeItems();
     this.credentialStates = credentialStates;
   }
 
@@ -168,31 +170,17 @@ export class CredentialsReceivedComponent implements OnInit {
 
   loadData() {
     this.pending$ = this.actionSvc.getPendingIssues().pipe(
-      map(
-        itms => {
-          const arr = [];
+      map(itms => {
+        const arr = [];
 
-          itms.forEach(val => {
-            val.records.forEach(cred => arr.push(cred));
-          });
-          console.log(arr);
-          return arr;
-        }
-        // itms.map(itm =>
-        //   itm.records
-        //     .map(record => ({
-        //       _id: itm.credential_exchange_id,
-        //       ...itm,
-        //       ...record
-        //     }))
-        //     .reduce(itm => itm)
-        // )
-      ),
-      tap(obs => console.log(obs))
+        itms.forEach(val => {
+          val.records.forEach(cred => arr.push(cred));
+        });
+        return arr;
+      }),
+      tap(obs => console.log(obs)),
     );
     this.credentials = this.actionSvc.getCredentials();
-
-    // this.pending$ = this.stateSvc.pending$;
   }
 
   async pendingActionSheet(id: string, state: string) {
@@ -202,11 +190,18 @@ export class CredentialsReceivedComponent implements OnInit {
     const actionSheet = await this.actionSheetCtrl.create({
       buttons: [
         {
+          text: 'View',
+          handler: () => {
+            this.router.navigate(['/credentials/pending/' + this._id]);
+          },
+          role: '',
+        },
+        {
           text: 'Accept',
           handler: async () => {
             const loading = await this.loadingController.create({
               message: 'Accepting credential stage',
-              duration: 10000
+              duration: 10000,
             });
             await loading.present();
             try {
@@ -226,130 +221,22 @@ export class CredentialsReceivedComponent implements OnInit {
               loading.dismiss();
               return false;
             }
-          }
+          },
         },
         {
           text: 'Decline',
           handler: async () => {
             const rm = await this.httpSvc.delete('issues', this._id);
             return true;
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();
   }
 
-  async shareCredPopup() {
-    const alert = await this.alertController.create({
-      header: 'Share Credential',
-      message: 'Please choose a relationship to share this credential with.',
-      inputs: [
-        {
-          name: 'checkbox1',
-          type: 'checkbox',
-          label: 'ACME Inc.',
-          value: 'value1',
-          checked: false
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-          }
-        },
-        {
-          text: 'Ok',
-          handler: () => {
-            console.log('Confirm Ok');
-            this.selectDataPopup();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async selectDataPopup() {
-    const alert = await this.alertController.create({
-      header: 'Select Data',
-      message: 'Please select what information you want to share.',
-      inputs: [
-        {
-          name: 'checkbox1',
-          type: 'checkbox',
-          label: 'Degree',
-          value: 'value1',
-          checked: false
-        },
-        {
-          name: 'checkbox2',
-          type: 'checkbox',
-          label: 'Program',
-          value: 'value2',
-          checked: false
-        },
-        {
-          name: 'checkbox3',
-          type: 'checkbox',
-          label: 'Date of Study',
-          value: 'value3',
-          checked: false
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-          }
-        },
-        {
-          text: 'Ok',
-          handler: () => {
-            console.log('Confirm Ok');
-            this.credSharedPopup();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  async credSharedPopup() {
-    const alert = await this.alertController.create({
-      header: 'Credential Shared',
-      message: 'Success! Your credential was shared with ACME Inc.',
-      buttons: [
-        {
-          text: 'Ok',
-          handler: () => {
-            console.log('Confirm Ok');
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  handleSelect(e) {
-    alert();
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
   navigate(id: string) {
-    console.log(id);
     this.router.navigate(['/credentials/received/view/' + id]);
   }
   doRefresh(event) {

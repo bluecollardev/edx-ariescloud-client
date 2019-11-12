@@ -12,11 +12,12 @@ import {
   ICredentialDef,
   ICredential,
   ICertificateOfProof,
-  IIssuer
+  IIssuer,
 } from './credential-state.service';
 
 import * as CredentialMocks from './credential-mocks';
 import { ICredentialResponse } from '../components/credentials-received/credentials-received.component';
+import { IIssueResponse } from '../models/i-issue';
 
 export interface ICredDefDeleteResponse {
   ok: boolean;
@@ -34,7 +35,7 @@ export interface ICertificateParams {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CredentialActionsService {
   headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -43,7 +44,7 @@ export class CredentialActionsService {
   constructor(
     private http: HttpClient,
     private httpSvc: HttpService,
-    private stateSvc: CredentialStateService
+    private stateSvc: CredentialStateService,
   ) {
     this.url = apiUrl;
     console.log(apiUrl);
@@ -57,7 +58,7 @@ export class CredentialActionsService {
       .post('credential-definitions', {
         schema_name: credDef.name,
         schema_version: credDef.version,
-        attributes: credDef.schema
+        attributes: credDef.schema,
       })
       .toPromise();
 
@@ -76,14 +77,14 @@ export class CredentialActionsService {
 
   createCredentialSchema() {
     this.http.post<ICredentialSchema[]>(`${this.url}credentials`, {
-      headers: this.headers
+      headers: this.headers,
     });
   }
 
   getCredentialSchema(id: string) {
     const credential = this.http.get<ICredentialSchema[]>(
       `${this.url}credentials/${id}`,
-      { headers: this.headers }
+      { headers: this.headers },
     );
 
     this.stateSvc.setActiveCredentialSchema(id);
@@ -97,7 +98,7 @@ export class CredentialActionsService {
   getCredentialDef(id: string) {
     const response = this.httpSvc.getById<ICredentialDef>(
       'credential-definitions',
-      id
+      id,
     );
     // this.stateSvc.setActiveCredentialDef(id);
 
@@ -110,27 +111,27 @@ export class CredentialActionsService {
 
   getCredentialDefs(params?: ICredentialParams) {
     const response = this.httpSvc.get<ICredentialDef[]>(
-      'credential-definitions'
+      'credential-definitions',
     );
     return response;
   }
 
   createCredentialDef() {
     this.http.post<ICredentialDef[]>(`${this.url}credentials`, {
-      headers: this.headers
+      headers: this.headers,
     });
   }
 
   acceptCredential() {
     this.http.put<ICredentialDef[]>(`${this.url}credentials`, {
-      headers: this.headers
+      headers: this.headers,
     });
   }
 
   getCertificate(id: string) {
     const response = this.http.get<ICertificateOfProof[]>(
       `${this.url}credentials/${id}`,
-      { headers: this.headers }
+      { headers: this.headers },
     );
 
     // this.stateSvc.setActiveCertificate(id);
@@ -145,7 +146,7 @@ export class CredentialActionsService {
           const filtered = cs.filter(c => c.issuerDid === params.did);
           console.log(filtered);
           return filtered;
-        })
+        }),
       ));
     }
 
@@ -164,5 +165,8 @@ export class CredentialActionsService {
 
   setRelState() {
     this.stateSvc.credentialDefs$ = this.getCredentialDefs();
+  }
+  getIssueById(id: string) {
+    return this.httpSvc.getById<IIssueResponse>('issues', id);
   }
 }

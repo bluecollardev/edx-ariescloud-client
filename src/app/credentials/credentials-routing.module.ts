@@ -8,76 +8,81 @@ import { ViewCredentialTypeComponent } from './components/view-credential-type/v
 import { EditCredentialComponent } from './components/edit-credential/edit-credential.component';
 import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { OrgCredentialsComponent } from './components/org-credentials/org-credentials.component';
+import { ViewPendingCredentialComponent } from './components/view-pending-credential/view-pending-credential.component';
 
 const routes: Routes = [
   {
     path: 'credentials',
-    component: CredentialsComponent
+    component: CredentialsComponent,
   },
   {
     path: 'credentials/issued',
-    component: CredentialsComponent
+    component: CredentialsComponent,
   },
   {
     path: 'credentials/:id/recipients',
-    component: CredentialsComponent
+    component: CredentialsComponent,
   },
   {
     path: 'credentials/received',
-    component: CredentialsComponent
+    component: CredentialsComponent,
   },
   {
     path: 'credentials/received/view',
-    component: ViewCredentialComponent
+    component: ViewCredentialComponent,
   },
   {
     path: 'credentials/received/view/:id',
-    component: ViewCredentialComponent
+    component: ViewCredentialComponent,
   },
   {
     path: 'credentials/received/group/:did',
-    component: OrgCredentialsComponent
+    component: OrgCredentialsComponent,
   },
   {
     path: 'credentials/types',
-    component: CredentialsComponent
+    component: CredentialsComponent,
   },
   {
     path: 'credentials/type/:id/preview',
-    component: ViewCredentialTypeComponent
+    component: ViewCredentialTypeComponent,
   },
   {
     path: 'credentials/create',
-    component: CreateCredentialComponent
+    component: CreateCredentialComponent,
   },
   {
     path: 'credentials/view',
-    component: ViewCredentialComponent
+    component: ViewCredentialComponent,
   },
   {
     path: 'credentials/view/:id',
-    component: ViewCredentialComponent
+    component: ViewCredentialComponent,
   },
   {
     path: 'credentials/edit',
-    component: EditCredentialComponent
+    component: EditCredentialComponent,
   },
   {
     path: 'credentials/edit/:id',
-    component: EditCredentialComponent
+    component: EditCredentialComponent,
   },
   {
     path: 'credentials/issue/:id',
-    component: IssueCredentialComponent
+    component: IssueCredentialComponent,
   },
   {
     path: 'credentials/issue/:id/to',
-    component: IssueCredentialComponent
-  }
+    component: IssueCredentialComponent,
+  },
+  {
+    path: 'credentials/pending/:id',
+    component: ViewPendingCredentialComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class CredentialsRoutingModule {}

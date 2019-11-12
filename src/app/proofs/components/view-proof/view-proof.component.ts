@@ -48,6 +48,16 @@ import { IRelationship } from 'src/app/messages/services/messages-state.service'
         />
 
         <ion-list>
+          <ion-item>
+            <app-chip icon="at" [label]="proof.initiator" color="tertiary">
+            </app-chip>
+            <app-chip
+              icon="time"
+              label="{{ proof.created_at | date: 'short' }}"
+              color="tertiary"
+            >
+            </app-chip>
+          </ion-item>
           <ion-card-title>
             <h2 *ngIf="relationship$ | async as rel">
               {{ rel.name }}
@@ -71,6 +81,13 @@ import { IRelationship } from 'src/app/messages/services/messages-state.service'
                 {{ request.name }}
               </ion-title>
             </ion-list-header>
+            <ion-item>
+              <ion-icon slot="start" name="key"> </ion-icon>
+              <ion-label>
+                {{ request.key }}
+              </ion-label>
+            </ion-item>
+
             <ion-item-divider color="medium">
               <ion-label>
                 Restrictions

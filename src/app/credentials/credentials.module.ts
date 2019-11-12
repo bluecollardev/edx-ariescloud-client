@@ -15,6 +15,7 @@ import { IssueCredentialComponent } from './components/issue-credential/issue-cr
 import { IssueCredentialRelationshipsComponent } from './components/issue-credential-relationships/issue-credential-relationships.component';
 import { CredentialRelationshipsComponent } from './components/credential-relationships/credential-relationships.component';
 import { SharedModule } from '../shared/shared.module';
+import { ViewPendingCredentialComponent } from './components/view-pending-credential/view-pending-credential.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SharedModule } from '../shared/shared.module';
     ViewCredentialTypeComponent,
     CreateCredentialComponent,
     IssueCredentialComponent,
-    IssueCredentialRelationshipsComponent
+    IssueCredentialRelationshipsComponent,
+    ViewPendingCredentialComponent
   ],
   imports: [CommonModule, CredentialsRoutingModule, SharedModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 
 import {
   CredentialStateService,
-  ICredentialDef
+  ICredentialDef,
 } from '../../services/credential-state.service';
 import {
   CredentialActionsService,
-  ICredentialParams
+  ICredentialParams,
 } from '../../services/credential-actions.service';
 import { tap, map } from 'rxjs/operators';
 import { ICredentialResponse } from '../credentials-received/credentials-received.component';
@@ -43,7 +43,7 @@ import { ICredentialResponse } from '../credentials-received/credentials-receive
                 </ion-list-header>
                 <ion-item-sliding *ngFor="let credDef of credDefs; index as i">
                   <ion-item (click)="presentActionSheet(credDef._id)">
-                    <ion-icon name="document" class="icon-lg"></ion-icon>
+                    <ion-icon name="list-box" class="icon-lg"></ion-icon>
                     <ion-label>
                       <h2>{{ credDef.name }}</h2>
                       <small>{{ credDef.program }}</small>
@@ -53,6 +53,7 @@ import { ICredentialResponse } from '../credentials-received/credentials-receive
                       credDef.count
                     }}</ion-badge>
                   </ion-item>
+                  <!--
                   <ion-list
                     *ngIf="
                       credDef.records.length > 0 && this._id === credDef._id
@@ -82,6 +83,8 @@ import { ICredentialResponse } from '../credentials-received/credentials-receive
                       ></ion-icon>
                     </ion-item>
                   </ion-list>
+                      -->
+
                   <ion-item-options>
                     <ion-item-option color="danger" type="button" icon-start>
                       <ion-icon name="trash" class="icon-md"></ion-icon>
@@ -101,7 +104,7 @@ import { ICredentialResponse } from '../credentials-received/credentials-receive
     </ng-container>
     <ng-template #noCreds></ng-template>
   `,
-  styleUrls: ['./credentials-issued.component.css']
+  styleUrls: ['./credentials-issued.component.css'],
 })
 export class CredentialsIssuedComponent implements OnInit {
   viewRecord: string;
@@ -114,7 +117,7 @@ export class CredentialsIssuedComponent implements OnInit {
     private router: Router,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
   ) {}
 
   async ngOnInit() {
@@ -127,12 +130,12 @@ export class CredentialsIssuedComponent implements OnInit {
               .map(record => ({
                 _id: itm.credential_exchange_id,
                 ...itm,
-                ...record
+                ...record,
               }))
-              .reduce(itm => itm)
-          )
+              .reduce(itm => itm),
+          ),
         ),
-        tap(obs => console.log(obs))
+        tap(obs => console.log(obs)),
       )
       .toPromise();
     // credentials.subscribe(obs => console.log(obs));
@@ -142,12 +145,12 @@ export class CredentialsIssuedComponent implements OnInit {
           count: credentials.filter(
             cred =>
               cred.credential_definition_id ===
-              credDef._id.slice(credDef._id.indexOf('_' + 1))
+              credDef._id.slice(credDef._id.indexOf('_' + 1)),
           ).length,
-          ...credDef
-        }))
+          ...credDef,
+        })),
       ),
-      tap(obs => console.log(obs))
+      tap(obs => console.log(obs)),
     );
   }
 
@@ -159,22 +162,22 @@ export class CredentialsIssuedComponent implements OnInit {
           text: 'Manage Recipients',
           handler: () => {
             this.router.navigate([`/credentials/${this._id}/recipients`]);
-          }
+          },
         },
         {
           text: 'Issue Credential To...',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
-          }
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();

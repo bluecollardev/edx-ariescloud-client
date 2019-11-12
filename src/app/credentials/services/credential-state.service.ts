@@ -40,6 +40,7 @@ export interface ICredential {
   records: any[];
   connectionId: string;
   credential_exchange_id: string;
+  attrs?: { [key: string]: string }[];
 }
 
 export interface ICertificateOfProof {
@@ -120,7 +121,7 @@ export interface IIssuer {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CredentialStateService {
   issuers$: Observable<IIssuer[]> = new Observable<IIssuer[]>();
@@ -192,7 +193,7 @@ export class CredentialStateService {
           console.log('------------');
           return c.id === cid;
         });
-      })
+      }),
     );
   }
 
@@ -213,7 +214,7 @@ export class CredentialStateService {
           console.log('------------');
           return c._id === cid;
         });
-      })
+      }),
     );
   }
 
@@ -229,7 +230,7 @@ export class CredentialStateService {
       .map(cred => ({
         name: cred.issuedBy,
         type: 'Organization',
-        did: cred.issuerDid
+        did: cred.issuerDid,
       }));
 
     return issuers;

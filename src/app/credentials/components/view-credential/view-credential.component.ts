@@ -2,11 +2,11 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import {
   CredentialStateService,
-  ICredential
+  ICredential,
 } from '../../../credentials/services/credential-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
 import { HttpService } from 'src/app/core/services/http.service';
@@ -16,27 +16,56 @@ import { HttpService } from 'src/app/core/services/http.service';
 @Component({
   selector: 'app-view-credential',
   template: `
-    <ion-header role="banner" class="ios header-ios hydrated">
-      <ion-toolbar class="ios hydrated">
-        <ion-buttons
-          slot="end"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons
-          slot="start"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-back-button></ion-back-button>
-        </ion-buttons>
-        <ion-title class="ios title-ios hydrated">My Credential</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content *ngIf="active$ | async as active">
-      <ion-grid>
+    <app-item-header
+      title="My Credential"
+      default="/credentials/received"
+    ></app-item-header>
+    <ion-content *ngIf="active$ | async as cred" color="light">
+      <ion-card text-center>
+        <img
+          src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
+        />
+        <ion-list>
+          <ion-list-header>
+            <h2>
+              Attributes
+            </h2>
+          </ion-list-header>
+          <ion-item *ngFor="let attr of cred.attrs">
+            <ion-label>{{ attr.key }}</ion-label>
+            <ion-badge color="secondary" item-end>{{ attr.val }}</ion-badge>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">
+              Credential Referent
+            </ion-label>
+            <ion-note>
+              {{ cred.referent }}
+            </ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">
+              Credential Definition Id
+            </ion-label>
+            <ion-note>
+              {{ cred.cred_def_id }}
+            </ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">
+              Schema Id
+            </ion-label>
+            <ion-note>
+              {{ cred.schema_id }}
+            </ion-note>
+          </ion-item>
+        </ion-list>
+        <ion-item (click)="action()" lines="none" color="danger">
+          <ion-badge slot="end" color="danger">Delete</ion-badge>
+        </ion-item>
+      </ion-card>
+
+      <!--<ion-grid>
         <ion-row>
           <ion-col >
             <ion-card text-center>
@@ -68,9 +97,10 @@ import { HttpService } from 'src/app/core/services/http.service';
           </ion-col>
         </ion-row>
       </ion-grid>
+      -->
     </ion-content>
   `,
-  styleUrls: ['./view-credential.component.scss']
+  styleUrls: ['./view-credential.component.scss'],
 })
 export class ViewCredentialComponent implements OnInit {
   active$: Observable<ICredential>;
@@ -81,28 +111,38 @@ export class ViewCredentialComponent implements OnInit {
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     private alertController: AlertController,
-    private httpSvc: HttpService
+    private httpSvc: HttpService,
   ) {
     // this.setActiveCred();
   }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log('the id', id);
-    this.active$ = this.httpSvc.getById(
-      'credentials',
-      this.route.snapshot.paramMap.get('id')
-    );
-  }
+    const getKeys = (attrs: { [key: string]: string }[]) => Object.keys(attrs);
+    const mapKeys = (key: string) => ({ key });
+    const mapVals = (val: string) => ({ val });
 
-  async setActiveCred() {
-    // this.stateSvc.activeCredential$.pipe(
-    //   map(is => {
-    //     return is.filter((i) => i.id === this.route.snapshot.paramMap.get('id'))[0];
-    //   })
-    // ).subscribe((credential) => {
-    //   this.active = credential;
-    // });
+    // const map = (arr: string[]) => {}
+
+    console.log('the id', id);
+    this.active$ = this.httpSvc
+      .getById<ICredential>(
+        'credentials',
+        this.route.snapshot.paramMap.get('id'),
+      )
+      .pipe(
+        map(cred => {
+          const { attrs, ...noattrs } = cred;
+          return {
+            attrs: getKeys(attrs).map(key => ({
+              ...mapKeys(key),
+              ...mapVals(attrs[key]),
+            })),
+            ...noattrs,
+          };
+        }),
+        tap(obs => console.log(obs)),
+      );
   }
 
   async getKeys(attr: any) {
@@ -121,8 +161,8 @@ export class ViewCredentialComponent implements OnInit {
           type: 'checkbox',
           label: 'ACME Inc.',
           value: 'value1',
-          checked: false
-        }
+          checked: false,
+        },
       ],
       buttons: [
         {
@@ -131,16 +171,16 @@ export class ViewCredentialComponent implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
             this.selectDataPopup();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -156,22 +196,22 @@ export class ViewCredentialComponent implements OnInit {
           type: 'checkbox',
           label: 'Degree',
           value: 'value1',
-          checked: false
+          checked: false,
         },
         {
           name: 'checkbox2',
           type: 'checkbox',
           label: 'Program',
           value: 'value2',
-          checked: false
+          checked: false,
         },
         {
           name: 'checkbox3',
           type: 'checkbox',
           label: 'Date of Study',
           value: 'value3',
-          checked: false
-        }
+          checked: false,
+        },
       ],
       buttons: [
         {
@@ -180,16 +220,16 @@ export class ViewCredentialComponent implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
             this.credSharedPopup();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -204,11 +244,14 @@ export class ViewCredentialComponent implements OnInit {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
+  }
+  action() {
+    console.log('clicked');
   }
 }
