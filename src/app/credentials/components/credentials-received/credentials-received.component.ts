@@ -146,7 +146,7 @@ export class CredentialsReceivedComponent implements OnInit {
     request_received: true,
     request_sent: false,
     credential_received: true,
-    issued: true,
+    issued: false,
   };
 
   constructor(
@@ -212,7 +212,7 @@ export class CredentialsReceivedComponent implements OnInit {
                 setTimeout(() => {
                   this.loadData();
                   loading.dismiss();
-                  this.router.navigate(['/credentials/received']);
+                  this.router.navigate(['/credentials/pending/' + this._id]);
                 }, 3000);
 
                 return true;
