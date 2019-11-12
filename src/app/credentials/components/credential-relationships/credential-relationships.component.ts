@@ -2,15 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
   ICredentialDef,
-  ICredential, CredentialStateService
+  ICredential,
+  CredentialStateService,
 } from '../../services/credential-state.service';
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import {FormGroup, FormControl, FormArray, Validators} from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { RelationshipsActionService } from 'src/app/relationships/services/relationships-action.service';
 import { IRelationship } from 'src/app/messages/services/messages-state.service';
 import { tap, map } from 'rxjs/operators';
-import {ActionSheetController, LoadingController} from '@ionic/angular';
+import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { HttpService } from 'src/app/core/services/http.service';
 import { RelationshipActionsService } from '../../services/relationship-actions.service';
 
@@ -19,25 +20,26 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
   template: `
     <ion-grid>
       <ion-row *ngIf="relationships | async as relationships">
-        <ion-col >
+        <ion-col>
           <ion-list>
             <ion-list-header class="ion-no-margin ion-no-padding">
               <div style="display: flex; width: 100%; flex-direction: column">
                 <!-- TODO: This would be better in the title -->
-                <span class="ion-padding" *ngIf="active$ | async as cred">Relationships with <strong>{{ cred.name }}</strong></span>
-                <ion-searchbar></ion-searchbar>
+                <span class="ion-padding" *ngIf="active$ | async as cred"
+                  >Relationships with <strong>{{ cred.name }}</strong></span
+                >
               </div>
             </ion-list-header>
-            <ion-item-sliding
-              *ngFor="let relationship of relationships"
-            >
+            <ion-item-sliding *ngFor="let relationship of relationships">
               <ion-item (click)="presentActionSheet(relationship._id)">
                 <ion-icon name="person" class="icon-lg"></ion-icon>
                 <ion-label>
                   <h2>{{ relationship.name }}</h2>
                   <small>DID: {{ relationship.did }}</small>
                 </ion-label>
-                <ion-badge color="success" item-end><ion-icon name="checkmark" class="icon-md"></ion-icon></ion-badge>
+                <ion-badge color="success" item-end
+                  ><ion-icon name="checkmark" class="icon-md"></ion-icon
+                ></ion-badge>
               </ion-item>
             </ion-item-sliding>
           </ion-list>
@@ -45,7 +47,7 @@ import { RelationshipActionsService } from '../../services/relationship-actions.
       </ion-row>
     </ion-grid>
   `,
-  styleUrls: ['./credential-relationships.component.scss']
+  styleUrls: ['./credential-relationships.component.scss'],
 })
 export class CredentialRelationshipsComponent implements OnInit {
   active$: Observable<ICredentialDef>;
@@ -58,20 +60,20 @@ export class CredentialRelationshipsComponent implements OnInit {
     public actionSheetCtrl: ActionSheetController,
     public relationShipActionService: RelationshipActionsService,
     private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService
+    private actionSvc: CredentialActionsService,
   ) {
     this.active$ = this.actionSvc.getCredential(
-      this.route.snapshot.paramMap.get('id')
+      this.route.snapshot.paramMap.get('id'),
     );
   }
 
   ngOnInit() {
     this.relationships = this.relationShipActionService.getRelationshipByState(
-      'active'
+      'active',
     );
 
     const fg = new FormGroup({
-      name: new FormControl('', [Validators.required])
+      name: new FormControl('', [Validators.required]),
     });
 
     this.fg = fg;
@@ -86,20 +88,22 @@ export class CredentialRelationshipsComponent implements OnInit {
           text: 'View Relationship',
           handler: () => {
             this.router.navigate([`/relationships/view/${relationshipId}`]);
-          }
+          },
         },
         {
           text: 'View Credential Details',
           handler: () => {
-            this.router.navigate([`/credentials/view/${credentialId}`], { queryParams: { rId: relationshipId } });
-          }
+            this.router.navigate([`/credentials/view/${credentialId}`], {
+              queryParams: { rId: relationshipId },
+            });
+          },
         },
         {
           text: 'Disable Credential',
           role: 'destructive',
           handler: () => {
             // this.router.navigate([`/credentials/revoke/${this._id}`]);
-          }
+          },
         },
         /*{
           text: 'View All Credentials',
@@ -112,9 +116,9 @@ export class CredentialRelationshipsComponent implements OnInit {
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();

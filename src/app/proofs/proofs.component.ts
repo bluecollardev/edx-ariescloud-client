@@ -172,7 +172,9 @@ export class ProofsComponent implements OnInit {
         {
           text: 'Request a Proof',
           handler: () => {
-            this.verifyCredPopup();
+            this.router.navigate([
+              'verify-credentials/issue/' + this.connectionId,
+            ]);
           },
         },
         {

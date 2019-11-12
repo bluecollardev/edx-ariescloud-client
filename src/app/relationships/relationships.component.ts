@@ -29,43 +29,31 @@ import { HttpService } from '../core/services/http.service';
       <ion-card *ngIf="profile$ | async as profile" (click)="hide = !hide">
         <ion-card-header>
           <ion-card-title>
-            <ion-text color="primary">{{ profile.label }}</ion-text>
+            <ion-text>{{ profile.label }}</ion-text>
           </ion-card-title>
           <ion-card-subtitle>DID: {{ profile.did }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content *ngIf="!hide">
           <ion-list>
             <ion-item lines="none">
-              <ion-icon name="people" slot="start" color="tertiary"></ion-icon>
+              <ion-icon name="people" slot="start"></ion-icon>
               <ion-label>Relationships</ion-label>
-              <ion-note slot="end" color="primary">{{
-                profile.relCount
-              }}</ion-note>
+              <ion-note slot="end">{{ profile.relCount }}</ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-icon name="card" slot="start" color="tertiary"></ion-icon>
+              <ion-icon name="ribbon" slot="start"></ion-icon>
               <ion-label>Credentials</ion-label>
-              <ion-note slot="end" color="primary">{{
-                profile.credsCount
-              }}</ion-note>
+              <ion-note slot="end">{{ profile.credsCount }}</ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-icon
-                name="checkbox"
-                slot="start"
-                color="tertiary"
-              ></ion-icon>
+              <ion-icon name="wallet" slot="start"></ion-icon>
               <ion-label>Proof Certificates</ion-label>
-              <ion-note slot="end" color="primary">{{
-                profile.proofsCount
-              }}</ion-note>
+              <ion-note slot="end">{{ profile.proofsCount }}</ion-note>
             </ion-item>
             <ion-item lines="none">
-              <ion-icon name="filing" slot="start" color="tertiary"></ion-icon>
+              <ion-icon name="list-box" slot="start"></ion-icon>
               <ion-label>Pending Credentials</ion-label>
-              <ion-note slot="end" color="primary">{{
-                profile.issuesCount
-              }}</ion-note>
+              <ion-note slot="end">{{ profile.issuesCount }}</ion-note>
             </ion-item>
           </ion-list>
         </ion-card-content>
@@ -98,10 +86,6 @@ import { HttpService } from '../core/services/http.service';
                     <h2>{{ item.name }}</h2>
                     <small>DID: {{ item.did }}</small>
                   </ion-label>
-                  <ion-badge color="medium" item-end
-                    ><ion-icon name="notifications" class="icon-md"></ion-icon
-                    ><sup><strong> 2</strong></sup></ion-badge
-                  >
                 </ion-item>
                 <ion-item-options>
                   <ion-item-option color="danger" type="button" icon-start>
@@ -173,7 +157,7 @@ import { HttpService } from '../core/services/http.service';
     </ion-footer>
     <ng-template #addRel> </ng-template>
   `,
-  styleUrls: ['./relationships.component.scss']
+  styleUrls: ['./relationships.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RelationshipsComponent implements OnInit {
@@ -186,7 +170,7 @@ export class RelationshipsComponent implements OnInit {
     public stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService,
     private globalStateSvc: StateService,
-    private httpSvc: HttpService
+    private httpSvc: HttpService,
   ) {}
 
   async ngOnInit() {
@@ -194,13 +178,13 @@ export class RelationshipsComponent implements OnInit {
     const pending$ = await this.actionSvc.getRelationships();
     this.stateSvc.pendingInvitations$ = pending$.pipe(
       map((obs: any[]) =>
-        obs.filter(itm => itm.state !== 'active' && itm.state !== 'invitation')
-      )
+        obs.filter(itm => itm.state !== 'active' && itm.state !== 'invitation'),
+      ),
     );
 
     this.stateSvc.pendingInvitations$.subscribe(obs => console.log(obs));
     this.stateSvc.activeRelationship$ = this.actionSvc.getRelationshipByState(
-      'active'
+      'active',
     );
   }
 
@@ -212,22 +196,22 @@ export class RelationshipsComponent implements OnInit {
           role: 'destructive',
           handler: () => {
             console.log('Destructive clicked');
-          }
+          },
         },
         {
           text: 'Archive',
           handler: () => {
             console.log('Archive clicked');
-          }
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     // actionSheet.present();

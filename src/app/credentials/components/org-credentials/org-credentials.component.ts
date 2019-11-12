@@ -7,11 +7,11 @@ import { map, filter, tap } from 'rxjs/operators';
 import {
   CredentialStateService,
   ICredential,
-  IIssuer
+  IIssuer,
 } from '../../../credentials/services/credential-state.service';
 import {
   RelationshipsStateService,
-  IRelationship
+  IRelationship,
 } from '../../../relationships/services/relationships-state.service';
 import { CredentialActionsService } from '../../../credentials/services/credential-actions.service';
 import { RelationshipsActionService } from '../../../relationships/services/relationships-action.service';
@@ -34,13 +34,8 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row>
-          <ion-col >
-            <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
-          </ion-col>
-        </ion-row>
         <ion-row *ngIf="credentials$ | async as creds">
-          <ion-col >
+          <ion-col>
             <ion-grid style="width: 100%;">
               <!--<ion-row>
                 <ion-col>
@@ -82,7 +77,7 @@ import { RelationshipsActionService } from '../../../relationships/services/rela
     </ion-content>
   `,
   styleUrls: ['./org-credentials.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrgCredentialsComponent implements OnInit {
   searchQuery: '';
@@ -101,7 +96,7 @@ export class OrgCredentialsComponent implements OnInit {
     private actionSvc: CredentialActionsService,
     private relationshipActionSvc: RelationshipsActionService,
     public actionSheetCtrl: ActionSheetController,
-    private alertController: AlertController
+    private alertController: AlertController,
   ) {
     this.initializeItems();
     this.setOrgName();
@@ -109,17 +104,10 @@ export class OrgCredentialsComponent implements OnInit {
 
   ngOnInit() {
     const did = this.route.snapshot.paramMap.get('did');
-    // const creds = await this.actionSvc.getCredentials().toPromise();
-    // const filtered = creds.filter(itm => itm.did === did);
-    // this.credentials = of(filtered);
     this.credentials$ = this.actionSvc.getCredentials().pipe(
       map(obs => obs.filter(itm => itm._id === did)),
       tap(obs => (this.issuer$ = of(obs))),
-      tap(obs => console.log(obs)),
       map((obs: any) => obs.map(itm => itm.credentials).flatMap(itm => itm)),
-      tap(obs => console.log(obs))
-
-      // map(obs => obs.map(credgroup => credgroup)
     );
     this.relationships = this.relationshipStateSvc.relationships$;
 
@@ -133,9 +121,9 @@ export class OrgCredentialsComponent implements OnInit {
       .pipe(
         map(is => {
           return is.filter(
-            i => i.did === this.route.snapshot.paramMap.get('did')
+            i => i.did === this.route.snapshot.paramMap.get('did'),
           )[0];
-        })
+        }),
       )
       .subscribe(issuer => {
         this.issuer = issuer;
@@ -144,7 +132,7 @@ export class OrgCredentialsComponent implements OnInit {
 
   async initializeItems() {
     await this.actionSvc.getCredentials({
-      did: this.route.snapshot.paramMap.get('did')
+      did: this.route.snapshot.paramMap.get('did'),
     });
   }
 
@@ -173,29 +161,29 @@ export class OrgCredentialsComponent implements OnInit {
         {
           text: 'View',
           handler: () =>
-            this.router.navigate([`/credentials/received/view/${this._id}`])
+            this.router.navigate([`/credentials/received/view/${this._id}`]),
         },
         {
           text: 'Share',
           handler: () => {
             this.shareCredPopup();
-          }
+          },
         },
         {
           text: 'Delete',
           role: 'destructive',
           handler: () => {
             console.log('Delete clicked');
-          }
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();
@@ -211,8 +199,8 @@ export class OrgCredentialsComponent implements OnInit {
           type: 'checkbox',
           label: 'ACME Inc.',
           value: 'value1',
-          checked: false
-        }
+          checked: false,
+        },
       ],
       buttons: [
         {
@@ -221,16 +209,16 @@ export class OrgCredentialsComponent implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
             this.selectDataPopup();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -246,22 +234,22 @@ export class OrgCredentialsComponent implements OnInit {
           type: 'checkbox',
           label: 'Degree',
           value: 'value1',
-          checked: false
+          checked: false,
         },
         {
           name: 'checkbox2',
           type: 'checkbox',
           label: 'Program',
           value: 'value2',
-          checked: false
+          checked: false,
         },
         {
           name: 'checkbox3',
           type: 'checkbox',
           label: 'Date of Study',
           value: 'value3',
-          checked: false
-        }
+          checked: false,
+        },
       ],
       buttons: [
         {
@@ -270,16 +258,16 @@ export class OrgCredentialsComponent implements OnInit {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-          }
+          },
         },
         {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
             this.credSharedPopup();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -294,9 +282,9 @@ export class OrgCredentialsComponent implements OnInit {
           text: 'Ok',
           handler: () => {
             console.log('Confirm Ok');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

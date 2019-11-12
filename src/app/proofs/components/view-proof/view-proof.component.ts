@@ -41,8 +41,17 @@ import { IRelationship } from 'src/app/messages/services/messages-state.service'
         >
       </ion-toolbar>
     </ion-header>
-    <ion-content fullscreen color="light">
-      <ion-card text-center *ngIf="proof$ | async as proof">
+
+    <ion-content fullscreen color="light" *ngIf="proof$ | async as proof">
+      <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button
+          [disabled]="disabled"
+          (click)="actions(proof.presentation_exchange_id)"
+        >
+          <ion-icon [name]="button"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <ion-card text-center>
         <img
           src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
         />
@@ -101,9 +110,6 @@ import { IRelationship } from 'src/app/messages/services/messages-state.service'
             </app-list-item>
           </ng-container>
         </ion-list>
-        <ion-item (click)="verifyCredPopup()" lines="none" color="primary">
-          <ion-badge slot="end">Verify</ion-badge>
-        </ion-item>
       </ion-card>
     </ion-content>
   `,
@@ -113,9 +119,25 @@ export class ViewProofComponent implements OnInit {
   active: ICertificateOfProof;
   proof$: any;
   relationship$: Observable<IRelationship>;
+  state: string;
+  role: string;
+
+  get button() {
+    return this.state === 'verifier' ? 'search' : 'wallet';
+  }
+
+  get disabled() {
+    const disabledStates = ['request_sent', 'proposal_sent'];
+    return disabledStates.some(val => val === this.state);
+  }
+
+  actionMap(state: string) {
+    console.log(state);
+    return this.state[state.replace(/ /g, '_')].label;
+  }
 
   getRole(role: string) {
-    return role === 'verifier' ? 'verifier' : 'issuer';
+    return role === 'verifier' ? 'verifier' : 'prover';
   }
 
   constructor(
@@ -137,19 +159,19 @@ export class ViewProofComponent implements OnInit {
             state,
             ...noRequestedAttributes
           } = proof;
+          this.state = state;
+          this.role = noRequestedAttributes.role || 'prover';
           const reqKeys = (req: IRequestedAttributes) =>
             [...Object.keys(req)].map(key => ({ key, ...req[key] }));
 
           const attrs = reqKeys(requested_attributes).map(attr => ({
             key: attr.key,
             name: attr.name,
-            restrictions: [...Object.keys(attr.restrictions)].map(key => ({
+            restrictions: [...Object.keys(attr.restrictions[0])].map(key => ({
               key,
-              value: attr.restrictions[key],
+              value: attr.restrictions[0][key],
             })),
           }));
-          console.log(attrs);
-
           return {
             mappedAttributes: attrs,
             state: state.replace(/_/g, ' '),
@@ -158,25 +180,11 @@ export class ViewProofComponent implements OnInit {
         }),
       );
     this.proof$.pipe(take(1)).subscribe(proof => {
+      console.log(proof);
       this.relationship$ = this.relActionSvc.getRelationshipById(
         proof.connection_id,
       );
-      console.log(proof);
     });
-  }
-
-  async setActiveCertificate() {
-    this.stateSvc.activeCertificateOfProof$
-      .pipe(
-        map(is => {
-          return is.filter(
-            (i: any) => i._id === this.route.snapshot.paramMap.get('id'),
-          )[0];
-        }),
-      )
-      .subscribe(certificate => {
-        this.active = certificate;
-      });
   }
 
   async verifyCredPopup() {
@@ -204,5 +212,18 @@ export class ViewProofComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async actions(id: string) {
+    const state = this.state;
+    if (state === 'request_received') {
+      return this.router.navigate(['/verify-credentials/claims/' + id]);
+    }
+    if (state === 'presentation_received') {
+      const res = await this.actionSvc.postProofById({}, id).toPromise();
+      console.log(res);
+      if (res) return this.router.navigate(['/verify-credentials/']);
+      else return console.log('err');
+    }
   }
 }

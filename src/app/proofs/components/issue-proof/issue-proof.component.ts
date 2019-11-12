@@ -6,6 +6,34 @@ import { RelationshipActionsService } from 'src/app/credentials/services/relatio
 import { IRelationship } from 'src/app/messages/services/messages-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProofActionService } from '../../services/proof-action.service';
+import { MessagesService } from 'src/app/core/services/messages.service';
+
+export interface IProofProposal {
+  connection_id: string;
+  proof_request: ProofRequest;
+}
+export interface ProofRequest {
+  version: string;
+  name: string;
+  requested_predicates: RequestedPredicates;
+  requested_attributes: RequestedAttributes;
+}
+export interface RequestedPredicates {}
+export interface RequestedAttributes {
+  [key: string]: IRestrictions;
+}
+export interface IRestrictions {
+  name: string;
+  restrictions?: RestrictionsEntity[] | null;
+}
+export interface RestrictionsEntity {
+  issuer_did: string;
+  schema_version: string;
+  schema_id: string;
+  cred_def_id: string;
+  schema_name: string;
+  // attr::corp_num::value: string;
+}
 
 @Component({
   selector: 'app-issue-proof',
@@ -113,7 +141,7 @@ import { ProofActionService } from '../../services/proof-action.service';
             <ion-col>
               <ion-item
                 ><ion-label position="stacked"
-                  >Comment
+                  >Proof Proposal Comment
                   <ion-text color="danger">*</ion-text>
                 </ion-label>
                 <ion-input formControlName="comment"></ion-input>
@@ -138,7 +166,7 @@ import { ProofActionService } from '../../services/proof-action.service';
       </form>
     </ion-content>
   `,
-  styleUrls: ['./issue-proof.component.css']
+  styleUrls: ['./issue-proof.component.css'],
 })
 export class IssueProofComponent implements OnInit {
   credDef$: Observable<any[]>;
@@ -150,12 +178,13 @@ export class IssueProofComponent implements OnInit {
     private relationshipsActionSvc: RelationshipActionsService,
     private proofActionSvc: ProofActionService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private mssg: MessagesService,
   ) {
     this.fg = new FormGroup({
       connectionId: new FormControl(''),
       credDef: new FormControl(''),
-      comment: new FormControl('')
+      comment: new FormControl(''),
     });
   }
 
@@ -173,34 +202,26 @@ export class IssueProofComponent implements OnInit {
   }
   async submit() {
     const proof = this.fg.value;
-    console.log(proof);
-    const mapped = {
-      schemaDef: {
-        schema_name: proof.credDef.name,
-        schema_version: proof.credDef.version,
-        attribtues: proof.credDef.attributes
-      },
-      connectionId: proof.connectionId,
-      comment: proof.comment,
-      names: proof.credDef.attributes
-    };
-    const res = await this.proofActionSvc.postProof(mapped).toPromise();
-    this.router.navigate(['/verify-credentials']);
-    /*
-    {
-      "schemaDef":
-      {
-        "schema_name": "schooldegreswe2r",
-        "schema_version": "1.0",
-        "attributes":
-        [
-          "name"
-        ]
-      },
-      "connectionId": "32798468-a6fd-41bf-a736-7ea13a7b0570",
-      "comment": "test comment",
-      "names": ["grade"]
+    const credId = proof.credDef._id.slice(proof.credDef._id.indexOf('_') + 1);
+    try {
+      const res = await this.proofActionSvc
+        .getProposal({
+          relId: proof.connectionId,
+          credId,
+          schemaId: proof.credDef.schemaId,
+        })
+        .toPromise();
+
+      const proposal = res.proofProposal;
+
+      proposal.comment = proof.comment;
+      const submitted = await this.proofActionSvc
+        .postProof({ ...proposal })
+        .toPromise();
+
+      this.router.navigate(['verify-credentials/view/' + submitted._id]);
+    } catch (err) {
+      this.mssg.presentToast('Something went wrong' + err.message, 3000);
     }
-  */
   }
 }

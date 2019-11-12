@@ -206,13 +206,13 @@ export class CredentialsReceivedComponent implements OnInit {
             await loading.present();
             try {
               const post = await this.httpSvc
-                .postById('issues', this._id)
+                .postById<{ _id: string }>('issues', this._id)
                 .toPromise();
               if (post) {
                 setTimeout(() => {
                   this.loadData();
                   loading.dismiss();
-                  this.router.navigate(['/credentials/pending/' + this._id]);
+                  this.router.navigate(['/credentials/pending/' + post._id]);
                 }, 3000);
 
                 return true;

@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import {
   CredentialStateService,
-  ICredentialDef
+  ICredentialDef,
 } from '../../services/credential-state.service';
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import { RelationshipActionsService } from '../../services/relationship-actions.service';
@@ -43,12 +43,11 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
           </ion-col>
         </ion-row>-->
         <ion-row *ngIf="relationships | async as relationships">
-          <ion-col >
+          <ion-col>
             <ion-list>
               <ion-list-header class="ion-no-margin ion-no-padding">
                 <div style="display: flex; width: 100%; flex-direction: column">
                   <span class="ion-padding">Issue To</span>
-                  <ion-searchbar></ion-searchbar>
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let relationship of relationships">
@@ -117,7 +116,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
       </ion-grid>-->
     </form>
   `,
-  styleUrls: ['./issue-credential-relationships.component.scss']
+  styleUrls: ['./issue-credential-relationships.component.scss'],
 })
 export class IssueCredentialRelationshipsComponent implements OnInit {
   active$: Observable<ICredentialDef>;
@@ -129,20 +128,20 @@ export class IssueCredentialRelationshipsComponent implements OnInit {
     public router: Router,
     public relationShipActionService: RelationshipActionsService,
     private stateSvc: CredentialStateService,
-    private actionSvc: CredentialActionsService
+    private actionSvc: CredentialActionsService,
   ) {
     this.active$ = this.actionSvc.getCredential(
-      this.route.snapshot.paramMap.get('id')
+      this.route.snapshot.paramMap.get('id'),
     );
   }
 
   ngOnInit() {
     this.relationships = this.relationShipActionService.getRelationshipByState(
-      'active'
+      'active',
     );
 
     const fg = new FormGroup({
-      name: new FormControl('', [Validators.required])
+      name: new FormControl('', [Validators.required]),
     });
 
     this.fg = fg;

@@ -1,4 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: ''
+  apiUrl: '',
+  verifier: true,
+  prover: true,
+  issuer: true,
 };

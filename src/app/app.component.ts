@@ -89,7 +89,7 @@ import { Observable, of } from 'rxjs';
       <ion-router-outlet id="content" main></ion-router-outlet>
     </ion-app>
   `,
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   mssgCount$: Observable<number>;
@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
     {
       title: 'Relationships & Invites',
       url: '/relationships/',
-      icon: 'people'
+      icon: 'people',
     },
     /*{
       title: 'Messages',
@@ -114,23 +114,23 @@ export class AppComponent implements OnInit {
       title: 'Proof Certificates',
       url: '/verify-credentials/',
       icon: 'finger-print',
-      hasBadge: true
+      hasBadge: true,
     },
     {
       title: 'Credentials Received',
       url: '/credentials/received/',
       hasBadge: true,
-      icon: 'archive'
+      icon: 'archive',
     },
     {
       title: 'Issued Credentials',
       url: '/credentials/issued/',
-      icon: 'ribbon'
+      icon: 'ribbon',
     },
     {
       title: 'Credential Types',
       url: '/credentials/types/',
-      icon: 'ribbon'
+      icon: 'list-box',
     },
     /*{
       title: 'Create Org. Credential',

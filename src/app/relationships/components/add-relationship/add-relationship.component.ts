@@ -31,7 +31,7 @@ import { LoadingController } from '@ionic/angular';
       <!--<ion-grid *ngIf="invitation$ | async as invite">-->
       <ion-grid>
         <ion-row>
-          <ion-col >
+          <ion-col>
             <form [formGroup]="fg">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
@@ -73,7 +73,7 @@ import { LoadingController } from '@ionic/angular';
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./add-relationship.component.scss']
+  styleUrls: ['./add-relationship.component.scss'],
 })
 export class AddRelationshipComponent implements OnInit, OnDestroy {
   invitation$: Observable<IInvitation>;
@@ -83,7 +83,7 @@ export class AddRelationshipComponent implements OnInit, OnDestroy {
     private stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService,
     private router: Router,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
   ) {}
 
   ngOnInit() {
@@ -98,7 +98,7 @@ export class AddRelationshipComponent implements OnInit, OnDestroy {
   async submit(fc: any) {
     const loading = await this.loadingController.create({
       message: 'Accepting Invitation',
-      duration: 10000
+      duration: 10000,
     });
     await loading.present();
     try {

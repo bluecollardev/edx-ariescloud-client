@@ -64,40 +64,6 @@ import { HttpService } from 'src/app/core/services/http.service';
           <ion-badge slot="end" color="danger">Delete</ion-badge>
         </ion-item>
       </ion-card>
-
-      <!--<ion-grid>
-        <ion-row>
-          <ion-col >
-            <ion-card text-center>
-              <ion-card-content>
-                <ion-item>
-                  <ion-textarea>{{ active | json }}</ion-textarea>
-                </ion-item>
-                <ion-card-title>
-                  {{ active.name }}
-                  <br />
-                </ion-card-title>
-              </ion-card-content>
-
-              <div style="display: flex; flex-direction: column">
-                <ion-button
-                  style="flex: 1"
-                  color="primary"
-                  clear
-                  full
-                  icon-start
-                  margin
-                  (click)="this.shareCredPopup()"
-                >
-                  <ion-icon name="share"></ion-icon>
-                  Share Credential
-                </ion-button>
-              </div>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      -->
     </ion-content>
   `,
   styleUrls: ['./view-credential.component.scss'],

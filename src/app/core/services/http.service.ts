@@ -20,13 +20,15 @@ export interface IMessageResult {
 
 export type APISegmentType =
   | 'proofs'
+  | 'proofs/presentation/attributes'
   | 'issues'
   | 'relationships'
   | 'invitations'
   | 'messages'
   | 'credentials'
   | 'credential-definitions'
-  | 'profile';
+  | 'profile'
+  | 'proofs/creds';
 
 export interface IInvitationResult {
   '@type': string;
@@ -37,7 +39,7 @@ export interface IInvitationResult {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpService {
   url: string;
@@ -48,6 +50,10 @@ export class HttpService {
 
   get<T>(segment: APISegmentType) {
     return this.http.get<T>(`${this.url}${segment}`);
+  }
+
+  getWithParam<T>(segment: APISegmentType, params: any) {
+    return this.http.get<T>(`${this.url}${segment}`, params);
   }
 
   post<T>(segment: APISegmentType, params = {}) {
