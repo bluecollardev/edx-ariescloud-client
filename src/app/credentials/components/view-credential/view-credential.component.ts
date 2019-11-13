@@ -22,9 +22,9 @@ import { HttpService } from 'src/app/core/services/http.service';
     ></app-item-header>
     <ion-content *ngIf="active$ | async as cred" color="light">
       <ion-card text-center>
-        <img
-          src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-        />
+        <ion-toolbar color="primary">
+          <ion-title>Received Credential</ion-title>
+        </ion-toolbar>
         <ion-list>
           <ion-list-header>
             <h2>
@@ -60,9 +60,6 @@ import { HttpService } from 'src/app/core/services/http.service';
             </ion-note>
           </ion-item>
         </ion-list>
-        <ion-item (click)="action()" lines="none" color="danger">
-          <ion-badge slot="end" color="danger">Delete</ion-badge>
-        </ion-item>
       </ion-card>
     </ion-content>
   `,

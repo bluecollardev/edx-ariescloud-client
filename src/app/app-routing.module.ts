@@ -5,6 +5,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
 import { CredentialsComponent } from './credentials/credentials.component';
 import { ProofsComponent } from './proofs/proofs.component';
+import { IssuerPage } from './issuer/issuer.page';
 
 // tslint:disable-next-line: max-line-length
 const routes: Routes = [
@@ -12,11 +13,11 @@ const routes: Routes = [
   {
     path: 'relationships',
     pathMatch: 'full',
-    component: RelationshipsComponent
+    component: RelationshipsComponent,
   },
   {
     path: 'relationships',
-    loadChildren: `./relationships/relationships.module#RelationshipsModule`
+    loadChildren: `./relationships/relationships.module#RelationshipsModule`,
   },
   /*{
     path: 'messages',
@@ -25,33 +26,39 @@ const routes: Routes = [
   },*/
   {
     path: 'messages',
-    loadChildren: `./messages/messages.module#MessagesModule`
+    loadChildren: `./messages/messages.module#MessagesModule`,
   },
   {
     path: 'credentials',
     pathMatch: 'full',
-    component: CredentialsComponent
+    component: CredentialsComponent,
   },
   {
     path: 'credentials',
-    loadChildren: `./credentials/credentials.module#CredentialsModule`
+    loadChildren: `./credentials/credentials.module#CredentialsModule`,
   },
   {
     path: 'verify-credentials',
     pathMatch: 'full',
-    component: ProofsComponent
+    component: ProofsComponent,
   },
   {
     path: 'verify-credentials',
-    loadChildren: `./proofs/proofs.module#ProofsModule`
-  }
+    loadChildren: `./proofs/proofs.module#ProofsModule`,
+  },
+  {
+    path: 'issuer',
+    pathMatch: 'full',
+    component: IssuerPage,
+  },
+  { path: 'issuer', loadChildren: './issuer/issuer.module#IssuerPageModule' },
 ];
 
 @NgModule({
   declarations: [],
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

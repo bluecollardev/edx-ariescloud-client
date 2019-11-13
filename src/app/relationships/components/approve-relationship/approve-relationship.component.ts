@@ -4,46 +4,39 @@ import { Observable } from 'rxjs';
 
 import {
   RelationshipsStateService,
-  IRelationship
+  IRelationship,
 } from '../../services/relationships-state.service';
 import { RelationshipsActionService } from '../../services/relationships-action.service';
 import { HttpService } from 'src/app/core/services/http.service';
 import { LoadingController } from '@ionic/angular';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-approve-relationship',
   template: `
-    <ion-header role="banner" class="ios header-ios hydrated">
-      <ion-toolbar class="ios hydrated">
-        <ion-buttons
-          slot="end"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Accept Invitation</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <app-item-header title="Approve Relationship" default="/relationships">
+    </app-item-header>
     <ion-content *ngIf="active | async as relationship">
       <ion-grid>
         <ion-row>
-          <ion-col >
+          <ion-col>
             <ion-card text-center>
-              <img
-                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-              />
-              <ion-card-content>
-                <ion-card-title>
-                  {{ relationship.name }}
-                </ion-card-title>
-                <small
-                  ><small>Their ID: {{ relationship.did }}</small></small
-                >
-                <br />
-                <small><small>My DID: acbd-123-sdf-2345</small></small>
-              </ion-card-content>
+              <ion-toolbar color="primary">
+                <ion-title>{{ relationship.name }}</ion-title>
+                <ion-buttons slot="secondary">
+                  <ion-button (click)="decline(relationship._id)" size="large">
+                    <ion-label>Decline</ion-label>
+                    <ion-icon name="trash" slot="start"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+                <ion-buttons slot="primary">
+                  <ion-button (click)="accept(relationship._id)" size="large">
+                    <ion-label>Accept</ion-label>
+                    <ion-icon name="checkmark"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+
               <ion-list>
                 <ion-item class="flex ion-justify-content-around">
                   <!--<ion-icon name='logo-twitter' item-start style="color: #55acee"></ion-icon>-->
@@ -60,58 +53,49 @@ import { LoadingController } from '@ionic/angular';
                     relationship.state
                   }}</ion-badge>
                 </ion-item>
+                <ng-container *ngIf="$fields | async as fields">
+                  <app-list-item
+                    *ngFor="let field of fields"
+                    [label]="field.key"
+                    [value]="field.value"
+                  >
+                  </app-list-item>
+                </ng-container>
               </ion-list>
-
-              <div style="display: flex">
-                <ion-button
-                  style="flex: 1"
-                  color="danger"
-                  outline
-                  full
-                  icon-start
-                  margin
-                  (click)="decline(relationship._id)"
-                >
-                  <ion-icon name="close"></ion-icon>
-                  Decline
-                </ion-button>
-                <ion-button
-                  style="flex: 1"
-                  color="success"
-                  outline
-                  full
-                  icon-start
-                  margin
-                  (click)="accept(relationship._id)"
-                >
-                  <ion-icon name="checkmark"></ion-icon>
-                  Accept
-                </ion-button>
-              </div>
             </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
   `,
-  styleUrls: ['./approve-relationship.component.scss']
+  styleUrls: ['./approve-relationship.component.scss'],
 })
 export class ApproveRelationshipComponent implements OnInit, OnDestroy {
   graduationDate: string = new Date().toDateString();
   active: Observable<IRelationship>;
+  $fields: Observable<{ key: string; value: any }[]>;
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     private actionSvc: RelationshipsActionService,
     private httpSvc: HttpService,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
   ) {}
 
   ngOnInit() {
     this.active = this.actionSvc.getRelationshipById(
-      this.route.snapshot.paramMap.get('id')
+      this.route.snapshot.paramMap.get('id'),
     );
+
+    this.$fields = this.actionSvc
+      .getRawRelationship(this.route.snapshot.paramMap.get('id'))
+      .pipe(
+        map(obs => {
+          const keys = Object.keys(obs.relationship);
+          return keys.map(key => ({ key, value: obs.relationship[key] }));
+        }),
+      );
   }
 
   async ngOnDestroy() {
@@ -120,20 +104,21 @@ export class ApproveRelationshipComponent implements OnInit, OnDestroy {
 
   async accept(id: string) {
     const res = await this.httpSvc.postById('relationships', id).toPromise();
+    console.log(res);
     if (res) {
       const loading = await this.loadingController.create({
         message: 'Accepting relationship',
-        duration: 10000
+        duration: 10000,
       });
       await loading.present();
       setTimeout(
         () =>
           this.actionSvc.resetRelState().then(() => {
             loading.dismiss().then(() => {
-              this.router.navigate(['/relationships']);
+              this.router.navigate(['/relationships/view/' + id]);
             });
           }),
-        3000
+        3000,
       );
     }
   }
@@ -144,17 +129,17 @@ export class ApproveRelationshipComponent implements OnInit, OnDestroy {
     if (res) {
       const loading = await this.loadingController.create({
         message: 'Declining relationship',
-        duration: 10000
+        duration: 10000,
       });
       await loading.present();
       setTimeout(
         () =>
           this.actionSvc.resetRelState().then(() => {
             loading.dismiss().then(() => {
-              this.router.navigate(['/relationships']);
+              this.router.navigate(['/relationships/']);
             });
           }),
-        3000
+        3000,
       );
     }
   }

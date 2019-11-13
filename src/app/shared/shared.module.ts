@@ -8,9 +8,20 @@ import { ListItemStackedComponent } from './components/list-item-stacked/list-it
 import { ListHeaderComponent } from './components/list-header/list-header.component';
 import { CardHeaderComponent } from './components/card-header/card-header.component';
 import { ItemHeaderComponent } from './components/item-header/item-header.component';
+import { ItemToolbarComponent } from './item-toolbar/item-toolbar.component';
+import { BaseComponent } from './components/base/base.component';
 
 @NgModule({
-  declarations: [ListItemComponent, ChipComponent, ListItemStackedComponent, ListHeaderComponent, CardHeaderComponent, ItemHeaderComponent],
+  declarations: [
+    ListItemComponent,
+    ChipComponent,
+    ListItemStackedComponent,
+    ListHeaderComponent,
+    CardHeaderComponent,
+    ItemHeaderComponent,
+    ItemToolbarComponent,
+    BaseComponent,
+  ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
   exports: [
     ReactiveFormsModule,
@@ -21,6 +32,8 @@ import { ItemHeaderComponent } from './components/item-header/item-header.compon
     ListItemStackedComponent,
     CardHeaderComponent,
     ItemHeaderComponent,
+    ItemToolbarComponent,
+    BaseComponent,
   ],
 })
 export class SharedModule {}

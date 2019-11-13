@@ -8,6 +8,7 @@ export const environment = {
   verifier: true,
   prover: true,
   issuer: true,
+  name: '',
 };
 
 /*

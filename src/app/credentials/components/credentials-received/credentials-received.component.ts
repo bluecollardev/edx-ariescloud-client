@@ -28,6 +28,7 @@ import {
 import { CredentialActionsService } from '../../services/credential-actions.service';
 
 import { map, tap, reduce } from 'rxjs/operators';
+import { LoadingService } from 'src/app/core/services/loading.service';
 
 const url = environment.apiUrl;
 
@@ -56,11 +57,44 @@ export interface ICredentialResponse {
 @Component({
   selector: 'app-credentials-received',
   template: `
+    <ion-header role="banner" class="ios header-ios hydrated">
+      <ion-toolbar class="ios hydrated">
+        <ion-buttons
+          slot="end"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-menu-button
+            class="hydrated ios button ion-activatable ion-focusable activated"
+          ></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons
+          slot="start"
+          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
+        >
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <ion-title class="ios title-ios hydrated">My Credentials</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="secondary">
+        <ion-button [routerLink]="['/credentials/create']">
+          <ion-label>Create</ion-label>
+          <ion-icon name="circle-add"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button [routerLink]="['/credentials/relationship']">
+          <ion-label>Issue</ion-label>
+          <ion-icon name="add-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
     <ion-content>
       <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
         <ion-refresher-content> </ion-refresher-content>
       </ion-refresher>
-      <ion-grid>
+      <ion-grid md>
         <ion-row>
           <ion-col>
             <ion-list *ngIf="credentials | async as creds">
@@ -69,7 +103,7 @@ export interface ICredentialResponse {
                   <div
                     style="display: flex; width: 100%; flex-direction: column"
                   >
-                    <span class="ion-padding">Accepted Credentials</span>
+                    <span class="ion-padding">Stored Credentials</span>
                   </div>
                 </ion-list-header>
                 <ion-item-sliding *ngFor="let cred of creds">
@@ -96,8 +130,11 @@ export interface ICredentialResponse {
                 </ion-list-header>
                 <ion-item-sliding *ngFor="let cred of pendingCreds">
                   <ion-item
-                    (click)="pendingActionSheet(cred._id, cred.state)"
-                    [disabled]="!actionMap[cred.state]"
+                    (click)="
+                      router.navigate([
+                        '/credentials/pending/' + cred.credential_exchange_id
+                      ])
+                    "
                   >
                     <ion-icon name="cog" size="medium" slot="start"></ion-icon>
                     <ion-list>
@@ -122,11 +159,16 @@ export interface ICredentialResponse {
       </ion-grid>
     </ion-content>
     <ng-template #noPending>
-      <ion-button [routerLink]="['/credentials/types']">
-        <ion-icon name="add"></ion-icon>
-        Credential Types
-      </ion-button></ng-template
-    >
+      <ion-card text-center>
+        <ion-card-header>
+          <ion-card-title>
+            <h2>
+              There's no Pending Credentials
+            </h2>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ng-template>
   `,
   styleUrls: ['./credentials-received.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -156,9 +198,9 @@ export class CredentialsReceivedComponent implements OnInit {
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
+    private loadingSvc: LoadingService,
     private httpSvc: HttpService,
     public loadingController: LoadingController,
-    private http: HttpClient,
   ) {
     this._url = url;
     this.credentialStates = credentialStates;
@@ -184,10 +226,9 @@ export class CredentialsReceivedComponent implements OnInit {
   }
 
   async pendingActionSheet(id: string, state: string) {
-    if (!this.actionMap[state]) return;
     this._id = id;
     console.log(this._id);
-    const actionSheet = await this.actionSheetCtrl.create({
+    const opts = {
       buttons: [
         {
           text: 'View',
@@ -196,42 +237,46 @@ export class CredentialsReceivedComponent implements OnInit {
           },
           role: '',
         },
-        {
-          text: 'Accept',
-          handler: async () => {
-            const loading = await this.loadingController.create({
-              message: 'Accepting credential stage',
-              duration: 10000,
-            });
-            await loading.present();
-            try {
-              const post = await this.httpSvc
-                .postById<{ _id: string }>('issues', this._id)
-                .toPromise();
-              if (post) {
-                setTimeout(() => {
-                  this.loadData();
-                  loading.dismiss();
-                  this.router.navigate(['/credentials/pending/' + post._id]);
-                }, 3000);
-
-                return true;
-              }
-            } catch {
-              loading.dismiss();
-              return false;
-            }
-          },
-        },
-        {
-          text: 'Decline',
-          handler: async () => {
-            const rm = await this.httpSvc.delete('issues', this._id);
-            return true;
-          },
-        },
       ],
-    });
+    };
+    const decline = {
+      text: 'Decline',
+      handler: async () => {
+        const rm = await this.httpSvc.delete('issues', this._id);
+        return true;
+      },
+      role: 'destructive',
+    };
+
+    const accept = {
+      text: 'Accept ' + state,
+      handler: async () => {
+        const loading = await this.loadingSvc.presentLoading();
+        await loading.present();
+        try {
+          const post = await this.httpSvc
+            .postById<{ _id: string }>('issues', this._id)
+            .toPromise();
+          if (post) {
+            setTimeout(() => {
+              loading.dismiss();
+              this.router.navigate(['/credentials/pending/' + this._id]);
+            }, 3000);
+
+            return true;
+          }
+        } catch {
+          loading.dismiss();
+          return false;
+        }
+      },
+      role: 'destructive',
+    };
+    this.actionMap[state]
+      ? opts.buttons.push(accept)
+      : opts.buttons.push(decline);
+
+    const actionSheet = await this.actionSheetCtrl.create(opts);
 
     await actionSheet.present();
   }

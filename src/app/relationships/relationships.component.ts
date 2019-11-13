@@ -22,18 +22,34 @@ import { HttpService } from '../core/services/http.service';
             class="hydrated ios button ion-activatable ion-focusable activated"
           ></ion-menu-button>
         </ion-buttons>
-        <ion-title class="ios title-ios hydrated">Aries Client</ion-title>
+        <ion-title class="ios title-ios hydrated">Relationships</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content full>
-      <ion-card *ngIf="profile$ | async as profile" (click)="hide = !hide">
+    <ion-toolbar>
+      <ion-buttons slot="secondary">
+        <ion-button [routerLink]="['add']">
+          <ion-label>Accept</ion-label>
+          <ion-icon name="people"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button [routerLink]="['invite']">
+          <ion-label>Create</ion-label>
+          <ion-icon name="add-circle"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-content>
+      <ion-card *ngIf="profile$ | async as profile">
         <ion-card-header>
           <ion-card-title>
             <ion-text>{{ profile.label }}</ion-text>
           </ion-card-title>
-          <ion-card-subtitle>DID: {{ profile.did }}</ion-card-subtitle>
+          <ion-card-subtitle *ngIf="globalStateSvc.isIssuer"
+            >DID: {{ profile.did }}</ion-card-subtitle
+          >
         </ion-card-header>
-        <ion-card-content *ngIf="!hide">
+        <ion-card-content>
           <ion-list>
             <ion-item lines="none">
               <ion-icon name="people" slot="start"></ion-icon>
@@ -99,13 +115,11 @@ import { HttpService } from '../core/services/http.service';
                 </ion-item-options>
               </ion-item-sliding>
             </ion-list>
-            <ion-list
-              *ngIf="
-                stateSvc.pendingInvitations$ | async as pendingInvitationItems
-              "
-            >
+            <ion-list>
               <ng-container
-                *ngIf="pendingInvitationItems.length > 0; else addRel"
+                *ngIf="
+                  stateSvc.pendingInvitations$ | async as pendingInvitationItems
+                "
               >
                 <ion-list-header>
                   Accept / Decline Invites
@@ -115,7 +129,9 @@ import { HttpService } from '../core/services/http.service';
                     <ion-icon name="business" class="icon-lg"></ion-icon>
                     <ion-label>
                       <h2>{{ item.name }}</h2>
-                      <small>DID: {{ item.did }}</small>
+                      <small *ngIf="globalStateSvc.isIssuer"
+                        >DID: {{ item.did }}</small
+                      >
                       <ion-row>
                         <small>State: {{ item.state }}</small>
                       </ion-row>
@@ -138,24 +154,6 @@ import { HttpService } from '../core/services/http.service';
         </ion-row>
       </ion-grid>
     </ion-content>
-    <ion-footer>
-      <ion-toolbar>
-        <ion-buttons slot="secondary">
-          <ion-button color="primary" [routerLink]="['add']" fill="solid"
-            >Accept</ion-button
-          >
-        </ion-buttons>
-
-        <ion-title>Invitations</ion-title>
-
-        <ion-buttons slot="secondary">
-          <ion-button outline fill="solid" [routerLink]="['invite']"
-            >Create</ion-button
-          >
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-footer>
-    <ng-template #addRel> </ng-template>
   `,
   styleUrls: ['./relationships.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush
@@ -169,7 +167,7 @@ export class RelationshipsComponent implements OnInit {
     public actionSheetCtrl: ActionSheetController,
     public stateSvc: RelationshipsStateService,
     private actionSvc: RelationshipsActionService,
-    private globalStateSvc: StateService,
+    public globalStateSvc: StateService,
     private httpSvc: HttpService,
   ) {}
 

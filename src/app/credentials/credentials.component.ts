@@ -5,19 +5,19 @@ import {
   Router,
   UrlSegment,
   Event as NavigationEvent,
-  NavigationStart
+  NavigationStart,
 } from '@angular/router';
 import { ActionSheetController, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import {
   CredentialStateService,
-  ICredentialDef
+  ICredentialDef,
 } from './services/credential-state.service';
 import {
   CredentialActionsService,
-  ICredentialParams
+  ICredentialParams,
 } from './services/credential-actions.service';
 import { ICredentialResponse } from './components/credentials-received/credentials-received.component';
 
@@ -46,6 +46,7 @@ import { ICredentialResponse } from './components/credentials-received/credentia
       </ion-toolbar>
     </ion-header>
     <ion-content slots="fixed">
+      <!--
       <div class="ion-padding" *ngIf="this.activeTab !== 'recipients'">
         <ion-segment color="primary" slot="fixed">
           <ion-segment-button
@@ -73,18 +74,24 @@ import { ICredentialResponse } from './components/credentials-received/credentia
       </div>
 
       <!-- This is a hidden "tab" -->
-      <app-credential-relationships *ngIf="this.activeTab === 'recipients'">
-      </app-credential-relationships>
-
-      <app-credentials-received *ngIf="this.activeTab === 'received'">
-      </app-credentials-received>
-      <app-credentials-issued *ngIf="this.activeTab === 'issued'">
-      </app-credentials-issued>
-      <app-credential-types *ngIf="this.activeTab === 'types'">
-      </app-credential-types>
+      <app-credential-relationships> </app-credential-relationships>
     </ion-content>
+    <ng-template #noCreds>
+      <ion-card text-center>
+        <ion-card-header>
+          <ion-card-title>
+            <h2>
+              You have no credential definitions.
+            </h2>
+          </ion-card-title>
+          <ion-card-subtitle>
+            Create a new credential type to start issuing!
+          </ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+    </ng-template>
   `,
-  styleUrls: ['./credentials.component.scss']
+  styleUrls: ['./credentials.component.scss'],
 })
 export class CredentialsComponent implements OnInit {
   activeTab: string;
@@ -102,64 +109,15 @@ export class CredentialsComponent implements OnInit {
     public stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
     public actionSheetCtrl: ActionSheetController,
-    public loadingController: LoadingController
+    public loadingController: LoadingController,
   ) {
     // this.initializeItems();
   }
 
   ngOnInit() {
-    this.route.url.subscribe(segments => {
-      this.setActiveTab(segments);
-    });
-
-    this.router.events
-      .pipe(
-        // The "events" stream contains all the navigation events. For this demo,
-        // though, we only care about the NavigationStart event as it contains
-        // information about what initiated the navigation sequence.
-        filter((event: NavigationEvent) => {
-          return event instanceof NavigationStart;
-        })
-      )
-      .subscribe((event: NavigationStart) => {
-        console.group('NavigationStart Event');
-        // Every navigation sequence is given a unique ID. Even "popstate"
-        // navigations are really just "roll forward" navigations that get
-        // a new, unique ID.
-        console.log('navigation id:', event.id);
-        console.log('route:', event.url);
-        // The "navigationTrigger" will be one of:
-        // --
-        // - imperative (ie, user clicked a link).
-        // - popstate (ie, browser controlled change such as Back button).
-        // - hashchange
-        // --
-        // NOTE: I am not sure what triggers the "hashchange" type.
-        console.log('trigger:', event.navigationTrigger);
-
-        // This "restoredState" property is defined when the navigation
-        // event is triggered by a "popstate" event (ex, back / forward
-        // buttons). It will contain the ID of the earlier navigation event
-        // to which the browser is returning.
-        // --
-        // CAUTION: This ID may not be part of the current page rendering.
-        // This value is pulled out of the browser; and, may exist across
-        // page refreshes.
-        if (event.restoredState) {
-          console.warn(
-            'restoring navigation id:',
-            event.restoredState.navigationId
-          );
-        }
-
-        console.groupEnd();
-      });
-
-    this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
-    this.stateSvc.credentials$ = this.actionSvc.getCredentials();
-
-    this.credentialDefs = this.stateSvc.credentialDefs$;
-    this.credentials = this.stateSvc.credentials$;
+    this.credentials = this.actionSvc
+      .getCredentials()
+      .pipe(tap(creds => console.log(creds)));
   }
 
   setActiveTab(segments) {
@@ -223,19 +181,19 @@ export class CredentialsComponent implements OnInit {
           text: 'View',
           handler: () => {
             this.router.navigate([`/credentials/view/${this._id}`]);
-          }
+          },
         },
         {
           text: 'Issue',
           handler: () => {
             this.router.navigate([`/credentials/issue/${this._id}`]);
-          }
+          },
         },
         {
           text: 'Edit',
           handler: () => {
             this.router.navigate([`/credentials/edit/${this._id}`]);
-          }
+          },
         },
         {
           text: 'Hide',
@@ -244,16 +202,16 @@ export class CredentialsComponent implements OnInit {
             await this.actionSvc.deleteCredDef(this._id);
             this.actionSvc.setRelState();
             this.credentialDefs = this.stateSvc.credentialDefs$;
-          }
+          },
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await actionSheet.present();

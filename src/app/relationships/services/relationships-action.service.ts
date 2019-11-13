@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import {
   IRelationshipResponse,
-  IConnectionParams
+  IConnectionParams,
 } from '../models/i-relationship';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -10,13 +10,14 @@ import { HttpService } from 'src/app/core/services/http.service';
 import { IInvitation } from '../models/i-invitation';
 import {
   RelationshipsStateService,
-  IRelationship
+  IRelationship,
 } from './relationships-state.service';
+import { IRawRel } from 'src/app/core/interfaces/raw-rel.interface';
 
 const apiUrl = environment.apiUrl;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RelationshipsActionService {
   headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -25,7 +26,7 @@ export class RelationshipsActionService {
   constructor(
     private http: HttpClient,
     private httpSvc: HttpService,
-    private stateSvc: RelationshipsStateService
+    private stateSvc: RelationshipsStateService,
   ) {
     this.url = apiUrl;
   }
@@ -33,12 +34,16 @@ export class RelationshipsActionService {
   getRelationship(did: string, params: IConnectionParams = {}) {
     const relationship = this.http.get<IRelationship[]>(
       `${this.url}relationships/${did}`,
-      { headers: this.headers }
+      { headers: this.headers },
     );
 
     this.stateSvc.setActiveRelationship(did);
 
     return this.stateSvc.activeRelationship$;
+  }
+
+  getRawRelationship(id: string) {
+    return this.http.get<IRawRel>(`${this.url}relationships/${id}/raw`);
   }
 
   getRelationships() {
@@ -50,7 +55,7 @@ export class RelationshipsActionService {
   getRelationshipById(id: string) {
     const relationship = this.httpSvc.getById<IRelationship>(
       'relationships',
-      id
+      id,
     );
     return relationship;
   }
@@ -59,8 +64,8 @@ export class RelationshipsActionService {
     const relationships = this.http.get<IRelationship[]>(
       `${this.url}relationships`,
       {
-        params: { state: state }
-      }
+        params: { state: state },
+      },
     );
     return relationships;
   }
@@ -68,8 +73,8 @@ export class RelationshipsActionService {
     this.stateSvc.invitation$ = this.http.post<IInvitation>(
       `${this.url}relationships`,
       {
-        headers: this.headers
-      }
+        headers: this.headers,
+      },
     );
   }
 
@@ -84,7 +89,7 @@ export class RelationshipsActionService {
   async resetRelState() {
     const pending$ = await this.getRelationships().toPromise();
     const pending = pending$.filter(
-      itm => itm.state !== 'active' && itm.state !== 'invitation'
+      itm => itm.state !== 'active' && itm.state !== 'invitation',
     );
     this.stateSvc.pendingInvitations$ = of(pending);
     this.stateSvc.activeRelationship$ = this.getRelationshipByState('active');

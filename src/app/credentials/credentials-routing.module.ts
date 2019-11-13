@@ -9,11 +9,13 @@ import { EditCredentialComponent } from './components/edit-credential/edit-crede
 import { IssueCredentialComponent } from './components/issue-credential/issue-credential.component';
 import { OrgCredentialsComponent } from './components/org-credentials/org-credentials.component';
 import { ViewPendingCredentialComponent } from './components/view-pending-credential/view-pending-credential.component';
+import { ManageCredentialsComponent } from '../issuer/components/manage-credentials/manage-credentials.component';
+import { IssueCredentialRelationshipsComponent } from './components/issue-credential-relationships/issue-credential-relationships.component';
 
 const routes: Routes = [
   {
     path: 'credentials',
-    component: CredentialsComponent,
+    component: CredentialsReceivedComponent,
   },
   {
     path: 'credentials/issued',
@@ -25,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'credentials/received',
-    component: CredentialsComponent,
+    component: CredentialsReceivedComponent,
   },
   {
     path: 'credentials/received/view',
@@ -39,10 +41,7 @@ const routes: Routes = [
     path: 'credentials/received/group/:did',
     component: OrgCredentialsComponent,
   },
-  {
-    path: 'credentials/types',
-    component: CredentialsComponent,
-  },
+
   {
     path: 'credentials/type/:id/preview',
     component: ViewCredentialTypeComponent,
@@ -72,12 +71,20 @@ const routes: Routes = [
     component: IssueCredentialComponent,
   },
   {
-    path: 'credentials/issue/:id/to',
+    path: 'credentials/issue/to/:id',
     component: IssueCredentialComponent,
   },
   {
     path: 'credentials/pending/:id',
     component: ViewPendingCredentialComponent,
+  },
+  {
+    path: 'credentials/relationship',
+    component: IssueCredentialRelationshipsComponent,
+  },
+  {
+    path: 'credentials/preview/:id',
+    component: IssueCredentialRelationshipsComponent,
   },
 ];
 

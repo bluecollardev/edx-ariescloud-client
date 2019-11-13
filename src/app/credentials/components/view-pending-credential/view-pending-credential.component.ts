@@ -10,6 +10,7 @@ import { mergeMap, tap, toArray, take, reduce, map } from 'rxjs/operators';
 import { LoadingController } from '@ionic/angular';
 import { HttpService } from 'src/app/core/services/http.service';
 import { MessagesService } from 'src/app/core/services/messages.service';
+import { StateService } from 'src/app/core/services/state.service';
 
 export interface IPendingCredView extends IIssueResponse {
   credDef: ICredentialDef;
@@ -24,19 +25,25 @@ export interface IPendingCreds {
   selector: 'app-view-pending-credential',
   template: `
     <app-item-header
-      title="Pending Credential"
-      default="/credentials/received"
+      *ngIf="$data | async as data; else loading"
+      [title]="labelMap[data.state]"
     ></app-item-header>
+
     <ion-content color="light" *ngIf="$data | async as data; else loading">
-      <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button [disabled]="disabled" (click)="action()">
-          <ion-icon name="build"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
       <ion-card>
-        <img
-          src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-        />
+        <ion-toolbar color="primary" *ngIf="$data | async as data">
+          <ion-title>{{ role }}</ion-title>
+          <ion-buttons slot="primary">
+            <ion-button
+              (click)="action()"
+              size="large"
+              *ngIf="actionMap[data.state]"
+            >
+              <ion-label>Submit</ion-label>
+              <ion-icon name="checkmark"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
         <ion-list>
           <app-list-header [title]="data.credDef.name"></app-list-header>
           <app-chip
@@ -108,7 +115,7 @@ export interface IPendingCreds {
       </ion-item>
     </ng-template>
   `,
-  styleUrls: ['./view-pending-credential.component.css'],
+  styleUrls: ['./view-pending-credential.component.scss'],
 })
 export class ViewPendingCredentialComponent implements OnInit {
   actionMap = {
@@ -120,13 +127,34 @@ export class ViewPendingCredentialComponent implements OnInit {
     issued: false,
   };
 
+  labelMap = {
+    offer_received: 'Request Credential',
+    offer_sent: 'Offer Sent',
+    request_received: 'Send Credential',
+    request_sent: 'Credential Sent',
+    credential_received: 'Store Credential',
+    issued: 'Credential Issued',
+  };
+
   $data: Observable<IPendingCredView>;
   id: string;
   state: string;
+
   get disabled() {
     const map = ['offer_received', 'request_received', 'credential_received'];
     return map.some(state => this.state === state);
   }
+  get role() {
+    return this.stateSvc.isIssuer ? 'Issuer' : 'Prover';
+  }
+
+  back() {
+    const route = this.stateSvc.isIssuer
+      ? '/issuer/manage'
+      : 'credentials/received';
+    this.router.navigate([route]);
+  }
+
   constructor(
     private actionSvc: CredentialActionsService,
     private relActionSvc: RelationshipActionsService,
@@ -135,6 +163,7 @@ export class ViewPendingCredentialComponent implements OnInit {
     private loadingController: LoadingController,
     private mssg: MessagesService,
     private httpSvc: HttpService,
+    private stateSvc: StateService,
   ) {}
 
   ngOnInit() {
@@ -170,7 +199,7 @@ export class ViewPendingCredentialComponent implements OnInit {
       if (post) {
         setTimeout(() => {
           loading.dismiss();
-          this.router.navigate(['/credentials/pending/' + this.id]);
+          this.back();
         }, 3000);
 
         return true;

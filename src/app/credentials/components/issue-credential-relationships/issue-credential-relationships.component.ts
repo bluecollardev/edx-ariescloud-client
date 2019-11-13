@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -18,103 +18,55 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-issue-credential-relationships',
   template: `
-    <form [formGroup]="fg">
+    <app-item-header title="Select Credential to Issue" default="/issuer">
+    </app-item-header>
+
+    <ion-content>
       <ion-grid>
-        <!-- TODO: Conditionally display this -->
-        <!--<ion-row>
+        <ion-row>
           <ion-col>
-            <ion-item>
-              <ion-label position="stacked"
-                >Select / Change Type
-                <ion-text color="danger">*</ion-text>
-              </ion-label>
-              <ion-select required>
-                <ion-select-option selected>BSc Degree</ion-select-option>
-                <ion-select-option>BA Degree</ion-select-option>
-                <ion-select-option>MBA Degree</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-col>
-          <ion-col size="4">
-            <ion-button margin-end [routerLink]="['/credentials/create']">
-              <ion-icon name="add"></ion-icon>
-              New
-            </ion-button>
-          </ion-col>
-        </ion-row>-->
-        <ion-row *ngIf="relationships | async as relationships">
-          <ion-col>
-            <ion-list>
-              <ion-list-header class="ion-no-margin ion-no-padding">
-                <div style="display: flex; width: 100%; flex-direction: column">
-                  <span class="ion-padding">Issue To</span>
-                </div>
-              </ion-list-header>
-              <ion-item-sliding *ngFor="let relationship of relationships">
-                <ion-item
-                  button
-                  (click)="
-                    this.router.navigate(['to'], {
-                      relativeTo: this.route,
-                      queryParams: { rId: relationship._id }
-                    })
-                  "
-                >
-                  <ion-icon name="person" class="icon-lg"></ion-icon>
-                  <ion-label>
-                    <h2>{{ relationship.name }}</h2>
-                    <small>DID: {{ relationship.did }}</small>
-                  </ion-label>
-                  <!--<ion-badge color="primary" item-end>2</ion-badge>-->
-                </ion-item>
-              </ion-item-sliding>
-            </ion-list>
+            <ng-container *ngIf="credDefs$ | async as credDefs; else noDefs">
+              <ion-list *ngIf="credDefs.length > 0; else noDefs">
+                <ion-list-header class="ion-no-margin ion-no-padding">
+                  <div
+                    style="display: flex; width: 100%; flex-direction: column"
+                  >
+                    <span class="ion-padding">Credential Types</span>
+                  </div>
+                </ion-list-header>
+                <ion-item-sliding *ngFor="let credDef of credDefs">
+                  <ion-item (click)="issue(credDef._id)">
+                    <ion-label>
+                      <h2>{{ credDef.name }}</h2>
+                      <p>{{ credDef.program }}</p>
+                      <p>Version: {{ credDef.version }}</p>
+
+                      <ion-note *ngFor="let attr of credDef.attributes">{{
+                        attr
+                      }}</ion-note>
+                    </ion-label>
+                  </ion-item>
+                </ion-item-sliding>
+              </ion-list>
+            </ng-container>
           </ion-col>
         </ion-row>
       </ion-grid>
-      <!--<ion-grid>
-        <ion-row>
-          <ion-col >
-            <ion-card text-center *ngIf="active$ | async as active">
-              <img
-                src="https://insidelatinamerica.net/wp-content/uploads/2018/01/noImg_2.jpg"
-              />
-
-              <ion-card-content>
-                <ion-card-title>
-                  {{ active.name }}
-                  <br />
-                  <div style="text-align: left; max-width: 60%; margin: 0 auto">
-                    <small
-                      ><small
-                        ><small>Issued by:</small> {{ active.issuedBy }}</small
-                      ></small
-                    >
-                  </div>
-                </ion-card-title>
-                <small><small>Tax ID: 123-45-6789</small></small>
-                <br />
-                <small
-                  ><small>DID: {{ active.did }}</small></small
-                >
-              </ion-card-content>
-
-              <ion-item class="flex ion-justify-content-around">
-                <ion-label>Date Issued</ion-label>
-                <ion-badge color="medium" item-end></ion-badge>
-              </ion-item>
-
-              <ion-item
-                class="flex ion-justify-content-around"
-                *ngFor="let attr of active.attributes"
-              >
-                <ion-label>{{ attr }}</ion-label>
-              </ion-item>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>-->
-    </form>
+    </ion-content>
+    <ng-template #noDefs>
+      <ion-card text-center>
+        <ion-card-header>
+          <ion-card-title>
+            <h2>
+              You have no credential definitions.
+            </h2>
+          </ion-card-title>
+          <ion-card-subtitle>
+            Create a new credential type to start issuing!
+          </ion-card-subtitle>
+        </ion-card-header>
+      </ion-card>
+    </ng-template>
   `,
   styleUrls: ['./issue-credential-relationships.component.scss'],
 })
@@ -122,6 +74,8 @@ export class IssueCredentialRelationshipsComponent implements OnInit {
   active$: Observable<ICredentialDef>;
   relationships: Observable<any[]>;
   fg: FormGroup;
+  selected: EventEmitter<string> = new EventEmitter();
+  credDefs$: Observable<ICredentialDef[]>;
 
   constructor(
     public route: ActivatedRoute,
@@ -130,9 +84,7 @@ export class IssueCredentialRelationshipsComponent implements OnInit {
     private stateSvc: CredentialStateService,
     private actionSvc: CredentialActionsService,
   ) {
-    this.active$ = this.actionSvc.getCredential(
-      this.route.snapshot.paramMap.get('id'),
-    );
+    this.credDefs$ = this.actionSvc.getCredentialDefs();
   }
 
   ngOnInit() {
@@ -145,5 +97,10 @@ export class IssueCredentialRelationshipsComponent implements OnInit {
     });
 
     this.fg = fg;
+    this.fg.valueChanges.subscribe(selected => this.selected.emit(selected));
+  }
+  issue(id: string) {
+    console.log(id);
+    this.router.navigate([`credentials/issue/${id}`]);
   }
 }

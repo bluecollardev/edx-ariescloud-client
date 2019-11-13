@@ -5,9 +5,10 @@
 export const environment = {
   production: true,
   apiUrl: 'http://localhost:3001/',
-  verifier: true,
-  prover: true,
+  verifier: false,
+  prover: false,
   issuer: true,
+  name: 'Faber University',
 };
 
 /*

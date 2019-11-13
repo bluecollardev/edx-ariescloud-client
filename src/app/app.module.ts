@@ -13,6 +13,7 @@ import { CredentialsModule } from './credentials/credentials.module';
 import { ProofsModule } from './proofs/proofs.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
+import { IssuerPageModule } from './issuer/issuer.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -25,9 +26,10 @@ import { SharedModule } from './shared/shared.module';
     MessagesModule,
     RelationshipsModule,
     ProofsModule,
-    CredentialsModule
+    CredentialsModule,
+    IssuerPageModule,
   ],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

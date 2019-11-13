@@ -22,15 +22,11 @@ import { MessagesService } from 'src/app/core/services/messages.service';
     <app-item-header
       *ngIf="credDef$ | async as credDef"
       title="Issue {{ credDef.name }}"
-      default="/credentials"
+      default="/issuer"
     >
     </app-item-header>
     <ion-content>
-      <app-issue-credential-relationships
-        *ngIf="this.activeTab === 'select-recipient'"
-      >
-      </app-issue-credential-relationships>
-      <form [formGroup]="fg" *ngIf="this.activeTab === 'issue-credential'">
+      <form [formGroup]="fg">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -133,25 +129,32 @@ export class IssueCredentialComponent implements OnInit {
       comment: new FormControl(''),
     });
   }
-
+  selectRel(evt) {
+    console.log(evt);
+    this.relationships$ = evt;
+  }
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
-      tap(obs => (console.log(obs), (this.credDefId = obs._id))),
-      tap(obs => {
-        const fa = new FormArray([]);
-        console.log(obs);
-        obs.attributes.forEach(val =>
-          fa.push(
-            new FormGroup({
-              name: new FormControl(val),
-              value: new FormControl(''),
-            }),
-          ),
-        );
-        this.fa$ = of(fa);
-      }),
-    );
+    id
+      ? (this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
+          tap(obs => (console.log(obs), (this.credDefId = obs._id))),
+          tap(obs => {
+            const fa = new FormArray([]);
+            console.log(obs);
+            obs.attributes.forEach(val =>
+              fa.push(
+                new FormGroup({
+                  name: new FormControl(val),
+                  value: new FormControl(''),
+                }),
+              ),
+            );
+            this.fa$ = of(fa);
+          }),
+        ))
+      : (this.credDef$ = this.actionSvc
+          .getCredentialDefs()
+          .pipe(map(obs => obs[1])));
 
     this.relationships$ = this.relationshipsActionSvc
       .getRelationships() // TODO: Fix this hack!
@@ -170,21 +173,6 @@ export class IssueCredentialComponent implements OnInit {
       console.log(this.relationshipId);
       this.fg.get('connectionId').setValue(this.relationshipId);
     });
-
-    this.route.url.subscribe(segments => {
-      this.setActiveTab(segments);
-    });
-  }
-
-  setActiveTab(segments) {
-    console.log(segments);
-    this.activeTab = 'select-recipient';
-
-    if (segments instanceof Array && segments.length > 3) {
-      if (this.validStates.indexOf(segments[3].path) > -1) {
-        this.activeTab = 'issue-credential';
-      }
-    }
   }
 
   isSelectedRelationship(rId) {
@@ -209,14 +197,26 @@ export class IssueCredentialComponent implements OnInit {
     console.log(ret);
     // "attrs": [{"name": "name", "value": "Science"}]
     try {
-      const res = await this.httpSvc.post('issues', ret).toPromise();
+      const res = await this.httpSvc.post<any>('issues', ret).toPromise();
+      if (res._id === 'cdef_undefined') {
+        this.mssg.alert({
+          message:
+            'Something went wrong. Try issuing a new credential definition',
+          header: 'Error',
+        });
+        this.actionSvc.deleteCredDef('cdef_undefined');
+      }
       if (res) {
         loading.dismiss();
-        this.router.navigate(['/credentials']);
+        this.router.navigate(['/credentials/pending/' + res._id]);
       }
     } catch (err) {
       console.log('error', err);
-      this.mssg.alert({message: 'Something went wrong. Try issuing a new credential definition', header: 'Error'})
+      this.mssg.alert({
+        message:
+          'Something went wrong. Try issuing a new credential definition',
+        header: 'Error',
+      });
       loading.dismiss();
     }
   }

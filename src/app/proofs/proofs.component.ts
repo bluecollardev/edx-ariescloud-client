@@ -17,6 +17,7 @@ import { ProofActionService } from './services/proof-action.service';
 import { RelationshipsActionService } from '../relationships/services/relationships-action.service';
 import { map, tap } from 'rxjs/operators';
 import { ICredentialResponse } from '../credentials/components/credentials-received/credentials-received.component';
+import { StateService } from '../core/services/state.service';
 
 @Component({
   selector: 'app-credentials',
@@ -45,9 +46,12 @@ import { ICredentialResponse } from '../credentials/components/credentials-recei
         <ion-row *ngIf="relationships | async as relationships">
           <ion-col>
             <ion-list>
-              <ion-list-header class="ion-no-margin ion-no-padding">
+              <ion-list-header
+                class="ion-no-margin ion-no-padding"
+                *ngIf="gState.isVerifier"
+              >
                 <div style="display: flex; width: 100%; flex-direction: column">
-                  <span class="ion-padding">Pending Proofs</span>
+                  <span class="ion-padding">Request Proof of Claim</span>
                 </div>
               </ion-list-header>
               <ion-item-sliding *ngFor="let relationship of relationships">
@@ -225,6 +229,7 @@ export class ProofsComponent implements OnInit {
     private actionSvc: ProofActionService,
     public actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
+    private gState: StateService,
   ) {}
 
   async ngOnInit() {

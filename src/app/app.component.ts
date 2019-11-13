@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { HttpService } from './core/services/http.service';
 import { Observable, of } from 'rxjs';
+import { StateService } from './core/services/state.service';
 
 @Component({
   selector: 'app-root',
@@ -97,67 +98,75 @@ export class AppComponent implements OnInit {
 
   certCount$: Observable<number>;
   title = 'edx-ariescloud-client';
+  pages: (
+    | {
+        title: string;
+        url: string;
+        icon: string;
+        show?: undefined;
+        hasBadge?: undefined;
+      }
+    | {
+        title: string;
+        url: string;
+        icon: string;
+        show: boolean;
+        hasBadge?: undefined;
+      }
+    | {
+        title: string;
+        url: string;
+        hasBadge: boolean;
+        icon: string;
+        show: boolean;
+      }
+  )[];
 
-  pages = [
-    {
-      title: 'Relationships & Invites',
-      url: '/relationships/',
-      icon: 'people',
-    },
-    /*{
-      title: 'Messages',
-      url: '/messages/',
-      icon: 'mail',
-      hasBadge: true
-    },*/
-    {
-      title: 'Proof Certificates',
-      url: '/verify-credentials/',
-      icon: 'finger-print',
-      hasBadge: true,
-    },
-    {
-      title: 'Credentials Received',
-      url: '/credentials/received/',
-      hasBadge: true,
-      icon: 'archive',
-    },
-    {
-      title: 'Issued Credentials',
-      url: '/credentials/issued/',
-      icon: 'ribbon',
-    },
-    {
-      title: 'Credential Types',
-      url: '/credentials/types/',
-      icon: 'list-box',
-    },
-    /*{
-      title: 'Create Org. Credential',
-      url: '/credentials/create/',
-      icon: 'bookmark'
-    },*/
-    /*{
-      title: 'Sign Out',
-      url: '/',
-      icon: 'log-out'
-    }*/
-  ];
-
-  constructor(private menu: MenuController, private httpSvc: HttpService) {}
+  constructor(
+    private menu: MenuController,
+    private httpSvc: HttpService,
+    public stateSvc: StateService,
+  ) {}
 
   async ngOnInit() {
-    try {
-      // TODO: When re-implementing, look back at history - we deleted the profile module
-      /*const profile = await this.httpSvc
-        .get<IProfileResult>('profile')
-        .toPromise();*/
-      this.mssgCount$ = of(2); // of(profile.messageCount);*/
-      this.certCount$ = of(2); // of(2);
-      this.credsCount$ = of(0); // of(profile.credsCount);
-    } catch (err) {
-      console.log(err);
-    }
+    const pages = [
+      {
+        title: 'Relationships & Invites',
+        url: '/relationships/',
+        icon: 'people',
+        show: true,
+      },
+
+      {
+        title: 'Credential Types',
+        url: '/issuer/',
+        icon: 'list-box',
+        show: this.stateSvc.isIssuer,
+      },
+
+      {
+        title: 'Issued Credentials',
+        url: '/issuer/manage',
+        icon: 'ribbon',
+        show: this.stateSvc.isIssuer,
+      },
+      {
+        title: 'Credentials Received',
+        url: '/credentials/received/',
+        hasBadge: false,
+        icon: 'archive',
+        show: this.stateSvc.isProver,
+      },
+      {
+        title: 'Proof Certificates',
+        url: '/verify-credentials/',
+        icon: 'finger-print',
+        hasBadge: false,
+        show: this.stateSvc.isProver,
+      },
+    ];
+
+    this.pages = pages.filter(page => page.show);
   }
 
   openFirst() {

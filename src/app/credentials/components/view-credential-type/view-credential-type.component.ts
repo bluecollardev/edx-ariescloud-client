@@ -14,8 +14,16 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
 @Component({
   selector: 'app-view-credential',
   template: `
-    <app-item-header title="Preview Credential" default="/credentials/types">
+    <app-item-header title="Preview Credential" default="/issuer">
     </app-item-header>
+    <ion-toolbar center class="ion-align-items-center">
+      <ion-buttons slot="primary">
+        <ion-button (click)="issue()" color="primary">
+          <ion-label>Issue</ion-label>
+          <ion-icon size="large" name="add-circle" slot="end"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
     <ion-content color="light">
       <ion-card text-center *ngIf="active$ | async as active">
         <img
@@ -26,7 +34,7 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
           <app-list-item
             *ngFor="let attr of active.attributes"
             [label]="attr"
-            color="secondary"
+            color="primary"
             value="Example value"
           ></app-list-item>
           <app-list-item-stacked
@@ -45,9 +53,6 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
           >
           </app-list-item-stacked>
         </ion-list>
-        <ion-item (click)="navigate(active._id)" lines="none" color="primary">
-          <ion-badge slot="end" color="primary">Issue</ion-badge>
-        </ion-item>
       </ion-card>
     </ion-content>
   `,
@@ -56,19 +61,21 @@ import { CredentialActionsService } from '../../services/credential-actions.serv
 // TODO: correct schema imports for the id on the cred def route
 export class ViewCredentialTypeComponent implements OnInit {
   active$: Observable<ICredentialDef>;
+  id: string;
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     private actionSvc: CredentialActionsService,
   ) {
+    this.id = this.route.snapshot.paramMap.get('id');
     this.active$ = this.actionSvc
-      .getCredentialDef(this.route.snapshot.paramMap.get('id'))
+      .getCredentialDef(this.id)
       .pipe(tap(obs => console.log(obs)));
   }
 
   ngOnInit() {}
-  navigate(id: string) {
-    this.router.navigate([`/credentials/issue/` + id]);
+  issue() {
+    this.router.navigate([`/credentials/issue/` + this.id]);
   }
 }

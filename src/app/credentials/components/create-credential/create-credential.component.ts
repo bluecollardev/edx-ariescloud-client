@@ -5,9 +5,10 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import { CredentialActionsService } from '../../services/credential-actions.service';
 import {
   CredentialStateService,
-  ICredentialDef
+  ICredentialDef,
 } from '../../services/credential-state.service';
 import { Router } from '@angular/router';
+import { MessagesService } from 'src/app/core/services/messages.service';
 
 @Component({
   template: `
@@ -31,7 +32,7 @@ import { Router } from '@angular/router';
       <br />
       <ion-grid>
         <ion-row>
-          <ion-col >
+          <ion-col>
             <form [formGroup]="fg">
               <ion-list lines="full" class="ion-no-margin ion-no-padding">
                 <ion-item>
@@ -128,7 +129,7 @@ import { Router } from '@angular/router';
     </ion-content>
   `,
   styleUrls: ['./create-credential.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateCredentialComponent implements OnInit {
   loading = false;
@@ -141,14 +142,15 @@ export class CreateCredentialComponent implements OnInit {
     private actionSvc: CredentialActionsService,
     private alertController: AlertController,
     private router: Router,
-    public loadingController: LoadingController
+    private mssgs: MessagesService,
+    public loadingController: LoadingController,
   ) {}
 
   ngOnInit() {
     const fg = new FormGroup({
       name: new FormControl('', [Validators.required]),
       version: new FormControl('1.0', [Validators.required]),
-      schema: new FormArray([])
+      schema: new FormArray([]),
     });
 
     this.fg = fg;
@@ -192,50 +194,29 @@ export class CreateCredentialComponent implements OnInit {
   async sendCredDef(credDef: ICredentialDef) {
     const loading = await this.loadingController.create({
       message: 'Creating credential definition',
-      duration: 10000
+      duration: 10000,
     });
     await loading.present();
     try {
-      const res = await this.actionSvc.submitCredDef(credDef);
+      const timer = setTimeout(() => {
+        this.mssgs.alert({
+          header: 'Credential Definition',
+          message: `Your credential definition is taking a while to get ready. n\
+            It'll be there soon,`,
+        });
+      }, 10000);
+
+      const res = (await this.actionSvc.submitCredDef(credDef)) as any;
+      clearTimeout(timer);
       if (res) {
         this.stateSvc.credentialDefs$ = this.actionSvc.getCredentialDefs();
         loading.dismiss();
-        this.router.navigate(['/credentials']);
+        this.router.navigate([`credentials/preview/'cdef_'+${res._id}`]);
       }
       loading.dismiss();
-    } catch {
+    } catch (err) {
+      this.mssgs.alert({ header: 'An error occured', message: err.message });
       loading.dismiss();
     }
-  }
-
-  async newSchemaPopup() {
-    const alert = await this.alertController.create({
-      header: 'Create a New Schema',
-      inputs: [
-        {
-          name: '',
-          type: 'text',
-          placeholder: 'MySchema'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-          }
-        },
-        {
-          text: 'Ok',
-          handler: () => {
-            console.log('Confirm Ok');
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 }

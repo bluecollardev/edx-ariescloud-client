@@ -1,7 +1,8 @@
 export const environment = {
   production: true,
   apiUrl: 'http://localhost:3000/',
-  verifier: true,
+  verifier: false,
   prover: true,
-  issuer: true,
+  issuer: false,
+  name: 'Alice Smith',
 };
