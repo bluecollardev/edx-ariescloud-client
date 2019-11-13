@@ -13,45 +13,36 @@ import { MessagesService } from 'src/app/core/services/messages.service';
 @Component({
   template: `
     <ion-header role="banner" class="ios header-ios hydrated">
-      <ion-toolbar class="ios hydrated">
-        <ion-buttons
-          slot="end"
-          class="sc-ion-buttons-ios-h sc-ion-buttons-ios-s ios buttons-first-slot hydrated"
-        >
-          <ion-menu-button
-            class="hydrated ios button ion-activatable ion-focusable activated"
-          ></ion-menu-button>
-        </ion-buttons>
-        <ion-title class="ios title-ios hydrated"
-          >Create Credential Type</ion-title
-        >
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <br />
-      <br />
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <form [formGroup]="fg">
-              <ion-list lines="full" class="ion-no-margin ion-no-padding">
-                <ion-item>
-                  <ion-label position="stacked"
-                    >Credential Name
-                    <ion-text color="danger">*</ion-text>
-                  </ion-label>
-                  <ion-input type="text" formControlName="name"></ion-input>
-                </ion-item>
-
-                <ion-grid>
-                  <ion-row>
-                    <ion-col>
+      <app-item-header title="Create New Credential Type" default="/issuer">
+        <app-item-header>
+          <ion-content>
+            <br />
+            <br />
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <form [formGroup]="fg">
+                    <ion-list lines="full" class="ion-no-margin ion-no-padding">
                       <ion-item>
                         <ion-label position="stacked"
-                          >Credential Version
+                          >Credential Name
                           <ion-text color="danger">*</ion-text>
                         </ion-label>
-                        <!--
+                        <ion-input
+                          type="text"
+                          formControlName="name"
+                        ></ion-input>
+                      </ion-item>
+
+                      <ion-grid>
+                        <ion-row>
+                          <ion-col>
+                            <ion-item>
+                              <ion-label position="stacked"
+                                >Credential Version
+                                <ion-text color="danger">*</ion-text>
+                              </ion-label>
+                              <!--
                         <ion-select required formControlName="version">
                           <ion-select-option>v1.1</ion-select-option>
                           <ion-select-option>v1.2</ion-select-option>
@@ -59,10 +50,10 @@ import { MessagesService } from 'src/app/core/services/messages.service';
                           <ion-select-option>v2.0</ion-select-option>
                         </ion-select>
                         -->
-                        1.0
-                      </ion-item>
-                    </ion-col>
-                    <!--
+                              1.0
+                            </ion-item>
+                          </ion-col>
+                          <!--
                     <ion-col size="3">
                       <ion-button margin-end (click)="this.newSchemaPopup()">
                         <ion-icon name="add"></ion-icon>
@@ -70,63 +61,70 @@ import { MessagesService } from 'src/app/core/services/messages.service';
                       </ion-button>
                     </ion-col>
                     -->
-                  </ion-row>
+                        </ion-row>
 
-                  <ion-row>
-                    <ion-col>
-                      <ion-item>
-                        <ion-label position="stacked"
-                          >Create Data Field</ion-label
+                        <ion-row>
+                          <ion-col>
+                            <ion-item>
+                              <ion-label position="stacked"
+                                >Create Data Field</ion-label
+                              >
+                              <ion-input
+                                required
+                                type="text"
+                                [formControl]="baseFc"
+                              >
+                              </ion-input>
+                            </ion-item>
+                          </ion-col>
+                          <ion-col size="3">
+                            <ion-button margin-end (click)="addFc(fg, baseFc)">
+                              <ion-icon name="add"></ion-icon> Add
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+
+                        <ion-row
+                          *ngFor="
+                            let itm of fg.controls['schema']['controls'];
+                            index as i
+                          "
                         >
-                        <ion-input required type="text" [formControl]="baseFc">
-                        </ion-input>
-                      </ion-item>
-                    </ion-col>
-                    <ion-col size="3">
-                      <ion-button margin-end (click)="addFc(fg, baseFc)">
-                        <ion-icon name="add"></ion-icon> Add
+                          <ng-container *ngIf="itm.value != null">
+                            <ion-col>
+                              <ion-list>
+                                <ion-item>
+                                  <ion-label>{{ itm.value }}</ion-label>
+                                  <ion-icon
+                                    name="remove-circle-outline"
+                                    (click)="removeFc(fg, i)"
+                                  ></ion-icon>
+                                </ion-item>
+                              </ion-list>
+                            </ion-col>
+                          </ng-container>
+                        </ion-row>
+                      </ion-grid>
+                    </ion-list>
+
+                    <div class="ion-padding">
+                      <ion-button
+                        expand="block"
+                        (click)="submit(fg)"
+                        class="ion-no-margin"
+                      >
+                        <ion-icon name="add"></ion-icon>
+                        Create Credential Type
                       </ion-button>
-                    </ion-col>
-                  </ion-row>
-
-                  <ion-row
-                    *ngFor="
-                      let itm of fg.controls['schema']['controls'];
-                      index as i
-                    "
-                  >
-                    <ng-container *ngIf="itm.value != null">
-                      <ion-col>
-                        <ion-list>
-                          <ion-item>
-                            <ion-label>{{ itm.value }}</ion-label>
-                            <ion-icon
-                              name="remove-circle-outline"
-                              (click)="removeFc(fg, i)"
-                            ></ion-icon>
-                          </ion-item>
-                        </ion-list>
-                      </ion-col>
-                    </ng-container>
-                  </ion-row>
-                </ion-grid>
-              </ion-list>
-
-              <div class="ion-padding">
-                <ion-button
-                  expand="block"
-                  (click)="submit(fg)"
-                  class="ion-no-margin"
-                >
-                  <ion-icon name="add"></ion-icon>
-                  Create Credential Type
-                </ion-button>
-              </div>
-            </form>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-content>
+                    </div>
+                  </form>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-content>
+        </app-item-header></app-item-header
+      ></ion-header
+    >
   `,
   styleUrls: ['./create-credential.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
