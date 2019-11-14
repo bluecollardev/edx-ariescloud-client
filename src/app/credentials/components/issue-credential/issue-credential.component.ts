@@ -22,7 +22,7 @@ import { MessagesService } from 'src/app/core/services/messages.service';
     <app-item-header title="Issue Credential" default="/issuer">
     </app-item-header>
     <ion-content>
-      <form [formGroup]="fg">
+      <form [formGroup]="fg" *ngIf="credDef$ | async as credDef">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -131,26 +131,23 @@ export class IssueCredentialComponent implements OnInit {
   }
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    id
-      ? (this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
-          tap(obs => (console.log(obs), (this.credDefId = obs._id))),
-          tap(obs => {
-            const fa = new FormArray([]);
-            console.log(obs);
-            obs.attributes.forEach(val =>
-              fa.push(
-                new FormGroup({
-                  name: new FormControl(val),
-                  value: new FormControl(''),
-                }),
-              ),
-            );
-            this.fa$ = of(fa);
-          }),
-        ))
-      : (this.credDef$ = this.actionSvc
-          .getCredentialDefs()
-          .pipe(map(obs => obs[1])));
+    console.log(id);
+    this.credDef$ = this.actionSvc.getCredentialDef(id).pipe(
+      tap(obs => (console.log(obs), (this.credDefId = obs._id))),
+      tap(obs => {
+        const fa = new FormArray([]);
+        console.log(obs);
+        obs.attributes.forEach(val =>
+          fa.push(
+            new FormGroup({
+              name: new FormControl(val),
+              value: new FormControl(''),
+            }),
+          ),
+        );
+        this.fa$ = of(fa);
+      }),
+    );
 
     this.relationships$ = this.relationshipsActionSvc
       .getRelationships() // TODO: Fix this hack!
