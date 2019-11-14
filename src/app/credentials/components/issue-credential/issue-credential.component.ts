@@ -19,11 +19,7 @@ import { MessagesService } from 'src/app/core/services/messages.service';
 @Component({
   selector: 'app-issue-credential',
   template: `
-    <app-item-header
-      *ngIf="credDef$ | async as credDef"
-      title="Issue {{ credDef.name }}"
-      default="/issuer"
-    >
+    <app-item-header title="Issue Credential" default="/issuer">
     </app-item-header>
     <ion-content>
       <form [formGroup]="fg">
